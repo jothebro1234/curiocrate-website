@@ -447,6 +447,102 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ─── SECTION 5: PARTNERS ─── */}
+      <section style={{ position:'relative', zIndex:1, padding:'80px 40px 100px' }}>
+        <div style={{ maxWidth:1100, margin:'0 auto' }}>
+          <motion.div
+            initial={{ opacity:0, y:24 }}
+            whileInView={{ opacity:1, y:0 }}
+            viewport={{ once:true }}
+            transition={{ duration:0.8 }}
+            style={{ textAlign:'center', marginBottom:52 }}
+          >
+            <div className="label" style={{ marginBottom:14 }}>Our Partners</div>
+            <h2 style={{
+              fontFamily:"'Cormorant Garamond', serif",
+              fontSize:'clamp(28px,4vw,50px)',
+              fontWeight:300, color:'var(--cream)',
+              lineHeight:1.1, letterSpacing:'-0.02em',
+            }}>
+              Organizations who believe<br/>
+              <em style={{ color:'var(--pastel1)', fontStyle:'italic' }}>science belongs to everyone.</em>
+            </h2>
+          </motion.div>
+
+          {/* Partner cards — replace with real logos/names */}
+          <div style={{
+            display:'grid',
+            gridTemplateColumns:'repeat(auto-fit, minmax(200px, 1fr))',
+            gap:16,
+          }}>
+            {[
+              { name:'Partner Organization', type:'Education Nonprofit', initial:'P' },
+              { name:'Partner School',        type:'K–12 Institution',   initial:'S' },
+              { name:'Community Foundation',  type:'Funding Partner',    initial:'C' },
+              { name:'University Lab',         type:'Research Partner',   initial:'U' },
+              { name:'Local Library System',  type:'Distribution Hub',   initial:'L' },
+            ].map((p, i) => (
+              <motion.div
+                key={p.name}
+                initial={{ opacity:0, y:24 }}
+                whileInView={{ opacity:1, y:0 }}
+                viewport={{ once:true }}
+                transition={{ duration:0.7, delay:i*0.08 }}
+                whileHover={{ y:-4, borderColor:'rgba(168,212,240,0.25)' }}
+                style={{
+                  padding:'28px 24px',
+                  border:'1px solid rgba(168,212,240,0.08)',
+                  borderRadius:14,
+                  background:'rgba(8,16,40,0.45)',
+                  backdropFilter:'blur(16px)',
+                  textAlign:'center',
+                  transition:'border-color 0.3s',
+                  cursor:'default',
+                }}
+              >
+                {/* Logo placeholder — replace with <img src="/images/partner-x.png"> */}
+                <div style={{
+                  width:56, height:56, borderRadius:14,
+                  background:'linear-gradient(135deg, rgba(168,212,240,0.12) 0%, rgba(168,212,240,0.04) 100%)',
+                  border:'1px solid rgba(168,212,240,0.12)',
+                  display:'flex', alignItems:'center', justifyContent:'center',
+                  margin:'0 auto 16px',
+                  fontFamily:"'Cormorant Garamond', serif",
+                  fontSize:24, color:'var(--pastel1)',
+                }}>
+                  {p.initial}
+                </div>
+                <div style={{
+                  fontFamily:"'Plus Jakarta Sans', sans-serif",
+                  fontWeight:600, fontSize:14,
+                  color:'var(--cream)', marginBottom:6,
+                }}>
+                  {p.name}
+                </div>
+                <div className="label" style={{ fontSize:9, opacity:0.5 }}>{p.type}</div>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.p
+            initial={{ opacity:0 }}
+            whileInView={{ opacity:1 }}
+            viewport={{ once:true }}
+            transition={{ delay:0.4, duration:0.8 }}
+            style={{
+              textAlign:'center', marginTop:36,
+              fontFamily:"'JetBrains Mono', monospace",
+              fontSize:11, letterSpacing:'2px', color:'var(--muted)', opacity:0.5,
+            }}
+          >
+            Want to partner with us? ·{' '}
+            <a href="mailto:hello@curiocrate.org" style={{ color:'var(--pastel1)', textDecoration:'none' }}>
+              hello@curiocrate.org
+            </a>
+          </motion.p>
+        </div>
+      </section>
+
       {/* Mascot cameo bottom */}
       <div style={{
         position:'relative', zIndex:1,
