@@ -227,6 +227,21 @@ export default function Home() {
             }}
           />
 
+          {/* Motto */}
+          <motion.div
+            initial={{ opacity:0 }}
+            animate={scrollReady ? { opacity:0.45 } : {}}
+            transition={{ duration:1.5 }}
+            style={{
+              fontFamily:"'Cormorant Garamond', serif",
+              fontStyle:'italic', fontSize:'clamp(13px,1.5vw,17px)',
+              color:'var(--pastel2)', letterSpacing:'0.08em',
+              textAlign:'center', zIndex:2, marginBottom:32,
+            }}
+          >
+            "Create Change in our Community through Curiosity."
+          </motion.div>
+
           {/* Scroll indicator */}
           <motion.div
             initial={{ opacity:0 }}
