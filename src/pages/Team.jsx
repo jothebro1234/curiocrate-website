@@ -1,426 +1,385 @@
-import { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
 
-// Board members — replace photo with a real cutout PNG (no background, lower-body crop)
-// Set photo to null to use emoji fallback until you have the real image
+// When you have real cutout PNGs (no background, cropped to lower body):
+// set photo: '/images/member-yourname.png'
 const members = [
   {
     id: 'director',
     name: 'Your Name',
-    role: 'Executive Director',
-    bio: 'Founded CurioCrate with a belief that access to great science education should never be determined by a zip code. Leads vision, strategy, and partnerships.',
-    photo: null,         // → set to '/images/member-director.png' when available
+    role: 'Executive Director & Founder',
+    bio: 'Founded CurioCrate with one conviction: the zip code a child grows up in should never determine their access to great science. Leads vision, strategy, and every partnership that brings kits to new communities.',
+    photo: null,
     emoji: '👩‍🔬',
     color: '#a8d4f0',
-    glow: 'rgba(168,212,240,0.4)',
-    // Constellation position (% of container)
-    cx: 50, cy: 28,
+    glow: 'rgba(168,212,240,0.35)',
+    accent: 'rgba(168,212,240,0.08)',
+    email: 'director@curiocrate.org',
+    linkedin: '#',
+    number: '01',
   },
   {
     id: 'ops',
     name: 'Board Member',
     role: 'Director of Operations',
-    bio: 'Orchestrates kit production, logistics, and community partnerships to ensure every program runs with precision and care.',
+    bio: 'The engine behind the mission. Orchestrates kit production, supply chains, and community logistics — ensuring every kit reaches its destination with precision and care.',
     photo: null,
     emoji: '⚙️',
     color: '#b8c8f8',
-    glow: 'rgba(184,200,248,0.4)',
-    cx: 22, cy: 62,
+    glow: 'rgba(184,200,248,0.35)',
+    accent: 'rgba(184,200,248,0.08)',
+    email: 'ops@curiocrate.org',
+    linkedin: '#',
+    number: '02',
   },
   {
     id: 'curriculum',
     name: 'Board Member',
     role: 'Curriculum Lead',
-    bio: 'Designs every experiment guide — tested by real kids, refined by educators, built to spark genuine discovery and scientific thinking.',
+    bio: 'Designs every experiment guide from the ground up — tested by real kids, refined with real educators, built to ignite genuine scientific curiosity and lasting discovery.',
     photo: null,
     emoji: '📚',
     color: '#d0b8f0',
-    glow: 'rgba(208,184,240,0.4)',
-    cx: 78, cy: 62,
+    glow: 'rgba(208,184,240,0.35)',
+    accent: 'rgba(208,184,240,0.08)',
+    email: 'curriculum@curiocrate.org',
+    linkedin: '#',
+    number: '03',
   },
   {
     id: 'outreach',
     name: 'Board Member',
     role: 'Outreach Director',
-    bio: 'Builds the bridges between CurioCrate and the communities that need it most — one relationship, one school, one library at a time.',
+    bio: 'Builds the human bridges between CurioCrate and the communities that need it most. One school, one library, one relationship at a time — expanding the reach of curiosity.',
     photo: null,
     emoji: '🤝',
     color: '#a8e8d0',
-    glow: 'rgba(168,232,208,0.4)',
-    cx: 50, cy: 85,
+    glow: 'rgba(168,232,208,0.35)',
+    accent: 'rgba(168,232,208,0.08)',
+    email: 'outreach@curiocrate.org',
+    linkedin: '#',
+    number: '04',
   },
 ]
 
-// Constellation edges
-const edges = [
-  [0, 1], [0, 2], [0, 3], [1, 3], [2, 3],
-]
-
-function ConstellationSVG({ active, containerSize }) {
-  const { w, h } = containerSize
-  return (
-    <svg
-      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }}
-      viewBox={`0 0 100 100`}
-      preserveAspectRatio="none"
-    >
-      <defs>
-        <filter id="glow-line">
-          <feGaussianBlur stdDeviation="0.4" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
-      {edges.map(([a, b], i) => {
-        const ma = members[a], mb = members[b]
-        const isActive = active === a || active === b
-        return (
-          <motion.line
-            key={i}
-            x1={ma.cx} y1={ma.cy} x2={mb.cx} y2={mb.cy}
-            stroke={isActive ? members[active].color : 'rgba(168,212,240,0.12)'}
-            strokeWidth={isActive ? '0.4' : '0.15'}
-            filter={isActive ? 'url(#glow-line)' : ''}
-            initial={false}
-            animate={{
-              stroke: isActive ? members[active].color : 'rgba(168,212,240,0.12)',
-              strokeWidth: isActive ? 0.4 : 0.15,
-              opacity: isActive ? 0.7 : 0.3,
-            }}
-            transition={{ duration: 0.5 }}
-          />
-        )
-      })}
-      {/* Star dots at each node */}
-      {members.map((m, i) => (
-        <motion.circle
-          key={m.id}
-          cx={m.cx} cy={m.cy} r={active === i ? 1.2 : 0.6}
-          fill={active === i ? m.color : 'rgba(168,212,240,0.3)'}
-          animate={{ r: active === i ? 1.2 : 0.6, opacity: active === i ? 1 : 0.5 }}
-          transition={{ duration: 0.4 }}
-          style={{ filter: active === i ? `drop-shadow(0 0 3px ${m.color})` : 'none' }}
-        />
-      ))}
-    </svg>
-  )
-}
-
-function MemberNode({ member, index, isActive, onClick, containerSize }) {
-  const { w, h } = containerSize
-  const left = `${member.cx}%`
-  const top  = `${member.cy}%`
+function MemberCard({ member, index }) {
+  const isEven = index % 2 === 0
 
   return (
     <motion.div
-      onClick={() => onClick(index)}
+      initial={{ opacity: 0, y: 60 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1] }}
       style={{
-        position: 'absolute',
-        left, top,
-        transform: 'translate(-50%, -50%)',
-        cursor: 'pointer',
-        zIndex: isActive ? 10 : 2,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: 10,
+        display: 'grid',
+        gridTemplateColumns: isEven ? '420px 1fr' : '1fr 420px',
+        minHeight: 520,
+        borderRadius: 20,
+        overflow: 'hidden',
+        border: '1px solid rgba(168,212,240,0.08)',
+        background: 'rgba(8,16,40,0.55)',
+        backdropFilter: 'blur(24px)',
+        boxShadow: `0 4px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(168,212,240,0.04)`,
+        marginBottom: 32,
+        position: 'relative',
       }}
-      whileHover={{ scale: 1.06 }}
-      transition={{ duration: 0.3 }}
     >
-      {/* Pulse ring */}
-      {isActive && (
-        <motion.div
-          style={{
-            position: 'absolute',
-            width: 120, height: 120,
-            borderRadius: '50%',
-            border: `1px solid ${member.color}`,
-            top: '50%', left: '50%',
-            transform: 'translate(-50%, -50%) translateY(-40px)',
-            pointerEvents: 'none',
-          }}
-          animate={{ scale: [1, 1.5], opacity: [0.5, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
-        />
-      )}
+      {/* Ambient corner glow */}
+      <div style={{
+        position: 'absolute',
+        top: isEven ? -60 : 'auto',
+        bottom: isEven ? 'auto' : -60,
+        left: isEven ? -60 : 'auto',
+        right: isEven ? 'auto' : -60,
+        width: 240, height: 240, borderRadius: '50%',
+        background: `radial-gradient(circle, ${member.glow} 0%, transparent 70%)`,
+        pointerEvents: 'none', zIndex: 0,
+      }}/>
 
-      {/* Photo / avatar */}
-      <motion.div
-        animate={{
-          boxShadow: isActive ? `0 0 40px ${member.glow}, 0 0 80px ${member.glow.replace('0.4','0.15')}` : '0 4px 20px rgba(0,0,0,0.4)',
-          borderColor: isActive ? member.color : 'rgba(168,212,240,0.15)',
-        }}
-        transition={{ duration: 0.5 }}
+      {/* Photo panel */}
+      <div
         style={{
-          width: isActive ? 110 : 80,
-          height: isActive ? 140 : 100,
-          borderRadius: 12,
-          border: `1px solid`,
-          overflow: 'hidden',
-          background: `radial-gradient(circle at 50% 30%, ${member.glow.replace('0.4','0.2')} 0%, rgba(8,16,40,0.8) 100%)`,
+          order: isEven ? 0 : 1,
+          position: 'relative',
+          background: `linear-gradient(135deg, ${member.accent} 0%, rgba(6,13,31,0.6) 100%)`,
           display: 'flex',
           alignItems: 'flex-end',
           justifyContent: 'center',
-          position: 'relative',
-          transition: 'width 0.4s ease, height 0.4s ease',
+          minHeight: 520,
+          overflow: 'hidden',
         }}
       >
+        {/* Number watermark */}
+        <div style={{
+          position: 'absolute',
+          top: 24, left: isEven ? 24 : 'auto', right: isEven ? 'auto' : 24,
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: 96, fontWeight: 300,
+          color: member.color,
+          opacity: 0.07,
+          lineHeight: 1,
+          userSelect: 'none',
+          zIndex: 0,
+        }}>
+          {member.number}
+        </div>
+
+        {/* Grid lines decoration */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 0,
+          backgroundImage: `linear-gradient(${member.color}08 1px, transparent 1px), linear-gradient(90deg, ${member.color}08 1px, transparent 1px)`,
+          backgroundSize: '40px 40px',
+        }}/>
+
+        {/* Photo or emoji */}
         {member.photo ? (
-          <img
+          <motion.img
             src={member.photo}
             alt={member.name}
+            whileHover={{ scale: 1.03 }}
+            transition={{ duration: 0.5 }}
             style={{
-              width: '100%',
-              height: '100%',
+              width: '85%',
               objectFit: 'cover',
               objectPosition: 'top center',
+              display: 'block',
+              position: 'relative', zIndex: 1,
+              filter: `drop-shadow(0 -20px 40px ${member.glow})`,
             }}
           />
         ) : (
-          <span style={{ fontSize: isActive ? 44 : 32, paddingBottom: 8, transition: 'font-size 0.4s' }}>
-            {member.emoji}
-          </span>
+          <motion.div
+            animate={{ y: [0, -8, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            style={{
+              position: 'relative', zIndex: 1,
+              width: '100%', height: '100%',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              flexDirection: 'column', gap: 16,
+            }}
+          >
+            {/* Glowing orb placeholder */}
+            <div style={{
+              width: 160, height: 160, borderRadius: '50%',
+              background: `radial-gradient(circle, ${member.glow.replace('0.35','0.3')} 0%, ${member.accent} 50%, transparent 70%)`,
+              border: `1px solid ${member.color}33`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 72,
+              boxShadow: `0 0 60px ${member.glow}, 0 0 120px ${member.glow.replace('0.35','0.1')}`,
+            }}>
+              {member.emoji}
+            </div>
+            <div style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase',
+              color: member.color, opacity: 0.4,
+            }}>
+              Photo coming soon
+            </div>
+          </motion.div>
         )}
-        {/* Bottom fade for cutout effect */}
-        <div style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0,
-          height: '35%',
-          background: 'linear-gradient(to top, rgba(3,5,15,0.95) 0%, transparent 100%)',
-          pointerEvents: 'none',
-        }}/>
-      </motion.div>
 
-      {/* Name + role */}
-      <motion.div
-        animate={{ opacity: isActive ? 1 : 0.5 }}
-        style={{ textAlign: 'center', maxWidth: 120 }}
-      >
+        {/* Bottom fade */}
         <div style={{
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
-          fontSize: isActive ? 13 : 11,
-          fontWeight: 600,
-          color: isActive ? 'var(--cream)' : 'var(--muted)',
-          transition: 'font-size 0.4s',
-          whiteSpace: 'nowrap',
-        }}>{member.name}</div>
-        <div className="label" style={{ fontSize: 8, color: member.color, marginTop: 3, opacity: isActive ? 0.9 : 0.5 }}>
+          position: 'absolute', bottom: 0, left: 0, right: 0, height: 120,
+          background: 'linear-gradient(to top, rgba(8,16,40,0.9) 0%, transparent 100%)',
+          zIndex: 2,
+        }}/>
+      </div>
+
+      {/* Info panel */}
+      <div style={{
+        order: isEven ? 1 : 0,
+        padding: '56px 52px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        position: 'relative', zIndex: 1,
+      }}>
+        {/* Role label */}
+        <div className="label" style={{
+          marginBottom: 20,
+          color: member.color,
+          opacity: 1,
+          fontSize: 10,
+          display: 'flex', alignItems: 'center', gap: 12,
+        }}>
+          <div style={{ width: 24, height: 1, background: member.color, opacity: 0.5 }}/>
           {member.role}
         </div>
-      </motion.div>
+
+        {/* Name */}
+        <h2 style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: 'clamp(36px, 3.5vw, 56px)',
+          fontWeight: 300,
+          color: 'var(--cream)',
+          lineHeight: 1.05,
+          letterSpacing: '-0.02em',
+          marginBottom: 28,
+          textShadow: `0 0 40px ${member.glow.replace('0.35','0.2')}`,
+        }}>
+          {member.name}
+        </h2>
+
+        {/* Divider */}
+        <div style={{ width: 40, height: 1, background: `linear-gradient(to right, ${member.color}60, transparent)`, marginBottom: 28 }}/>
+
+        {/* Bio */}
+        <p style={{
+          fontSize: 16,
+          color: 'var(--muted)',
+          lineHeight: 1.85,
+          marginBottom: 40,
+          maxWidth: 460,
+        }}>
+          {member.bio}
+        </p>
+
+        {/* Contact links */}
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+          <a
+            href={`mailto:${member.email}`}
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10, letterSpacing: '2.5px', textTransform: 'uppercase',
+              textDecoration: 'none',
+              padding: '12px 22px',
+              border: `1px solid ${member.color}44`,
+              borderRadius: 4,
+              color: member.color,
+              background: member.accent,
+              transition: 'all 0.3s ease',
+              display: 'flex', alignItems: 'center', gap: 8,
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = member.color
+              e.currentTarget.style.boxShadow = `0 0 24px ${member.glow}`
+              e.currentTarget.style.background = member.glow.replace('0.35', '0.12')
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = member.color + '44'
+              e.currentTarget.style.boxShadow = 'none'
+              e.currentTarget.style.background = member.accent
+            }}
+          >
+            ✉ Email
+          </a>
+          <a
+            href={member.linkedin}
+            target="_blank" rel="noopener noreferrer"
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 10, letterSpacing: '2.5px', textTransform: 'uppercase',
+              textDecoration: 'none',
+              padding: '12px 22px',
+              border: '1px solid rgba(168,212,240,0.15)',
+              borderRadius: 4,
+              color: 'var(--muted)',
+              transition: 'all 0.3s ease',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = 'rgba(168,212,240,0.4)'
+              e.currentTarget.style.color = 'var(--pastel2)'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = 'rgba(168,212,240,0.15)'
+              e.currentTarget.style.color = 'var(--muted)'
+            }}
+          >
+            LinkedIn →
+          </a>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 860px) {
+          .member-card { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </motion.div>
   )
 }
 
 export default function Team() {
-  const [active, setActive] = useState(0)
-  const constellationRef = useRef(null)
-  const [containerSize, setContainerSize] = useState({ w: 800, h: 560 })
-
-  useEffect(() => {
-    const update = () => {
-      if (constellationRef.current) {
-        const r = constellationRef.current.getBoundingClientRect()
-        setContainerSize({ w: r.width, h: r.height })
-      }
-    }
-    update()
-    window.addEventListener('resize', update)
-    return () => window.removeEventListener('resize', update)
-  }, [])
-
-  const member = members[active]
-
   return (
     <PageTransition>
-      <div style={{ minHeight: '100vh', position: 'relative', zIndex: 1, padding: '120px 40px 80px' }}>
-
-        {/* Ambient glow */}
-        <AnimatePresence>
-          <motion.div
-            key={member.id}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8 }}
-            style={{
-              position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
-              background: `radial-gradient(ellipse 50% 50% at 50% 40%, ${member.glow.replace('0.4','0.06')} 0%, transparent 70%)`,
-            }}
-          />
-        </AnimatePresence>
-
-        <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+      <div style={{ minHeight: '100vh', position: 'relative', zIndex: 1, padding: '120px 40px 100px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
 
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9 }}
-            style={{ textAlign: 'center', marginBottom: 60 }}
+            style={{ textAlign: 'center', marginBottom: 80 }}
           >
-            <div className="label" style={{ marginBottom: 14 }}>The Constellation</div>
+            <div className="label" style={{ marginBottom: 16 }}>The People</div>
             <h1 style={{
               fontFamily: "'Cormorant Garamond', serif",
-              fontSize: 'clamp(42px,6vw,78px)',
+              fontSize: 'clamp(48px,7vw,88px)',
               fontWeight: 300, color: 'var(--cream)',
-              lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 12,
+              lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 16,
             }}>
               Meet the<br/>
               <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>minds behind it.</em>
             </h1>
-            <p style={{ color: 'var(--muted)', fontSize: 14, maxWidth: 380, margin: '0 auto', lineHeight: 1.7 }}>
-              Click any node to learn their story.
+            <p style={{ color: 'var(--muted)', fontSize: 15, maxWidth: 420, margin: '0 auto', lineHeight: 1.7 }}>
+              A team united by one motto:
+            </p>
+            <p style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontStyle: 'italic', fontSize: 20,
+              color: 'var(--pastel1)', marginTop: 10,
+              textShadow: '0 0 30px rgba(168,212,240,0.25)',
+            }}>
+              "Create Change in our Community through Curiosity."
             </p>
           </motion.div>
 
-          {/* Constellation map */}
-          <div
-            ref={constellationRef}
-            style={{
-              position: 'relative',
-              width: '100%',
-              height: 560,
-              marginBottom: 48,
-            }}
-          >
-            <ConstellationSVG active={active} containerSize={containerSize} />
-            {members.map((m, i) => (
-              <MemberNode
-                key={m.id}
-                member={m}
-                index={i}
-                isActive={active === i}
-                onClick={setActive}
-                containerSize={containerSize}
-              />
+          {/* Member cards */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            {members.map((member, i) => (
+              <MemberCard key={member.id} member={member} index={i} />
             ))}
           </div>
 
-          {/* Bio card — animates in for selected member */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={member.id}
-              initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, y: -10, filter: 'blur(6px)' }}
-              transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-              style={{
-                background: 'rgba(8,16,40,0.7)',
-                border: `1px solid ${member.color}22`,
-                borderRadius: 14,
-                padding: '36px 40px',
-                backdropFilter: 'blur(24px)',
-                boxShadow: `0 0 60px ${member.glow.replace('0.4','0.08')}`,
-                display: 'grid',
-                gridTemplateColumns: '1fr auto',
-                gap: 32,
-                alignItems: 'start',
-                maxWidth: 760,
-                margin: '0 auto',
-              }}
-            >
-              <div>
-                <div className="label" style={{ marginBottom: 10, color: member.color, opacity: 1 }}>
-                  {member.role}
-                </div>
-                <h2 style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: 32, fontWeight: 300,
-                  color: 'var(--cream)', marginBottom: 14,
-                }}>
-                  {member.name}
-                </h2>
-                <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.8, marginBottom: 24 }}>
-                  {member.bio}
-                </p>
-                <div style={{ display: 'flex', gap: 10 }}>
-                  <a href={`mailto:${member.id}@curiocrate.org`} style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 10, letterSpacing: '2px', textTransform: 'uppercase',
-                    textDecoration: 'none', padding: '10px 18px',
-                    border: `1px solid ${member.color}33`, borderRadius: 3,
-                    color: member.color, transition: 'all 0.3s',
-                  }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background=`${member.color}11` }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background='transparent' }}
-                  >
-                    Email →
-                  </a>
-                </div>
-              </div>
-              {/* Mini portrait in card */}
-              <div style={{
-                width: 80, height: 110,
-                borderRadius: 10,
-                border: `1px solid ${member.color}33`,
-                overflow: 'hidden',
-                background: `radial-gradient(circle at 50% 20%, ${member.glow.replace('0.4','0.25')} 0%, rgba(8,16,40,0.8) 100%)`,
-                display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
-                flexShrink: 0,
-                position: 'relative',
-              }}>
-                {member.photo
-                  ? <img src={member.photo} alt={member.name} style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'top' }}/>
-                  : <span style={{ fontSize: 38, paddingBottom: 8 }}>{member.emoji}</span>
-                }
-                <div style={{
-                  position: 'absolute', bottom: 0, left: 0, right: 0, height: '30%',
-                  background: 'linear-gradient(to top, rgba(3,5,15,0.95) 0%, transparent 100%)',
-                }}/>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Motto */}
+          {/* Join CTA */}
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.3 }}
-            style={{ textAlign: 'center', marginTop: 72, padding: '48px 0' }}
-          >
-            <div style={{ width: 40, height: 1, background: 'rgba(168,212,240,0.2)', margin: '0 auto 24px' }}/>
-            <blockquote style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: 'clamp(18px,3vw,30px)',
-              fontWeight: 300, fontStyle: 'italic',
-              color: 'var(--pastel1)',
-              lineHeight: 1.5,
-              textShadow: '0 0 40px rgba(168,212,240,0.2)',
-            }}>
-              "Create Change in our Community through Curiosity."
-            </blockquote>
-            <div style={{ width: 40, height: 1, background: 'rgba(168,212,240,0.2)', margin: '24px auto 0' }}/>
-          </motion.div>
-
-          {/* Volunteer CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            style={{ textAlign: 'center', marginTop: 56 }}
+            transition={{ duration: 0.9 }}
+            style={{
+              marginTop: 80,
+              textAlign: 'center',
+              padding: '64px 40px',
+              border: '1px solid rgba(168,212,240,0.09)',
+              borderRadius: 20,
+              background: 'rgba(8,16,40,0.5)',
+              backdropFilter: 'blur(20px)',
+            }}
           >
             <img
               src="/images/mascot1.png" alt=""
-              style={{ height: 72, marginBottom: 20, filter: 'drop-shadow(0 0 16px rgba(168,212,240,0.4))', animation: 'drift 5s ease-in-out infinite' }}
+              style={{ height: 80, marginBottom: 24, filter: 'drop-shadow(0 0 20px rgba(168,212,240,0.4))', animation: 'drift 5s ease-in-out infinite' }}
             />
-            <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 300, color: 'var(--cream)', marginBottom: 10 }}>
-              Want to join the constellation?
+            <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 36, fontWeight: 300, color: 'var(--cream)', marginBottom: 12 }}>
+              Want to join the team?
             </h3>
-            <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 24 }}>
-              We're looking for volunteers, educators, and community partners.
+            <p style={{ color: 'var(--muted)', fontSize: 15, marginBottom: 32, maxWidth: 400, margin: '0 auto 32px', lineHeight: 1.7 }}>
+              We're always looking for passionate volunteers, educators, and community partners who believe science belongs to everyone.
             </p>
             <a href="mailto:hello@curiocrate.org" style={{
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
-              textDecoration: 'none', padding: '13px 30px',
-              border: '1px solid rgba(168,212,240,0.25)', borderRadius: 3,
+              textDecoration: 'none', padding: '14px 34px',
+              border: '1px solid rgba(168,212,240,0.28)', borderRadius: 4,
               color: 'var(--pastel1)', transition: 'all 0.3s',
             }}
-            onMouseEnter={e=>{ e.currentTarget.style.background='rgba(168,212,240,0.07)'; e.currentTarget.style.boxShadow='0 0 24px rgba(168,212,240,0.12)' }}
-            onMouseLeave={e=>{ e.currentTarget.style.background='transparent'; e.currentTarget.style.boxShadow='none' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.07)'; e.currentTarget.style.boxShadow = '0 0 28px rgba(168,212,240,0.12)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none' }}
             >
               Get in Touch →
             </a>
