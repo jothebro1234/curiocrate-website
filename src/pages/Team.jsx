@@ -2,374 +2,652 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
 
-const members = [
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+
+const cabinet = [
   {
-    id: 'director',
-    name: 'Your Name',
-    role: 'Executive Director',
-    title: 'Founder',
-    bio: 'Founded CurioCrate with one conviction: the zip code a child grows up in should never determine their access to great science.',
+    id: 'president',
+    name: 'Daniel Son',
+    role: 'President',
+    bio: 'Leads CurioCrate with a clear vision: every child, regardless of zip code, deserves access to the wonder of science.',
     photo: null,
-    emoji: '👩‍🔬',
+    emoji: '🔬',
+    color: '#fbbf24',
+    glow: 'rgba(251,191,36,0.5)',
+    dark: '#0d0900',
+    number: '01',
+  },
+  {
+    id: 'vp',
+    name: 'Hayven Yang',
+    role: 'Vice President',
+    bio: 'Partners with leadership to drive strategy, expand community reach, and keep every initiative aligned with the mission.',
+    photo: '/boardmembers/hayvenyangvicepresident.png',
     color: '#a8d4f0',
     glow: 'rgba(168,212,240,0.5)',
-    dark: '#0a1830',
-    number: '01',
-    email: 'director@curiocrate.org',
-  },
-  {
-    id: 'ops',
-    name: 'Board Member',
-    role: 'Operations',
-    title: 'Director',
-    bio: 'The engine behind the mission. Orchestrates kit production, logistics, and partnerships — ensuring precision and care at every step.',
-    photo: null,
-    emoji: '⚙️',
-    color: '#b8c8f8',
-    glow: 'rgba(184,200,248,0.5)',
-    dark: '#0c1235',
+    dark: '#020d1a',
     number: '02',
-    email: 'ops@curiocrate.org',
   },
   {
-    id: 'curriculum',
-    name: 'Board Member',
-    role: 'Curriculum',
-    title: 'Lead',
-    bio: 'Designs every experiment — tested by real kids, refined by educators, built to spark lasting scientific curiosity.',
-    photo: null,
-    emoji: '📚',
-    color: '#d0b8f0',
-    glow: 'rgba(208,184,240,0.5)',
-    dark: '#100a30',
+    id: 'treasurer',
+    name: 'Rebecca Ho',
+    role: 'Treasurer',
+    bio: 'Stewards the organization\'s finances with precision — ensuring every dollar goes toward putting science in students\' hands.',
+    photo: '/boardmembers/rebeccahotres.png',
+    color: '#6ee7b7',
+    glow: 'rgba(110,231,183,0.5)',
+    dark: '#00100a',
     number: '03',
-    email: 'curriculum@curiocrate.org',
   },
   {
-    id: 'outreach',
-    name: 'Board Member',
-    role: 'Outreach',
-    title: 'Director',
-    bio: 'Builds the human bridges between CurioCrate and the communities that need it most — one school, one library at a time.',
-    photo: null,
-    emoji: '🤝',
-    color: '#a8e8d0',
-    glow: 'rgba(168,232,208,0.5)',
-    dark: '#061a10',
+    id: 'secretary',
+    name: 'Sienna Lee',
+    role: 'Secretary',
+    bio: 'Keeps the organization running with clarity and care — documenting decisions, coordinating communications, and holding everything together.',
+    photo: '/boardmembers/siennaleesecretary.png',
+    color: '#c084fc',
+    glow: 'rgba(192,132,252,0.5)',
+    dark: '#0a0018',
     number: '04',
-    email: 'outreach@curiocrate.org',
   },
 ]
 
-export default function Team() {
+const directors = [
+  {
+    id: 'chapter',
+    name: 'Allison Chun',
+    role: 'Director of Chapter Development',
+    bio: "Grows CurioCrate's reach by building and supporting chapters that bring science kits to new communities.",
+    photo: '/boardmembers/allisonchundirectorofchapterdevelopment.png',
+    color: '#f9a8d4',
+    glow: 'rgba(249,168,212,0.5)',
+    dark: '#120008',
+    number: '01',
+  },
+  {
+    id: 'curriculum1',
+    name: 'Chloe Koo',
+    role: 'Director of Curriculum',
+    bio: 'Designs hands-on experiments tested by real students — making science accessible, exciting, and unforgettable.',
+    photo: '/boardmembers/chloekoodirectorofcurriculum.png',
+    color: '#93c5fd',
+    glow: 'rgba(147,197,253,0.5)',
+    dark: '#020c18',
+    number: '02',
+  },
+  {
+    id: 'publicity',
+    name: 'Daniel Kim',
+    role: 'Director of Publicity',
+    bio: 'Amplifies CurioCrate\'s story — connecting the mission to the public through compelling campaigns and outreach.',
+    photo: '/boardmembers/danielkimDirectorofpublicity.png',
+    color: '#fca5a5',
+    glow: 'rgba(252,165,165,0.5)',
+    dark: '#120000',
+    number: '03',
+  },
+  {
+    id: 'hr',
+    name: 'Elijah Rhee',
+    role: 'Human Resources',
+    bio: 'Builds a team where every volunteer and member feels valued, supported, and energized to serve the mission.',
+    photo: '/boardmembers/elijahrheehumanresources.png',
+    color: '#5eead4',
+    glow: 'rgba(94,234,212,0.5)',
+    dark: '#001210',
+    number: '04',
+  },
+  {
+    id: 'ops1',
+    name: 'Jamie Song',
+    role: 'Director of Operations',
+    bio: 'The engine behind every event — orchestrating logistics, partnerships, and kit delivery with precision and care.',
+    photo: '/boardmembers/jamiesongdirectorofoperations.png',
+    color: '#a5b4fc',
+    glow: 'rgba(165,180,252,0.5)',
+    dark: '#050618',
+    number: '05',
+  },
+  {
+    id: 'curriculum2',
+    name: 'Megan Yao',
+    role: 'Director of Curriculum',
+    bio: 'Refines the learning experience inside every kit, ensuring each experiment sparks genuine scientific curiosity.',
+    photo: '/boardmembers/meganyaodirectorofcurriculum.png',
+    color: '#fda4af',
+    glow: 'rgba(253,164,175,0.5)',
+    dark: '#120008',
+    number: '06',
+  },
+  {
+    id: 'ops2',
+    name: 'Pragya Jain',
+    role: 'Director of Operations',
+    bio: 'Keeps programs moving smoothly from planning through execution, turning vision into tangible impact.',
+    photo: '/boardmembers/pragyajaindirectorofoperations.png',
+    color: '#fcd34d',
+    glow: 'rgba(252,211,77,0.5)',
+    dark: '#0d0a00',
+    number: '07',
+  },
+  {
+    id: 'curriculum3',
+    name: 'Sourish Mehta',
+    role: 'Director of Curriculum',
+    bio: 'Brings a rigorous yet joyful approach to curriculum design, making complex science concepts feel natural and exciting.',
+    photo: '/boardmembers/sourishmehtadirectorofcurriculum.png',
+    color: '#7dd3fc',
+    glow: 'rgba(125,211,252,0.5)',
+    dark: '#000d18',
+    number: '08',
+  },
+]
+
+// ─── PANEL STAGE (reusable for Cabinet + Directors) ───────────────────────────
+function PanelStage({ members, height = 580, expandFlex = 3.5 }) {
   const [active, setActive] = useState(null)
   const [hovered, setHovered] = useState(null)
-
   const focus = hovered ?? active
 
   return (
+    <motion.div
+      initial={{ opacity:0, y:40 }}
+      whileInView={{ opacity:1, y:0 }}
+      viewport={{ once:true }}
+      transition={{ duration:0.9, ease:[0.4,0,0.2,1] }}
+      style={{
+        display:'flex',
+        height,
+        margin:'0 40px',
+        borderRadius:20,
+        overflow:'hidden',
+        border:'1px solid rgba(168,212,240,0.07)',
+        boxShadow:'0 40px 120px rgba(0,0,0,0.6)',
+      }}
+    >
+      {members.map((m, i) => {
+        const isActive = focus === i
+        return (
+          <motion.div
+            key={m.id}
+            animate={{ flex: isActive ? expandFlex : 1 }}
+            transition={{ duration:0.55, ease:[0.4,0,0.2,1] }}
+            onMouseEnter={() => setHovered(i)}
+            onMouseLeave={() => setHovered(null)}
+            onClick={() => setActive(active === i ? null : i)}
+            style={{
+              position:'relative', overflow:'hidden', cursor:'pointer',
+              background: m.dark,
+              flexShrink:0,
+              borderRight: i < members.length-1 ? '1px solid rgba(168,212,240,0.06)' : 'none',
+            }}
+          >
+            {/* Grid texture */}
+            <div style={{
+              position:'absolute', inset:0, zIndex:0,
+              backgroundImage:`linear-gradient(${m.color}07 1px, transparent 1px), linear-gradient(90deg, ${m.color}07 1px, transparent 1px)`,
+              backgroundSize:'32px 32px',
+              opacity: isActive ? 1 : 0.4, transition:'opacity 0.5s',
+            }}/>
+
+            {/* Bottom glow */}
+            <motion.div
+              animate={{ opacity: isActive ? 1 : 0.3, scale: isActive ? 1.3 : 1 }}
+              transition={{ duration:0.5 }}
+              style={{
+                position:'absolute', bottom:-60, left:'50%', transform:'translateX(-50%)',
+                width:280, height:280, borderRadius:'50%',
+                background:`radial-gradient(circle, ${m.glow.replace('0.5','0.22')} 0%, transparent 70%)`,
+                pointerEvents:'none', zIndex:0,
+              }}
+            />
+
+            {/* Number watermark */}
+            <div style={{
+              position:'absolute', top:16, right:16,
+              fontFamily:"'Cormorant Garamond', serif",
+              fontSize:100, fontWeight:300, lineHeight:1,
+              color:m.color, opacity: isActive ? 0.09 : 0.04,
+              transition:'opacity 0.5s', userSelect:'none', zIndex:0,
+            }}>
+              {m.number}
+            </div>
+
+            {/* Photo / emoji */}
+            <div style={{
+              position:'absolute', top:'50%', left:'50%',
+              transform:'translate(-50%, -58%)', zIndex:1,
+            }}>
+              {m.photo ? (
+                <motion.img
+                  src={m.photo} alt={m.name}
+                  animate={{ scale: isActive ? 1.04 : 1 }}
+                  transition={{ duration:0.5 }}
+                  style={{
+                    height: isActive ? 360 : 180,
+                    transition:'height 0.55s cubic-bezier(0.4,0,0.2,1)',
+                    objectFit:'contain', objectPosition:'top',
+                    filter:`drop-shadow(0 0 28px ${m.glow})`,
+                    display:'block',
+                  }}
+                />
+              ) : (
+                <motion.div
+                  animate={{ scale: isActive ? 1.1 : 1 }}
+                  transition={{ duration:0.5 }}
+                  style={{
+                    width: isActive ? 160 : 90,
+                    height: isActive ? 160 : 90,
+                    transition:'width 0.55s cubic-bezier(0.4,0,0.2,1), height 0.55s cubic-bezier(0.4,0,0.2,1)',
+                    borderRadius:'50%',
+                    background:`radial-gradient(circle, ${m.glow.replace('0.5','0.35')} 0%, ${m.dark} 70%)`,
+                    border:`1px solid ${m.color}33`,
+                    boxShadow:`0 0 60px ${m.glow}, 0 0 100px ${m.glow.replace('0.5','0.15')}`,
+                    display:'flex', alignItems:'center', justifyContent:'center',
+                    fontSize: isActive ? 64 : 36,
+                  }}
+                >
+                  {m.emoji}
+                </motion.div>
+              )}
+            </div>
+
+            {/* Bottom overlay */}
+            <div style={{
+              position:'absolute', bottom:0, left:0, right:0, zIndex:3,
+              background:`linear-gradient(to top, ${m.dark}f8 0%, ${m.dark}90 50%, transparent 100%)`,
+              padding:'56px 24px 24px',
+            }}>
+              <AnimatePresence mode="wait">
+                {!isActive ? (
+                  <motion.div key="collapsed"
+                    initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
+                    transition={{ duration:0.22 }}
+                    style={{ textAlign:'center' }}
+                  >
+                    <div className="label" style={{ color:m.color, fontSize:8, marginBottom:6, opacity:0.6 }}>
+                      {m.number}
+                    </div>
+                    <div style={{
+                      fontFamily:"'Cormorant Garamond', serif",
+                      fontSize:14, fontWeight:300, color:'var(--cream)', opacity:0.65,
+                      writingMode:'vertical-rl', textOrientation:'mixed',
+                      transform:'rotate(180deg)', margin:'0 auto', letterSpacing:'0.05em',
+                    }}>
+                      {m.name}
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div key="expanded"
+                    initial={{ opacity:0, y:14 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0, y:8 }}
+                    transition={{ duration:0.32, delay:0.08 }}
+                  >
+                    <div className="label" style={{ color:m.color, fontSize:10, marginBottom:8, display:'flex', alignItems:'center', gap:10 }}>
+                      <div style={{ width:18, height:1, background:m.color }}/>
+                      {m.role}
+                    </div>
+                    <h2 style={{
+                      fontFamily:"'Cormorant Garamond', serif",
+                      fontSize:'clamp(22px, 2.2vw, 36px)',
+                      fontWeight:300, color:'var(--cream)',
+                      lineHeight:1.05, marginBottom:10,
+                      textShadow:`0 0 30px ${m.glow}`,
+                    }}>
+                      {m.name}
+                    </h2>
+                    <p style={{
+                      fontSize:13, color:'var(--muted)', lineHeight:1.7,
+                      marginBottom:18, maxWidth:340,
+                    }}>
+                      {m.bio}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Top accent line */}
+            <motion.div
+              animate={{ scaleX: isActive ? 1 : 0, opacity: isActive ? 1 : 0 }}
+              transition={{ duration:0.38 }}
+              style={{
+                position:'absolute', top:0, left:0, right:0, height:2,
+                background:`linear-gradient(to right, transparent, ${m.color}, transparent)`,
+                transformOrigin:'center', zIndex:4,
+              }}
+            />
+          </motion.div>
+        )
+      })}
+    </motion.div>
+  )
+}
+
+// ─── SECTION HEADING ─────────────────────────────────────────────────────────
+function SectionHeading({ label, title, italic, delay = 0 }) {
+  return (
+    <motion.div
+      initial={{ opacity:0, y:20 }}
+      whileInView={{ opacity:1, y:0 }}
+      viewport={{ once:true }}
+      transition={{ duration:0.8, delay, ease:[0.4,0,0.2,1] }}
+      style={{ textAlign:'center', marginBottom:36 }}
+    >
+      <div className="label" style={{ marginBottom:12 }}>{label}</div>
+      <h2 style={{
+        fontFamily:"'Cormorant Garamond', serif",
+        fontSize:'clamp(30px,4vw,50px)',
+        fontWeight:300, color:'var(--cream)', lineHeight:1.1,
+      }}>
+        {title}<br/>
+        <em style={{ color:'var(--pastel1)', fontStyle:'italic' }}>{italic}</em>
+      </h2>
+    </motion.div>
+  )
+}
+
+// ─── MAIN ─────────────────────────────────────────────────────────────────────
+export default function Team() {
+  return (
     <PageTransition>
-      <div style={{ minHeight: '100vh', position: 'relative', zIndex: 1 }}>
+      <div style={{ minHeight:'100vh', position:'relative', zIndex:1 }}>
 
         {/* ── PAGE HEADER ── */}
-        <div style={{ padding: '120px 56px 56px', textAlign: 'center' }}>
+        <div style={{ padding:'120px 56px 64px', textAlign:'center' }}>
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            initial={{ opacity:0, y:24 }}
+            animate={{ opacity:1, y:0 }}
+            transition={{ duration:0.8 }}
           >
-            <div className="label" style={{ marginBottom: 14 }}>The People</div>
+            <div className="label" style={{ marginBottom:14 }}>The People</div>
             <h1 style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: 'clamp(44px, 6vw, 80px)',
-              fontWeight: 300, color: 'var(--cream)',
-              lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 14,
+              fontFamily:"'Cormorant Garamond', serif",
+              fontSize:'clamp(44px, 6vw, 80px)',
+              fontWeight:300, color:'var(--cream)',
+              lineHeight:1.05, letterSpacing:'-0.02em', marginBottom:14,
             }}>
               Meet the minds<br/>
-              <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>behind CurioCrate.</em>
+              <em style={{ color:'var(--pastel1)', fontStyle:'italic' }}>behind CurioCrate.</em>
             </h1>
             <p style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontStyle: 'italic', fontSize: 18,
-              color: 'var(--pastel1)', opacity: 0.7,
-              textShadow: '0 0 30px rgba(168,212,240,0.2)',
+              fontFamily:"'Cormorant Garamond', serif",
+              fontStyle:'italic', fontSize:18,
+              color:'var(--pastel1)', opacity:0.7,
             }}>
               "Create Change in our Community through Curiosity."
             </p>
           </motion.div>
         </div>
 
-        {/* ── CINEMATIC PANEL STAGE ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2 }}
-          style={{
-            display: 'flex',
-            height: 640,
-            margin: '0 40px',
-            borderRadius: 20,
-            overflow: 'hidden',
-            border: '1px solid rgba(168,212,240,0.07)',
-            boxShadow: '0 40px 120px rgba(0,0,0,0.6)',
-          }}
-        >
-          {members.map((m, i) => {
-            const isActive = focus === i
-
-            return (
-              <motion.div
-                key={m.id}
-                animate={{ flex: isActive ? 3.2 : 1 }}
-                transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
-                onMouseEnter={() => setHovered(i)}
-                onMouseLeave={() => setHovered(null)}
-                onClick={() => setActive(active === i ? null : i)}
-                style={{
-                  position: 'relative',
-                  overflow: 'hidden',
-                  cursor: 'pointer',
-                  background: m.dark,
-                  flexShrink: 0,
-                  borderRight: i < members.length - 1 ? '1px solid rgba(168,212,240,0.06)' : 'none',
-                }}
-              >
-                {/* Grid texture */}
-                <div style={{
-                  position: 'absolute', inset: 0, zIndex: 0,
-                  backgroundImage: `linear-gradient(${m.color}07 1px, transparent 1px), linear-gradient(90deg, ${m.color}07 1px, transparent 1px)`,
-                  backgroundSize: '32px 32px',
-                  opacity: isActive ? 1 : 0.4,
-                  transition: 'opacity 0.5s',
-                }}/>
-
-                {/* Glow center */}
-                <motion.div
-                  animate={{ opacity: isActive ? 1 : 0.3, scale: isActive ? 1.2 : 1 }}
-                  transition={{ duration: 0.5 }}
-                  style={{
-                    position: 'absolute',
-                    bottom: -60, left: '50%', transform: 'translateX(-50%)',
-                    width: 300, height: 300, borderRadius: '50%',
-                    background: `radial-gradient(circle, ${m.glow.replace('0.5','0.25')} 0%, transparent 70%)`,
-                    pointerEvents: 'none', zIndex: 0,
-                  }}
-                />
-
-                {/* Big number watermark */}
-                <div style={{
-                  position: 'absolute', top: 20, right: 20,
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: 120, fontWeight: 300, lineHeight: 1,
-                  color: m.color, opacity: isActive ? 0.08 : 0.04,
-                  transition: 'opacity 0.5s',
-                  userSelect: 'none', zIndex: 0,
-                }}>
-                  {m.number}
-                </div>
-
-                {/* EMOJI / PHOTO — floats in center */}
-                <div style={{
-                  position: 'absolute',
-                  top: '50%', left: '50%',
-                  transform: 'translate(-50%, -58%)',
-                  zIndex: 1,
-                  transition: 'transform 0.5s ease',
-                }}>
-                  {m.photo ? (
-                    <motion.img
-                      src={m.photo}
-                      alt={m.name}
-                      animate={{ scale: isActive ? 1.05 : 1 }}
-                      transition={{ duration: 0.5 }}
-                      style={{
-                        height: isActive ? 340 : 180,
-                        transition: 'height 0.55s cubic-bezier(0.4,0,0.2,1)',
-                        objectFit: 'cover', objectPosition: 'top',
-                        filter: `drop-shadow(0 0 30px ${m.glow})`,
-                        display: 'block',
-                      }}
-                    />
-                  ) : (
-                    <motion.div
-                      animate={{ scale: isActive ? 1.1 : 1 }}
-                      transition={{ duration: 0.5 }}
-                      style={{
-                        width: isActive ? 180 : 100,
-                        height: isActive ? 180 : 100,
-                        transition: 'width 0.55s cubic-bezier(0.4,0,0.2,1), height 0.55s cubic-bezier(0.4,0,0.2,1)',
-                        borderRadius: '50%',
-                        background: `radial-gradient(circle, ${m.glow.replace('0.5','0.35')} 0%, ${m.dark} 70%)`,
-                        border: `1px solid ${m.color}33`,
-                        boxShadow: `0 0 60px ${m.glow}, 0 0 120px ${m.glow.replace('0.5','0.15')}`,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: isActive ? 72 : 40,
-                        transition: 'all 0.55s cubic-bezier(0.4,0,0.2,1)',
-                      }}
-                    >
-                      {m.emoji}
-                    </motion.div>
-                  )}
-                </div>
-
-                {/* Bottom overlay — always visible: name + role */}
-                <div style={{
-                  position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 3,
-                  background: `linear-gradient(to top, ${m.dark}f0 0%, ${m.dark}88 50%, transparent 100%)`,
-                  padding: '60px 28px 28px',
-                }}>
-                  {/* Collapsed state: vertical text */}
-                  <AnimatePresence mode="wait">
-                    {!isActive ? (
-                      <motion.div
-                        key="collapsed"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.25 }}
-                        style={{ textAlign: 'center' }}
-                      >
-                        <div className="label" style={{ color: m.color, fontSize: 8, marginBottom: 6, opacity: 0.7 }}>
-                          {m.number}
-                        </div>
-                        <div style={{
-                          fontFamily: "'Cormorant Garamond', serif",
-                          fontSize: 15, fontWeight: 300,
-                          color: 'var(--cream)', opacity: 0.7,
-                          writingMode: 'vertical-rl',
-                          textOrientation: 'mixed',
-                          transform: 'rotate(180deg)',
-                          margin: '0 auto',
-                          letterSpacing: '0.05em',
-                        }}>
-                          {m.role}
-                        </div>
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="expanded"
-                        initial={{ opacity: 0, y: 16 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 8 }}
-                        transition={{ duration: 0.35, delay: 0.1 }}
-                      >
-                        {/* Role */}
-                        <div className="label" style={{ color: m.color, fontSize: 10, marginBottom: 8, opacity: 1, display:'flex', alignItems:'center', gap:10 }}>
-                          <div style={{ width: 20, height: 1, background: m.color }}/>
-                          {m.role} · {m.title}
-                        </div>
-                        {/* Name */}
-                        <h2 style={{
-                          fontFamily: "'Cormorant Garamond', serif",
-                          fontSize: 'clamp(24px, 2.5vw, 38px)',
-                          fontWeight: 300, color: 'var(--cream)',
-                          lineHeight: 1.05, marginBottom: 12,
-                          textShadow: `0 0 30px ${m.glow}`,
-                        }}>
-                          {m.name}
-                        </h2>
-                        {/* Bio */}
-                        <p style={{
-                          fontSize: 13, color: 'var(--muted)',
-                          lineHeight: 1.7, marginBottom: 20,
-                          maxWidth: 360,
-                        }}>
-                          {m.bio}
-                        </p>
-                        {/* Email */}
-                        <a
-                          href={`mailto:${m.email}`}
-                          onClick={e => e.stopPropagation()}
-                          style={{
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: 10, letterSpacing: '2px', textTransform: 'uppercase',
-                            textDecoration: 'none',
-                            padding: '10px 20px',
-                            border: `1px solid ${m.color}44`,
-                            borderRadius: 3,
-                            color: m.color,
-                            background: `${m.color}11`,
-                            display: 'inline-block',
-                            transition: 'all 0.3s',
-                          }}
-                          onMouseEnter={e => { e.currentTarget.style.boxShadow = `0 0 20px ${m.glow}`; e.currentTarget.style.borderColor = m.color }}
-                          onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = `${m.color}44` }}
-                        >
-                          ✉ Get in Touch
-                        </a>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* Top accent line */}
-                <motion.div
-                  animate={{ scaleX: isActive ? 1 : 0, opacity: isActive ? 1 : 0 }}
-                  transition={{ duration: 0.4 }}
-                  style={{
-                    position: 'absolute', top: 0, left: 0, right: 0,
-                    height: 2,
-                    background: `linear-gradient(to right, transparent, ${m.color}, transparent)`,
-                    transformOrigin: 'center',
-                    zIndex: 4,
-                  }}
-                />
-              </motion.div>
-            )
-          })}
-        </motion.div>
-
-        {/* ── HINT TEXT ── */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8, duration: 1 }}
-          style={{ textAlign: 'center', marginTop: 24, marginBottom: 80 }}
-        >
-          <span className="label" style={{ fontSize: 9, opacity: 0.35 }}>
-            Hover to reveal · Click to lock
-          </span>
-        </motion.div>
-
-        {/* ── JOIN CTA ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.9 }}
-          style={{
-            margin: '0 40px 100px',
-            textAlign: 'center',
-            padding: '64px 40px',
-            border: '1px solid rgba(168,212,240,0.09)',
-            borderRadius: 20,
-            background: 'rgba(8,16,40,0.5)',
-            backdropFilter: 'blur(20px)',
-          }}
-        >
-          <img
-            src="/images/mascot1.png" alt=""
-            style={{ height: 72, marginBottom: 24, filter: 'drop-shadow(0 0 20px rgba(168,212,240,0.4))', animation: 'drift 5s ease-in-out infinite' }}
+        {/* ══════════════════════════════════════════════════════════════════════
+            DIRECTORS
+        ══════════════════════════════════════════════════════════════════════ */}
+        <div style={{ padding:'72px 0 20px' }}>
+          <SectionHeading
+            label="Directors"
+            title="Specialists who build"
+            italic="the mission daily."
           />
-          <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 36, fontWeight: 300, color: 'var(--cream)', marginBottom: 12 }}>
+          <PanelStage members={directors} height={540} expandFlex={2.8} />
+          <div style={{ textAlign:'center', marginTop:18, marginBottom:0 }}>
+            <span className="label" style={{ fontSize:9, opacity:0.3 }}>
+              Hover to reveal · Click to lock
+            </span>
+          </div>
+        </div>
+
+        {/* ══════════════════════════════════════════════════════════════════════
+            EXECUTIVE CABINET
+        ══════════════════════════════════════════════════════════════════════ */}
+        <div style={{ padding:'72px 0 20px' }}>
+          <SectionHeading
+            label="Executive Cabinet"
+            title="Leadership that drives"
+            italic="every decision."
+          />
+          <PanelStage members={cabinet} height={580} expandFlex={3.5} />
+          <div style={{ textAlign:'center', marginTop:18, marginBottom:0 }}>
+            <span className="label" style={{ fontSize:9, opacity:0.3 }}>
+              Hover to reveal · Click to lock
+            </span>
+          </div>
+        </div>
+
+        {/* ══════════════════════════════════════════════════════════════════════
+            FOUNDER SPOTLIGHT — Chief Executive Founder
+        ══════════════════════════════════════════════════════════════════════ */}
+        <motion.div
+          initial={{ opacity:0 }}
+          whileInView={{ opacity:1 }}
+          viewport={{ once:true }}
+          transition={{ duration:1.2, ease:[0.4,0,0.2,1] }}
+          style={{
+            position:'relative',
+            margin:'72px 40px 20px',
+            borderRadius:24,
+            overflow:'hidden',
+            border:'1px solid rgba(103,232,249,0.18)',
+            boxShadow:'0 0 80px rgba(103,232,249,0.08), 0 60px 160px rgba(0,0,0,0.7)',
+            minHeight:'88vh',
+            display:'flex',
+            flexDirection:'column',
+            justifyContent:'flex-end',
+            background:'#00080e',
+          }}
+        >
+          {/* ── Atmosphere ── */}
+          <div style={{
+            position:'absolute', inset:0,
+            background:'radial-gradient(ellipse 65% 90% at 50% 30%, rgba(103,232,249,0.1) 0%, rgba(0,8,14,0.6) 55%, #00080e 100%)',
+          }}/>
+          <div style={{
+            position:'absolute', inset:0,
+            backgroundImage:'linear-gradient(rgba(103,232,249,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(103,232,249,0.05) 1px, transparent 1px)',
+            backgroundSize:'44px 44px',
+          }}/>
+
+          {/* Scanline */}
+          <div style={{ position:'absolute', inset:0, zIndex:1, pointerEvents:'none', overflow:'hidden' }}>
+            <div style={{
+              position:'absolute', left:0, right:0, height:'1px',
+              background:'linear-gradient(90deg, transparent, rgba(103,232,249,0.07), transparent)',
+              animation:'scanline 10s linear infinite',
+            }}/>
+          </div>
+
+          {/* "00" giant watermark */}
+          <div style={{
+            position:'absolute', bottom:-80, right:-20,
+            fontFamily:"'Cormorant Garamond', serif",
+            fontSize:'clamp(280px, 35vw, 480px)',
+            fontWeight:300, lineHeight:1,
+            color:'#67e8f9', opacity:0.028,
+            userSelect:'none', pointerEvents:'none', zIndex:0,
+          }}>
+            00
+          </div>
+
+          {/* ── Eyebrow ── */}
+          <motion.div
+            initial={{ opacity:0, y:-10 }}
+            whileInView={{ opacity:1, y:0 }}
+            viewport={{ once:true }}
+            transition={{ delay:0.3, duration:1 }}
+            style={{
+              position:'absolute', top:44, left:0, right:0,
+              textAlign:'center', zIndex:4,
+            }}
+          >
+            <div className="label" style={{
+              fontSize:10, letterSpacing:'8px',
+              color:'#67e8f9', opacity:0.65,
+            }}>
+              ◈ &nbsp; CHIEF EXECUTIVE · FOUNDER · EST. 2023 &nbsp; ◈
+            </div>
+          </motion.div>
+
+          {/* ── Portrait ── */}
+          <motion.div
+            initial={{ opacity:0, scale:0.88, filter:'blur(20px)' }}
+            whileInView={{ opacity:1, scale:1, filter:'blur(0px)' }}
+            viewport={{ once:true }}
+            transition={{ duration:1.4, ease:[0.4,0,0.2,1], delay:0.1 }}
+            style={{
+              position:'absolute',
+              bottom:0, left:'50%', transform:'translateX(-50%)',
+              zIndex:2, pointerEvents:'none',
+              display:'flex', alignItems:'flex-end', justifyContent:'center',
+            }}
+          >
+            <div style={{
+              position:'absolute', bottom:0, left:'50%', transform:'translateX(-50%)',
+              width:'clamp(300px, 40vw, 560px)', height:'clamp(300px, 40vw, 560px)',
+              borderRadius:'50%',
+              background:'radial-gradient(circle, rgba(103,232,249,0.18) 0%, transparent 65%)',
+              animation:'breathe 5s ease-in-out infinite',
+              filter:'blur(20px)',
+            }}/>
+            <img
+              src="/boardmembers/jeongseopyoonchiefexecutivefounder.png"
+              alt="Jeongseop Yoon"
+              style={{
+                height:'clamp(460px, 66vh, 740px)',
+                objectFit:'contain', objectPosition:'bottom',
+                filter:'drop-shadow(0 0 50px rgba(103,232,249,0.65)) drop-shadow(0 0 120px rgba(103,232,249,0.3)) drop-shadow(0 0 200px rgba(103,232,249,0.12))',
+                display:'block',
+                animation:'drift 7s ease-in-out infinite',
+              }}
+            />
+          </motion.div>
+
+          {/* ── Bottom text overlay ── */}
+          <div style={{
+            position:'relative', zIndex:5,
+            padding:'120px 64px 56px',
+            background:'linear-gradient(to top, #00080e 0%, rgba(0,8,14,0.92) 35%, rgba(0,8,14,0.5) 65%, transparent 100%)',
+          }}>
+            <div style={{
+              display:'flex', alignItems:'flex-end',
+              justifyContent:'space-between', flexWrap:'wrap', gap:40,
+            }}>
+              <motion.div
+                initial={{ opacity:0, x:-24 }}
+                whileInView={{ opacity:1, x:0 }}
+                viewport={{ once:true }}
+                transition={{ delay:0.5, duration:0.9, ease:[0.4,0,0.2,1] }}
+              >
+                <h2 style={{
+                  fontFamily:"'Cormorant Garamond', serif",
+                  fontSize:'clamp(56px, 9vw, 116px)',
+                  fontWeight:300, color:'var(--cream)',
+                  lineHeight:0.92, letterSpacing:'-0.03em',
+                  marginBottom:20,
+                  textShadow:'0 0 80px rgba(103,232,249,0.5), 0 0 160px rgba(103,232,249,0.2)',
+                }}>
+                  Jeongseop<br/>Yoon
+                </h2>
+                <div style={{ display:'flex', alignItems:'center', gap:16 }}>
+                  <div style={{ width:32, height:1, background:'linear-gradient(to right, #67e8f9, transparent)' }}/>
+                  <div className="label" style={{ color:'#67e8f9', fontSize:11, letterSpacing:'4px' }}>
+                    Chief Executive Founder
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity:0, x:24 }}
+                whileInView={{ opacity:1, x:0 }}
+                viewport={{ once:true }}
+                transition={{ delay:0.65, duration:0.9, ease:[0.4,0,0.2,1] }}
+                style={{ maxWidth:400 }}
+              >
+                <p style={{
+                  fontFamily:"'Cormorant Garamond', serif",
+                  fontStyle:'italic',
+                  fontSize:'clamp(16px, 1.6vw, 20px)',
+                  color:'var(--muted)', lineHeight:1.8,
+                  marginBottom:32, opacity:0.85,
+                }}>
+                  Founded CurioCrate with one conviction: the zip code a child grows up
+                  in should never determine their access to great science.
+                </p>
+                <a
+                  href="mailto:josephyoon25@curiocrate.org"
+                  style={{
+                    fontFamily:"'JetBrains Mono', monospace",
+                    fontSize:11, letterSpacing:'3px', textTransform:'uppercase',
+                    textDecoration:'none', padding:'13px 28px',
+                    border:'1px solid rgba(103,232,249,0.4)', borderRadius:4,
+                    color:'#67e8f9', background:'rgba(103,232,249,0.06)',
+                    display:'inline-block', transition:'all 0.35s ease',
+                  }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background='rgba(103,232,249,0.14)'; e.currentTarget.style.boxShadow='0 0 36px rgba(103,232,249,0.25)'; e.currentTarget.style.borderColor='rgba(103,232,249,0.7)' }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background='rgba(103,232,249,0.06)'; e.currentTarget.style.boxShadow='none'; e.currentTarget.style.borderColor='rgba(103,232,249,0.4)' }}
+                >
+                  ✉ &nbsp; Get in Touch
+                </a>
+              </motion.div>
+            </div>
+          </div>
+
+          <motion.div
+            initial={{ scaleX:0 }}
+            whileInView={{ scaleX:1 }}
+            viewport={{ once:true }}
+            transition={{ delay:0.2, duration:1.2, ease:[0.4,0,0.2,1] }}
+            style={{
+              position:'absolute', top:0, left:0, right:0, height:2,
+              background:'linear-gradient(to right, transparent, rgba(103,232,249,0.6), rgba(103,232,249,0.9), rgba(103,232,249,0.6), transparent)',
+              transformOrigin:'center', zIndex:6,
+            }}
+          />
+        </motion.div>
+
+        {/* ══════════════════════════════════════════════════════════════════════
+            JOIN CTA
+        ══════════════════════════════════════════════════════════════════════ */}
+        <motion.div
+          initial={{ opacity:0, y:30 }}
+          whileInView={{ opacity:1, y:0 }}
+          viewport={{ once:true }}
+          transition={{ duration:0.9 }}
+          style={{
+            margin:'72px 40px 100px', textAlign:'center',
+            padding:'64px 40px',
+            border:'1px solid rgba(168,212,240,0.09)',
+            borderRadius:20,
+            background:'rgba(8,16,40,0.5)', backdropFilter:'blur(20px)',
+          }}
+        >
+          <img src="/images/mascot1.png" alt=""
+            style={{ height:72, marginBottom:24, filter:'drop-shadow(0 0 20px rgba(168,212,240,0.4))', animation:'drift 5s ease-in-out infinite' }}
+          />
+          <h3 style={{
+            fontFamily:"'Cormorant Garamond', serif", fontSize:36,
+            fontWeight:300, color:'var(--cream)', marginBottom:12,
+          }}>
             Want to join the team?
           </h3>
-          <p style={{ color: 'var(--muted)', fontSize: 15, marginBottom: 32, maxWidth: 400, margin: '0 auto 32px', lineHeight: 1.7 }}>
+          <p style={{
+            color:'var(--muted)', fontSize:15,
+            maxWidth:400, margin:'0 auto 32px', lineHeight:1.7,
+          }}>
             We're looking for passionate volunteers, educators, and community partners.
           </p>
-          <a href="mailto:hello@curiocrate.org" style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
-            textDecoration: 'none', padding: '14px 34px',
-            border: '1px solid rgba(168,212,240,0.28)', borderRadius: 4,
-            color: 'var(--pastel1)', transition: 'all 0.3s',
+          <a href="mailto:josephyoon25@curiocrate.org" style={{
+            fontFamily:"'JetBrains Mono', monospace",
+            fontSize:11, letterSpacing:'3px', textTransform:'uppercase',
+            textDecoration:'none', padding:'14px 34px',
+            border:'1px solid rgba(168,212,240,0.28)', borderRadius:4,
+            color:'var(--pastel1)', transition:'all 0.3s',
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.07)'; e.currentTarget.style.boxShadow = '0 0 28px rgba(168,212,240,0.12)' }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none' }}
+          onMouseEnter={e=>{ e.currentTarget.style.background='rgba(168,212,240,0.07)'; e.currentTarget.style.boxShadow='0 0 28px rgba(168,212,240,0.12)' }}
+          onMouseLeave={e=>{ e.currentTarget.style.background='transparent'; e.currentTarget.style.boxShadow='none' }}
           >
             Get in Touch →
           </a>
         </motion.div>
+
       </div>
     </PageTransition>
   )

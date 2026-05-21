@@ -12,7 +12,7 @@ const footerLinks = {
     { label: 'Volunteer Portal', href: 'https://portal.curiocrate.org' },
   ],
   Contact: [
-    { label: 'hello@curiocrate.org', href: 'mailto:hello@curiocrate.org' },
+    { label: 'ckf.curiocrate@curiocrate.org', href: 'mailto:ckf.curiocrate@curiocrate.org' },
     { label: 'Instagram', href: '#' },
     { label: 'Twitter / X', href: '#' },
   ],
@@ -22,7 +22,7 @@ const socials = [
   { icon: <Globe size={18} />, href: '#', label: 'Instagram' },
   { icon: <MessageCircle size={18} />, href: '#', label: 'Twitter' },
   { icon: <Play size={18} />, href: '#', label: 'YouTube' },
-  { icon: <Mail size={18} />, href: 'mailto:hello@curiocrate.org', label: 'Email' },
+  { icon: <Mail size={18} />, href: 'mailto:ckf.curiocrate@curiocrate.org', label: 'Email' },
 ]
 
 export default function Footer() {

@@ -37,40 +37,93 @@ export default function Mission() {
     <PageTransition>
       <div style={{ minHeight:'100vh', position:'relative', zIndex:1, overflow:'hidden' }}>
 
-        {/* Hero */}
+        {/* ── VIDEO HERO ── */}
         <div style={{
-          minHeight:'60vh',
-          display:'flex', alignItems:'center', justifyContent:'center',
-          padding:'160px 40px 80px',
-          textAlign:'center', position:'relative',
+          position:'relative',
+          width:'100%',
+          height:'100vh',
+          overflow:'hidden',
+          flexShrink:0,
         }}>
+          {/* Video */}
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={{
+              position:'absolute', inset:0,
+              width:'100%', height:'100%',
+              objectFit:'cover',
+              zIndex:0,
+            }}
+          >
+            <source src="/missionvideo.mp4" type="video/mp4" />
+          </video>
+
+          {/* Top fade — blends with nav */}
+          <div style={{
+            position:'absolute', top:0, left:0, right:0, height:160,
+            background:'linear-gradient(to bottom, rgba(3,5,15,0.72) 0%, transparent 100%)',
+            zIndex:1, pointerEvents:'none',
+          }}/>
+
+          {/* Bottom fade — blends into next section */}
+          <div style={{
+            position:'absolute', bottom:0, left:0, right:0, height:220,
+            background:'linear-gradient(to top, var(--void, #03050f) 0%, transparent 100%)',
+            zIndex:1, pointerEvents:'none',
+          }}/>
+
+          {/* Subtle vignette */}
           <div style={{
             position:'absolute', inset:0,
-            background:'radial-gradient(ellipse 60% 60% at 50% 50%, rgba(10,30,80,0.5) 0%, transparent 70%)',
+            background:'radial-gradient(ellipse 90% 90% at 50% 50%, transparent 50%, rgba(3,5,15,0.45) 100%)',
+            zIndex:1, pointerEvents:'none',
           }}/>
-          <div style={{ position:'relative', zIndex:1 }}>
-            <InViewFade>
-              <div className="label" style={{ marginBottom:16 }}>Our Purpose</div>
-            </InViewFade>
-            <InViewFade delay={0.1}>
-              <h1 style={{
-                fontFamily:"'Cormorant Garamond', serif",
-                fontSize:'clamp(48px,8vw,96px)',
-                fontWeight:300, color:'var(--cream)',
-                lineHeight:1.05, letterSpacing:'-0.02em',
-                marginBottom:24,
-              }}>
-                Science belongs<br/>
-                <em style={{ color:'var(--pastel1)', fontStyle:'italic' }}>to everyone.</em>
-              </h1>
-            </InViewFade>
-            <InViewFade delay={0.2}>
-              <p style={{ fontSize:18, color:'var(--muted)', maxWidth:520, margin:'0 auto', lineHeight:1.8 }}>
-                We exist to close the gap between curiosity and opportunity —
-                one kit, one child, one community at a time.
-              </p>
-            </InViewFade>
-          </div>
+
+          {/* Text overlay — bottom left */}
+          <motion.div
+            initial={{ opacity:0, y:24 }}
+            animate={{ opacity:1, y:0 }}
+            transition={{ duration:1.1, delay:0.4, ease:[0.4,0,0.2,1] }}
+            style={{
+              position:'absolute', bottom:80, left:56,
+              zIndex:2, maxWidth:600,
+            }}
+          >
+            <div className="label" style={{ marginBottom:14, opacity:0.7 }}>Our Purpose</div>
+            <h1 style={{
+              fontFamily:"'Cormorant Garamond', serif",
+              fontSize:'clamp(40px, 7vw, 88px)',
+              fontWeight:300, color:'var(--cream)',
+              lineHeight:1.05, letterSpacing:'-0.02em',
+              marginBottom:0,
+              textShadow:'0 2px 40px rgba(0,0,0,0.6)',
+            }}>
+              Science belongs<br/>
+              <em style={{ color:'var(--pastel1)', fontStyle:'italic' }}>to everyone.</em>
+            </h1>
+          </motion.div>
+
+          {/* Scroll indicator */}
+          <motion.div
+            initial={{ opacity:0 }}
+            animate={{ opacity:1 }}
+            transition={{ delay:1.2, duration:1 }}
+            style={{
+              position:'absolute', bottom:32, right:48,
+              display:'flex', flexDirection:'column', alignItems:'center', gap:8,
+              zIndex:2,
+            }}
+          >
+            <span className="label" style={{ fontSize:9, opacity:0.45 }}>Scroll</span>
+            <div style={{
+              width:1, height:40,
+              background:'linear-gradient(to bottom, rgba(168,212,240,0.5), transparent)',
+              animation:'breathe 2s ease-in-out infinite',
+            }}/>
+          </motion.div>
         </div>
 
         {/* Chapter scroll */}
@@ -78,22 +131,12 @@ export default function Mission() {
           {chapters.map((ch, i) => (
             <InViewFade key={ch.n} delay={i*0.1}>
               <div style={{
-                display:'grid', gridTemplateColumns:'80px 1fr',
-                gap:32, marginBottom:80,
+                marginBottom:80,
                 paddingBottom:80,
                 borderBottom: i < chapters.length-1
                   ? '1px solid rgba(168,212,240,0.06)'
                   : 'none',
               }}>
-                {/* Number */}
-                <div style={{
-                  fontFamily:"'Cormorant Garamond', serif",
-                  fontSize:64, fontWeight:300,
-                  color:'rgba(168,212,240,0.15)',
-                  lineHeight:1, paddingTop:8,
-                }}>
-                  {ch.n}
-                </div>
                 {/* Content */}
                 <div>
                   <div style={{
@@ -153,43 +196,6 @@ export default function Mission() {
           </div>
         </InViewFade>
 
-        {/* Stats */}
-        <div style={{ padding:'60px 40px 120px', maxWidth:1000, margin:'0 auto' }}>
-          <div style={{
-            display:'grid', gridTemplateColumns:'repeat(2,1fr)',
-            gap:1, border:'1px solid rgba(168,212,240,0.08)',
-            borderRadius:8, overflow:'hidden',
-          }}>
-            {[
-              { v:'500+', l:'Kits in Hands' },
-              { v:'15+',  l:'Communities Reached' },
-              { v:'20+',  l:'Events Hosted' },
-              { v:'100%', l:'Free for Recipients' },
-            ].map((s,i) => (
-              <InViewFade key={s.l} delay={i*0.1}>
-                <div style={{
-                  padding:'48px 40px',
-                  background:'rgba(15,32,68,0.3)',
-                  backdropFilter:'blur(10px)',
-                  borderRight: i%2===0 ? '1px solid rgba(168,212,240,0.06)' : 'none',
-                  borderBottom: i<2 ? '1px solid rgba(168,212,240,0.06)' : 'none',
-                  textAlign:'center',
-                }}>
-                  <div style={{
-                    fontFamily:"'Cormorant Garamond', serif",
-                    fontSize:56, fontWeight:300,
-                    color:'var(--pastel1)',
-                    textShadow:'0 0 30px rgba(168,212,240,0.35)',
-                    lineHeight:1, marginBottom:10,
-                  }}>
-                    {s.v}
-                  </div>
-                  <div className="label" style={{ fontSize:9 }}>{s.l}</div>
-                </div>
-              </InViewFade>
-            ))}
-          </div>
-        </div>
       </div>
     </PageTransition>
   )

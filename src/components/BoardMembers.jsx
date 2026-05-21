@@ -280,7 +280,7 @@ export default function BoardMembers() {
             We're always looking for passionate volunteers, educators, and community partners.
           </p>
           <a
-            href="mailto:hello@curiocrate.org"
+            href="mailto:ckf.curiocrate@curiocrate.org"
             style={{
               display: 'inline-block',
               fontFamily: "'Plus Jakarta Sans', sans-serif",
