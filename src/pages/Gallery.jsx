@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
 import { featured, chronicle } from '../data/gallery'
@@ -23,7 +24,7 @@ function Lightbox({ photos, startIndex, onClose }) {
     return () => window.removeEventListener('keydown', fn)
   }, [photos.length, onClose])
 
-  return (
+  return createPortal(
     <motion.div
       initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
       transition={{ duration:.3 }}
@@ -77,7 +78,8 @@ function Lightbox({ photos, startIndex, onClose }) {
           </div>
         </motion.div>
       </AnimatePresence>
-    </motion.div>
+    </motion.div>,
+    document.body
   )
 }
 
@@ -94,7 +96,7 @@ function YearModal({ data, onClose, onOpenPhoto }) {
     return () => window.removeEventListener('keydown', fn)
   }, [onClose])
 
-  return (
+  return createPortal(
     <motion.div
       initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
       transition={{ duration:.4 }}
@@ -156,7 +158,8 @@ function YearModal({ data, onClose, onOpenPhoto }) {
           </div>
         )}
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    document.body
   )
 }
 
@@ -200,12 +203,20 @@ function ChronicleHero({ onOpenYear }) {
           style={{ position:'absolute', inset:0 }}
         >
           {current.cover && (
-            <img src={current.cover} alt="" style={{
-              position:'absolute', inset:0,
-              width:'100%', height:'100%',
-              objectFit:'cover',
-              filter:'brightness(0.28) saturate(0.5)',
-            }} />
+            <motion.img
+              src={current.cover}
+              alt=""
+              initial={{ scale: idx % 2 === 0 ? 1.12 : 1.0 }}
+              animate={{ scale: idx % 2 === 0 ? 1.0 : 1.12 }}
+              transition={{ duration: 20, ease: 'easeInOut', repeat: Infinity, repeatType: 'reverse' }}
+              style={{
+                position:'absolute', inset:0,
+                width:'100%', height:'100%',
+                objectFit:'cover',
+                filter:'brightness(0.28) saturate(0.5)',
+                transformOrigin: idx % 2 === 0 ? '50% 52%' : '52% 48%',
+              }}
+            />
           )}
 
           {/* Color atmosphere */}
@@ -235,6 +246,7 @@ function ChronicleHero({ onOpenYear }) {
             position:'absolute', inset:0,
             display:'flex', flexDirection:'column',
             alignItems:'center', justifyContent:'center', zIndex:2,
+            paddingBottom: 148,
           }}>
             <motion.div
               initial={{ opacity:0, y:20 }} animate={{ opacity:0.72, y:0 }}
@@ -339,20 +351,87 @@ function ChronicleHero({ onOpenYear }) {
         onMouseLeave={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.05)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.13)' }}
       >›</button>
 
-      {/* Dot indicators */}
+      {/* Timeline */}
       <div style={{
-        position:'absolute', bottom:40, left:'50%', transform:'translateX(-50%)',
-        display:'flex', gap:10, zIndex:10, alignItems:'center',
+        position:'absolute', bottom:0, left:0, right:0, zIndex:10,
+        background:'linear-gradient(to top, rgba(3,5,15,0.98) 0%, rgba(3,5,15,0.72) 52%, transparent 100%)',
+        padding:'0 80px 30px',
       }}>
-        {chronicle.map((c, i) => (
-          <button key={c.year} onClick={() => go(i)} style={{
-            width: i === idx ? 28 : 7, height:7,
-            borderRadius:4,
-            background: i === idx ? current.color : 'rgba(168,212,240,0.22)',
-            border:'none', cursor:'pointer', padding:0,
-            transition:'all 0.4s ease',
+        <div style={{ position:'relative' }}>
+          {/* Track base */}
+          <div style={{
+            position:'absolute', top:18, left:28, right:28, height:1,
+            background:'rgba(168,212,240,0.1)',
           }} />
-        ))}
+          {/* Animated progress fill */}
+          <motion.div
+            animate={{
+              width: chronicle.length > 1
+                ? `calc(${(idx / (chronicle.length - 1)) * 100}% - 56px)`
+                : '0%',
+            }}
+            transition={{ duration:0.75, ease:[0.4,0,0.2,1] }}
+            style={{
+              position:'absolute', top:18, left:28, height:1,
+              background:`linear-gradient(to right, ${chronicle[0].color}50, ${current.color}dd)`,
+              boxShadow:`0 0 10px ${current.color}60`,
+            }}
+          />
+          {/* Nodes row */}
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', position:'relative', zIndex:1 }}>
+            {chronicle.map((c, i) => {
+              const active = i === idx
+              return (
+                <button key={c.year} onClick={() => go(i)} style={{
+                  display:'flex', flexDirection:'column', alignItems:'center', gap:7,
+                  background:'none', border:'none', cursor:'pointer', padding:0,
+                  minWidth:56,
+                }}>
+                  {/* Circle + pulse ring */}
+                  <div style={{ position:'relative', width:36, height:36, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                    {active && (
+                      <motion.div
+                        animate={{ scale:[1, 2.5], opacity:[0.55, 0] }}
+                        transition={{ duration:2.2, repeat:Infinity, ease:'easeOut' }}
+                        style={{
+                          position:'absolute', width:14, height:14,
+                          borderRadius:'50%',
+                          border:`1px solid ${c.color}`,
+                          pointerEvents:'none',
+                        }}
+                      />
+                    )}
+                    <motion.div
+                      animate={{
+                        width: active ? 14 : 7,
+                        height: active ? 14 : 7,
+                        background: active ? c.color : 'rgba(168,212,240,0.2)',
+                        boxShadow: active ? `0 0 20px ${c.color}90, 0 0 40px ${c.color}40` : 'none',
+                      }}
+                      transition={{ duration:0.45 }}
+                      style={{ borderRadius:'50%' }}
+                    />
+                  </div>
+                  {/* Year */}
+                  <div style={{
+                    fontFamily:"'JetBrains Mono', monospace",
+                    fontSize:11, letterSpacing:'3px',
+                    color: active ? c.color : 'rgba(168,212,240,0.28)',
+                    transition:'color 0.4s', lineHeight:1,
+                  }}>{c.year}</div>
+                  {/* Era */}
+                  <div style={{
+                    fontFamily:"'Plus Jakarta Sans', sans-serif",
+                    fontSize:8, letterSpacing:'2px',
+                    color: active ? 'rgba(168,212,240,0.52)' : 'rgba(168,212,240,0.15)',
+                    textTransform:'uppercase', transition:'color 0.4s',
+                    lineHeight:1, textAlign:'center', maxWidth:80,
+                  }}>{c.era}</div>
+                </button>
+              )
+            })}
+          </div>
+        </div>
       </div>
 
       {/* Top-left label */}
@@ -375,13 +454,6 @@ function ChronicleHero({ onOpenYear }) {
         {String(idx + 1).padStart(2, '0')} / {String(chronicle.length).padStart(2, '0')}
       </div>
 
-      {/* Scroll hint */}
-      <div style={{
-        position:'absolute', bottom:42, right:48,
-        fontFamily:"'JetBrains Mono', monospace",
-        fontSize:9, letterSpacing:3,
-        color:'var(--muted)', opacity:0.32, zIndex:10,
-      }}>scroll ↓</div>
     </div>
   )
 }

@@ -14,6 +14,14 @@ export const featured = [
 
 export const chronicle = [
   {
+    year: 2026,
+    era: 'Chapter Expansion',
+    color: '#e8c96e',
+    glow: 'rgba(232,201,110,0.5)',
+    cover: null,
+    photos: [],
+  },
+  {
     year: 2025,
     era: 'Present Day',
     color: '#a8d4f0',

@@ -115,7 +115,7 @@ export default function Home() {
   const [mascotReady, setMascotReady] = useState(false)
   const [scrollReady, setScrollReady] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [chaptersData, setChaptersData] = useState(staticChapters)
+  const [chaptersData, setChaptersData] = useState([])
   const [chaptersLoading, setChaptersLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const heroRef = useRef(null)
@@ -610,23 +610,50 @@ export default function Home() {
                 whileInView={{ opacity:1, y:0 }}
                 viewport={{ once:true }}
                 transition={{ delay:i*0.12, duration:0.9, ease:[0.4,0,0.2,1] }}
-                whileHover={{ background:'rgba(12,26,64,0.7)' }}
                 style={{
                   padding:'72px 56px',
-                  background: i%2===0 ? 'rgba(10,20,50,0.55)' : 'rgba(8,16,40,0.38)',
-                  backdropFilter:'blur(16px)',
-                  border:'1px solid rgba(168,212,240,0.07)',
                   position:'relative', overflow:'hidden',
-                  transition:'background 0.4s',
+                  border:'1px solid rgba(168,212,240,0.07)',
+                }}
+                onMouseEnter={e => {
+                  const img = e.currentTarget.querySelector('img.stat-bg')
+                  if (img) { img.style.transform='scale(1.07)'; img.style.filter='brightness(0.32) saturate(0.55)' }
+                  const ov = e.currentTarget.querySelector('.stat-ov')
+                  if (ov) ov.style.opacity='0.72'
+                }}
+                onMouseLeave={e => {
+                  const img = e.currentTarget.querySelector('img.stat-bg')
+                  if (img) { img.style.transform='scale(1)'; img.style.filter='brightness(0.22) saturate(0.45)' }
+                  const ov = e.currentTarget.querySelector('.stat-ov')
+                  if (ov) ov.style.opacity='1'
                 }}
               >
+                {/* Cinematic photo background */}
+                <img className="stat-bg" src={s.photo} alt="" style={{
+                  position:'absolute', inset:0,
+                  width:'100%', height:'100%', objectFit:'cover',
+                  filter:'brightness(0.22) saturate(0.45)',
+                  transition:'transform 0.7s ease, filter 0.7s ease',
+                  pointerEvents:'none', userSelect:'none',
+                }} />
+
+                {/* Blue overlay */}
+                <div className="stat-ov" style={{
+                  position:'absolute', inset:0,
+                  background: i%2===0
+                    ? 'linear-gradient(135deg, rgba(10,20,55,0.82) 0%, rgba(6,14,38,0.75) 100%)'
+                    : 'linear-gradient(135deg, rgba(6,14,38,0.78) 0%, rgba(10,20,55,0.70) 100%)',
+                  transition:'opacity 0.4s',
+                  pointerEvents:'none',
+                }} />
+
                 {/* Ghost watermark */}
                 <div style={{
                   position:'absolute', bottom:-30, right:-10,
                   fontFamily:"'Cormorant Garamond', serif",
                   fontSize:'clamp(120px,14vw,200px)', fontWeight:300, lineHeight:1,
-                  color:'rgba(168,212,240,0.035)',
-                  userSelect:'none', pointerEvents:'none',
+                  color:'rgba(168,212,240,0.045)',
+                  userSelect:'none', pointerEvents:'none', zIndex:1,
                 }}>{s.value}</div>
 
                 {/* Top accent rule */}
@@ -637,18 +664,19 @@ export default function Home() {
                   transition={{ delay:i*0.12+0.3, duration:0.8, ease:[0.4,0,0.2,1] }}
                   style={{
                     position:'absolute', top:0, left:56, right:56, height:1,
-                    background:'linear-gradient(to right, transparent, rgba(168,212,240,0.25), transparent)',
-                    transformOrigin:'left',
+                    background:'linear-gradient(to right, transparent, rgba(168,212,240,0.3), transparent)',
+                    transformOrigin:'left', zIndex:2,
                   }}
                 />
 
                 {/* Number */}
                 <div style={{
+                  position:'relative', zIndex:2,
                   fontFamily:"'Cormorant Garamond', serif",
                   fontSize:'clamp(80px, 11vw, 140px)',
                   fontWeight:300, lineHeight:0.9,
                   color:'var(--pastel1)',
-                  textShadow:'0 0 80px rgba(168,212,240,0.55), 0 0 160px rgba(168,212,240,0.2)',
+                  textShadow:'0 0 80px rgba(168,212,240,0.7), 0 0 160px rgba(168,212,240,0.3)',
                   marginBottom:24, letterSpacing:'-0.04em',
                 }}>
                   {s.value}
@@ -656,6 +684,7 @@ export default function Home() {
 
                 {/* Label */}
                 <div style={{
+                  position:'relative', zIndex:2,
                   fontFamily:"'Plus Jakarta Sans', sans-serif",
                   fontWeight:700, fontSize:13,
                   color:'var(--cream)', marginBottom:12,
@@ -666,8 +695,9 @@ export default function Home() {
 
                 {/* Description */}
                 <div style={{
+                  position:'relative', zIndex:2,
                   fontSize:14, color:'var(--muted)', lineHeight:1.75,
-                  maxWidth:320, opacity:0.75,
+                  maxWidth:320, opacity:0.8,
                 }}>
                   {s.description}
                 </div>
