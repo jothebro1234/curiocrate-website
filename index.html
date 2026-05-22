@@ -10,6 +10,41 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://curiocrate.org" />
     <title>CurioCrate — Creating Change by Sparking Curiosity</title>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "NGO",
+          "@id": "https://curiocrate.org/#organization",
+          "name": "CurioCrate",
+          "url": "https://curiocrate.org",
+          "logo": "https://curiocrate.org/images/cclogo.png",
+          "foundingDate": "2023",
+          "description": "CurioCrate delivers hands-on science kits to underserved communities, sparking a love for STEM in the next generation of innovators.",
+          "email": "ckf.curiocrate@curiocrate.org",
+          "founder": {
+            "@id": "https://curiocrate.org/#founder"
+          },
+          "knowsAbout": ["STEM Education", "Science Kits", "Youth Education", "Nonprofit"]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://curiocrate.org/#founder",
+          "name": "Jeongseop Yoon",
+          "jobTitle": "Chief Executive Founder",
+          "email": "josephyoon25@curiocrate.org",
+          "url": "https://curiocrate.org/team",
+          "worksFor": {
+            "@id": "https://curiocrate.org/#organization"
+          },
+          "founder": {
+            "@id": "https://curiocrate.org/#organization"
+          }
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>

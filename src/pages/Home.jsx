@@ -142,14 +142,20 @@ export default function Home() {
 
   useEffect(() => {
     const url = import.meta.env.VITE_APPS_SCRIPT_URL
-    if (!url) { setChaptersLoading(false); return }
+    if (!url) {
+      setChaptersData(staticChapters)
+      setChaptersLoading(false)
+      return
+    }
     fetch(`${url}?action=get_chapters`)
       .then(r => r.json())
       .then(data => {
         if (data.ok && Array.isArray(data.chapters) && data.chapters.length > 0)
           setChaptersData(data.chapters)
+        else
+          setChaptersData(staticChapters)
       })
-      .catch(() => {})
+      .catch(() => setChaptersData(staticChapters))
       .finally(() => setChaptersLoading(false))
   }, [])
 
