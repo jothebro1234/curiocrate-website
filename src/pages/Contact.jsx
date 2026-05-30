@@ -6,13 +6,13 @@ const contacts = [
     audience: 'Schools & Organizations',
     description: 'Interested in bringing CurioCrate kits to your school, district, or community program?',
     email: 'ckf.curiocrate@curiocrate.org',
-    icon: '🏫',
+    img: '/images/curieschool.png',
   },
   {
     audience: 'Students & Volunteers',
-    description: 'Want to volunteer, join a chapter, or learn more about our programs?',
+    description: 'Do you have any questions about starting a chapter, or want to learn more about our programs?',
     email: 'ckf.curiocrate@curiocrate.org',
-    icon: '🔬',
+    img: '/images/curiequestion.png',
   },
 ]
 
@@ -32,11 +32,8 @@ export default function Contact() {
             <h1 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(40px,6vw,80px)',
-              fontWeight: 300,
-              color: 'var(--cream)',
-              lineHeight: 1.05,
-              letterSpacing: '-0.02em',
-              marginBottom: 20,
+              fontWeight: 300, color: 'var(--cream)',
+              lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 20,
             }}>Contact Us</h1>
             <p style={{ fontSize: 16, color: 'var(--muted)', maxWidth: 480, margin: '0 auto', lineHeight: 1.7 }}>
               We'd love to hear from you. Reach out and we'll get back to you as soon as we can.
@@ -58,15 +55,16 @@ export default function Contact() {
                   backdropFilter: 'blur(24px)',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 24 }}>
-                  <div style={{
-                    fontSize: 32, lineHeight: 1,
-                    padding: '12px 14px',
-                    background: 'rgba(168,212,240,0.06)',
-                    borderRadius: 12,
-                    border: '1px solid rgba(168,212,240,0.1)',
-                    flexShrink: 0,
-                  }}>{c.icon}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+                  <img
+                    src={c.img}
+                    alt={c.audience}
+                    style={{
+                      width: 80, height: 80, objectFit: 'contain',
+                      flexShrink: 0,
+                      filter: 'drop-shadow(0 4px 16px rgba(0,0,0,0.3))',
+                    }}
+                  />
                   <div>
                     <div style={{
                       fontFamily: "'Cormorant Garamond', serif",
@@ -81,8 +79,7 @@ export default function Contact() {
                       fontSize: 13, letterSpacing: '1px',
                       color: 'var(--pastel1)', textDecoration: 'none',
                       borderBottom: '1px solid rgba(168,212,240,0.3)',
-                      paddingBottom: 2,
-                      transition: 'border-color 0.2s',
+                      paddingBottom: 2, transition: 'border-color 0.2s',
                     }}
                     onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(168,212,240,0.7)' }}
                     onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(168,212,240,0.3)' }}

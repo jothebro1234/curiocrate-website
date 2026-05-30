@@ -248,14 +248,19 @@ export default function OurChapters() {
               </div>
             </div>
           ) : (
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-              gap: 20,
-            }}>
-              {filteredChapters.map((chapter, i) => (
-                <ChapterCard key={chapter.school + i} chapter={chapter} index={i} />
-              ))}
+            <div style={filteredChapters.length > 9 ? {
+              maxHeight: 760, overflowY: 'auto',
+              paddingRight: 4,
+            } : {}}>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                gap: 20,
+              }}>
+                {filteredChapters.map((chapter, i) => (
+                  <ChapterCard key={chapter.school + i} chapter={chapter} index={i} />
+                ))}
+              </div>
             </div>
           )}
         </div>

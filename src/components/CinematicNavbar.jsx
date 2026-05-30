@@ -3,7 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 
 const NAV_LEFT = [
   { path: '/',         label: 'Discover'     },
-  { path: '/kits',     label: 'Kits'         },
+  { path: '/kits',     label: 'Research Kits' },
   { path: '/chapters', label: 'Our Chapters' },
   { path: '/mission',  label: 'Mission'      },
 ]

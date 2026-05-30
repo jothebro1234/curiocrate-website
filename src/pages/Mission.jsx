@@ -162,39 +162,6 @@ export default function Mission() {
           ))}
         </div>
 
-        {/* Quote */}
-        <InViewFade>
-          <div style={{
-            padding:'80px 40px',
-            textAlign:'center',
-            position:'relative',
-          }}>
-            <div style={{
-              position:'absolute', inset:0,
-              background:'linear-gradient(to bottom, transparent, rgba(10,30,80,0.2), transparent)',
-            }}/>
-            <div style={{ position:'relative', maxWidth:700, margin:'0 auto' }}>
-              <div style={{
-                fontFamily:"'Cormorant Garamond', serif",
-                fontSize:14, letterSpacing:'4px',
-                color:'var(--pastel1)', opacity:0.6,
-                marginBottom:32, textTransform:'uppercase',
-              }}>
-                ❝
-              </div>
-              <blockquote style={{
-                fontFamily:"'Cormorant Garamond', serif",
-                fontSize:'clamp(28px,4vw,48px)',
-                fontWeight:300, fontStyle:'italic',
-                color:'var(--cream)', lineHeight:1.3,
-                marginBottom:24,
-              }}>
-                A child who asks 'why' is a scientist in the making.
-              </blockquote>
-              <div className="label" style={{ fontSize:9 }}>— The CurioCrate Team</div>
-            </div>
-          </div>
-        </InViewFade>
 
       </div>
     </PageTransition>

@@ -197,11 +197,13 @@ export default function Home() {
                 <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>curious mind.</em>
               </h1>
               <p style={{
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontSize: 'clamp(13px, 1.6vw, 17px)',
-                color: 'rgba(197,227,247,0.75)',
-                letterSpacing: '0.02em', lineHeight: 1.6,
-                textShadow: '0 1px 12px rgba(3,5,15,0.7)',
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: 'italic',
+                fontSize: 'clamp(15px, 1.8vw, 22px)',
+                fontWeight: 300,
+                color: 'rgba(197,227,247,0.78)',
+                letterSpacing: '0.01em', lineHeight: 1.5,
+                textShadow: '0 1px 16px rgba(3,5,15,0.8)',
               }}>
                 Accessible, immersive, hands-on science kits for underserved students.
               </p>
@@ -266,26 +268,42 @@ export default function Home() {
             transition={{ delay: 0.4 }}
             style={{
               position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 4,
-              borderTop: '1px solid rgba(168,212,240,0.08)',
-              background: 'linear-gradient(to top, rgba(3,5,15,0.75) 0%, transparent 100%)',
-              padding: '20px 40px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 48,
+              background: 'linear-gradient(to top, rgba(3,5,15,0.82) 0%, rgba(3,5,15,0.4) 60%, transparent 100%)',
+              padding: '18px 48px 14px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 32,
             }}
           >
             <span style={{
-              fontFamily: "'JetBrains Mono', monospace", fontSize: 9,
+              fontFamily: "'JetBrains Mono', monospace", fontSize: 8,
               letterSpacing: '3px', textTransform: 'uppercase',
-              color: 'rgba(168,212,240,0.4)',
+              color: 'rgba(168,212,240,0.35)', whiteSpace: 'nowrap',
             }}>Supported by</span>
-            {PARTNERS.map(p => (
-              <img key={p.name} src={p.logo} alt={p.name} style={{
-                height: 72, objectFit: 'contain',
-                filter: 'brightness(0) invert(1) opacity(0.7)',
-                transition: 'filter 0.3s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(1)' }}
-              onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(0.7)' }}
-              />
+
+            <div style={{ width: 1, height: 20, background: 'rgba(168,212,240,0.12)' }}/>
+
+            {/* Each logo in a normalized container */}
+            {PARTNERS.map((p, i) => (
+              <div key={p.name} style={{
+                display: 'flex', flexDirection: 'column',
+                alignItems: 'center', gap: 5,
+              }}>
+                <div style={{ width: 120, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <img src={p.logo} alt={p.name} style={{
+                    maxWidth: '100%', maxHeight: '100%',
+                    objectFit: 'contain',
+                    filter: 'brightness(0) invert(1) opacity(0.55)',
+                    transition: 'filter 0.3s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(0.85)' }}
+                  onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(0.55)' }}
+                  />
+                </div>
+                <span style={{
+                  fontFamily: "'JetBrains Mono', monospace", fontSize: 7,
+                  letterSpacing: '1.5px', textTransform: 'uppercase',
+                  color: 'rgba(168,212,240,0.25)',
+                }}>{p.name}</span>
+              </div>
             ))}
           </motion.div>
         </div>
@@ -311,11 +329,11 @@ export default function Home() {
                 What is<br/>
                 <em style={{ color: 'var(--pastel1)' }}>CurioCrate?</em>
               </h2>
-              <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.85, marginBottom: 20 }}>
-                CurioCrate is a 501(c)(3) nonprofit founded on one belief: every student deserves hands-on science education, regardless of their zip code.
+              <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.9, marginBottom: 20 }}>
+                CurioCrate believes every child, regardless of zip code, income, or background, deserves to experience the wonder of real science.
               </p>
-              <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.85 }}>
-                We design and distribute free science kits to underserved schools and communities, and build a national network of student-led chapters that make science tangible, exciting, and accessible.
+              <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.9 }}>
+                Our immersive, accessible, hands-on experiment kits — designed by passionate high school volunteers alongside college professors and industry professionals — bring lab education to underserved students, paired with live workshops that make learning engaging for early learners.
               </p>
             </motion.div>
 
