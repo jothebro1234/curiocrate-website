@@ -100,7 +100,7 @@ export default function Contact() {
               fontSize: 10, letterSpacing: '2px', color: 'var(--muted)', opacity: 0.4,
             }}
           >
-            We typically respond within 2–3 business days.
+            We typically respond within 2 to 3 business days.
           </motion.p>
         </div>
       </section>

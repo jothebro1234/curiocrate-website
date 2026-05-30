@@ -4,12 +4,12 @@ import PageTransition from '../components/PageTransition'
 const chapters = [
   {
     n:'01', title:'The Problem',
-    body:'Millions of children grow up without access to quality STEM education. Not because they lack curiosity — but because quality resources never reached them.',
+    body:'Millions of children grow up without access to quality STEM education. Not because they lack curiosity, but because quality resources never reached them.',
     icon:'🔍',
   },
   {
     n:'02', title:'Our Answer',
-    body:'CurioCrate builds hands-on science kits and delivers them directly into underserved communities — turning curiosity into structured discovery.',
+    body:'CurioCrate builds hands-on science kits and delivers them directly into underserved communities, turning curiosity into structured discovery.',
     icon:'📦',
   },
   {

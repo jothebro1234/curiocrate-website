@@ -155,7 +155,7 @@ export default function Kits() {
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: 10, letterSpacing: '2px', textTransform: 'uppercase',
                 color: 'var(--pastel1)', opacity: 0.8,
-              }}>Finalizing Prototypes — In Progress</span>
+              }}>Finalizing Prototypes, In Progress</span>
             </div>
 
             {/* Milestones */}

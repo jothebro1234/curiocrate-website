@@ -32,7 +32,7 @@ const cabinet = [
     id: 'treasurer',
     name: 'Rebecca Ho',
     role: 'Treasurer',
-    bio: 'Stewards the organization\'s finances with precision — ensuring every dollar goes toward putting science in students\' hands.',
+    bio: 'Stewards the organization\'s finances with precision, ensuring every dollar goes toward putting science in students\' hands.',
     photo: '/boardmembers/rebeccahotres.png',
     color: '#6ee7b7',
     glow: 'rgba(110,231,183,0.5)',
@@ -43,7 +43,7 @@ const cabinet = [
     id: 'secretary',
     name: 'Sienna Lee',
     role: 'Secretary',
-    bio: 'Keeps the organization running with clarity and care — documenting decisions, coordinating communications, and holding everything together.',
+    bio: 'Keeps the organization running with clarity and care, documenting decisions, coordinating communications, and holding everything together.',
     photo: '/boardmembers/siennaleesecretary.png',
     color: '#c084fc',
     glow: 'rgba(192,132,252,0.5)',
@@ -68,7 +68,7 @@ const directors = [
     id: 'curriculum1',
     name: 'Chloe Koo',
     role: 'Director of Curriculum',
-    bio: 'Designs hands-on experiments tested by real students — making science accessible, exciting, and unforgettable.',
+    bio: 'Designs hands-on experiments tested by real students, making science accessible, exciting, and unforgettable.',
     photo: '/boardmembers/chloekoodirectorofcurriculum.png',
     color: '#93c5fd',
     glow: 'rgba(147,197,253,0.5)',
@@ -79,7 +79,7 @@ const directors = [
     id: 'publicity',
     name: 'Daniel Kim',
     role: 'Director of Publicity',
-    bio: 'Amplifies CurioCrate\'s story — connecting the mission to the public through compelling campaigns and outreach.',
+    bio: 'Amplifies CurioCrate\'s story, connecting the mission to the public through compelling campaigns and outreach.',
     photo: '/boardmembers/danielkimDirectorofpublicity.png',
     color: '#fca5a5',
     glow: 'rgba(252,165,165,0.5)',
@@ -101,7 +101,7 @@ const directors = [
     id: 'ops1',
     name: 'Jamie Song',
     role: 'Director of Operations',
-    bio: 'The engine behind every event — orchestrating logistics, partnerships, and kit delivery with precision and care.',
+    bio: 'The engine behind every event, orchestrating logistics, partnerships, and kit delivery with precision and care.',
     photo: '/boardmembers/jamiesongdirectorofoperations.png',
     color: '#a5b4fc',
     glow: 'rgba(165,180,252,0.5)',
@@ -414,7 +414,7 @@ export default function Team() {
         </div>
 
         {/* ══════════════════════════════════════════════════════════════════════
-            FOUNDER SPOTLIGHT — Chief Executive Founder
+            FOUNDER SPOTLIGHT: Chief Executive Founder
         ══════════════════════════════════════════════════════════════════════ */}
         <motion.div
           initial={{ opacity:0 }}

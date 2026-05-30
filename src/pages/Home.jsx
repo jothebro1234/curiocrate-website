@@ -323,7 +323,7 @@ export default function Home() {
                 CurioCrate believes every child, regardless of zip code, income, or background, deserves to experience the wonder of real science.
               </p>
               <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.9 }}>
-                Our immersive, accessible, hands-on experiment kits — designed by passionate high school volunteers alongside college professors and industry professionals — bring lab education to underserved students, paired with live workshops that make learning engaging for early learners.
+                Our immersive, accessible, hands-on experiment kits, designed by passionate high school volunteers alongside college professors and industry professionals, bring "lab" education to underserved students, paired with live workshops that make learning engaging for early learners.
               </p>
             </motion.div>
 

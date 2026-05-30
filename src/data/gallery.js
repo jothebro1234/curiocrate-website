@@ -7,7 +7,7 @@
 //   4. To set a year cover image, update `cover` for that year
 
 export const featured = [
-  { src: '/images/IMG_3920.jpg', caption: 'Kit distribution — sparking curiosity one child at a time', wide: true },
+  { src: '/images/IMG_3920.jpg', caption: 'Kit distribution, sparking curiosity one child at a time', wide: true },
   { src: '/images/volunteeringimage.jpg', caption: 'Volunteers making science accessible' },
   { src: '/images/P1080258.JPG', caption: 'Science is for every curious mind' },
 ]
