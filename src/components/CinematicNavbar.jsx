@@ -5,13 +5,13 @@ const NAV_LEFT = [
   { path: '/',         label: 'Discover'     },
   { path: '/kits',     label: 'Kits'         },
   { path: '/chapters', label: 'Our Chapters' },
-  { path: '/contact',  label: 'Contact Us'   },
+  { path: '/mission',  label: 'Mission'      },
 ]
 
 const ABOUT_ITEMS = [
-  { path: '/mission', label: 'Mission' },
-  { path: '/gallery', label: 'Gallery' },
-  { path: '/team',    label: 'Team'    },
+  { path: '/gallery', label: 'Gallery'    },
+  { path: '/team',    label: 'Team'       },
+  { path: '/contact', label: 'Contact Us' },
 ]
 
 const NAV_RIGHT = []
@@ -91,7 +91,7 @@ export default function CinematicNavbar() {
           fontFamily: "'Cormorant Garamond', serif", fontWeight: 300,
           fontSize: 19, letterSpacing: '0.12em',
           color: 'var(--pastel2)', textShadow: '0 0 20px rgba(168,212,240,0.35)',
-        }}>CurioCrate</span>
+        }}>CurioCrate<sup style={{ fontSize: '0.5em', letterSpacing: 0, verticalAlign: 'super', opacity: 0.7 }}>™</sup></span>
       </NavLink>
 
       {/* Nav */}

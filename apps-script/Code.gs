@@ -5,7 +5,7 @@
  * Handles all actions for the website's API calls.
  *
  * Chapters sheet columns:
- *   A = Email | B = President Name | C = School | D = Logo URL | E = State
+ *   A = Email | B = President Name | C = School | D = Logo URL | E = State | F = City
  */
 
 function doGet(e) {
@@ -37,6 +37,7 @@ function getChapters() {
         school:    String(r[2] || '').trim(),
         logo:      String(r[3] || '').trim(),
         state:     String(r[4] || '').trim(),
+        city:      String(r[5] || '').trim(),
       }))
 
     return json({ ok: true, chapters })

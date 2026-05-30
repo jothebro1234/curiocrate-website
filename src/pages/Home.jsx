@@ -88,13 +88,14 @@ function LeafletMap({ chaptersData }) {
       {allMarkers.map((m, i) => (
         <Marker key={i} position={[m.coordinates[1], m.coordinates[0]]} icon={chapterIcon}>
           <Popup>
-            <div style={{
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              minWidth: 180,
-            }}>
+            <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", minWidth: 180 }}>
               <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>{m.school}</div>
-              {m.president && <div style={{ fontSize: 12, color: '#666' }}>{m.president}</div>}
-              {m.state && <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>{m.state}</div>}
+              {m.president && <div style={{ fontSize: 12, color: '#aaa' }}>{m.president}</div>}
+              {(m.city || m.state) && (
+                <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>
+                  {[m.city, m.state].filter(Boolean).join(', ')}
+                </div>
+              )}
             </div>
           </Popup>
         </Marker>
@@ -278,12 +279,12 @@ export default function Home() {
             }}>Supported by</span>
             {PARTNERS.map(p => (
               <img key={p.name} src={p.logo} alt={p.name} style={{
-                height: 44, objectFit: 'contain',
-                filter: 'brightness(0) invert(1) opacity(0.65)',
-                transition: 'opacity 0.3s',
+                height: 72, objectFit: 'contain',
+                filter: 'brightness(0) invert(1) opacity(0.7)',
+                transition: 'filter 0.3s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(0.9)' }}
-              onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(0.65)' }}
+              onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(1)' }}
+              onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(0.7)' }}
               />
             ))}
           </motion.div>
@@ -375,14 +376,14 @@ export default function Home() {
                   style={{ flex: 1, textAlign: 'center', padding: '0 20px' }}
                 >
                   {/* Character image */}
-                  <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'center' }}>
+                  <div style={{ marginBottom: 20, display: 'flex', justifyContent: 'center' }}>
                     <img
                       src={step.img}
                       alt={step.title}
                       style={{
-                        height: 140,
+                        height: 220,
                         objectFit: 'contain',
-                        filter: 'drop-shadow(0 8px 24px rgba(0,0,0,0.4))',
+                        filter: 'drop-shadow(0 12px 32px rgba(0,0,0,0.45))',
                       }}
                     />
                   </div>
@@ -490,9 +491,9 @@ export default function Home() {
                 src="/images/curielead.png"
                 alt="Start a chapter"
                 style={{
-                  height: 260,
+                  height: 340,
                   objectFit: 'contain',
-                  filter: 'drop-shadow(0 12px 40px rgba(0,0,0,0.4))',
+                  filter: 'drop-shadow(0 16px 48px rgba(0,0,0,0.45))',
                 }}
               />
             </motion.div>
