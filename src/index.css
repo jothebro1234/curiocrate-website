@@ -109,3 +109,7 @@ h1, h2, h3 {
   from { clip-path: inset(0 100% 0 0); }
   to   { clip-path: inset(0 0% 0 0); }
 }
+@keyframes kenBurns {
+  from { transform: scale(1.04) translate(0%, 0%); }
+  to   { transform: scale(1.14) translate(-1.5%, -1%); }
+}

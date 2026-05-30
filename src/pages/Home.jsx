@@ -1,19 +1,24 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
 import { stats } from '../data/stats'
-import { chapters as staticChapters } from '../data/chapters'
 
+const HERO_PHOTOS = [
+  '/images/IMG_3920.jpg',
+  '/images/volunteeringimage.jpg',
+  '/images/IMG_9240.jpg',
+  '/images/P1080258.JPG',
+  '/images/P1080212.JPG',
+]
+
+// ─── CHAPTER ROW ──────────────────────────────────────────────────────────────
 function resolveLogoUrl(url) {
   if (!url) return ''
-  // Plain filename → serve from project's logos folder
   if (!url.startsWith('http')) return `/logos/chapters/${url}`
-  // Full URL → use as-is
   return url
 }
 
-// ─── CHAPTER ROW ──────────────────────────────────────────────────────────────
 function ChapterCard({ chapter, index }) {
   const [imgError, setImgError] = useState(false)
   const initials = chapter.school
@@ -39,7 +44,6 @@ function ChapterCard({ chapter, index }) {
       onMouseEnter={e => e.currentTarget.style.background = 'rgba(168,212,240,0.035)'}
       onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
     >
-      {/* Logo circle */}
       <div style={{
         flexShrink:0, width:48, height:48, borderRadius:'50%',
         display:'flex', alignItems:'center', justifyContent:'center',
@@ -60,7 +64,6 @@ function ChapterCard({ chapter, index }) {
         )}
       </div>
 
-      {/* Info */}
       <div style={{ flex:1, minWidth:0 }}>
         <div style={{
           fontFamily:"'Cormorant Garamond', serif",
@@ -84,7 +87,6 @@ function ChapterCard({ chapter, index }) {
         </div>
       </div>
 
-      {/* Row number */}
       <div style={{
         flexShrink:0,
         fontFamily:"'JetBrains Mono', monospace",
@@ -94,52 +96,32 @@ function ChapterCard({ chapter, index }) {
   )
 }
 
-function useTypewriter(text, speed = 38, start = false) {
-  const [displayed, setDisplayed] = useState('')
-  useEffect(() => {
-    if (!start || !text) return
-    setDisplayed('')
-    let i = 0
-    const t = setInterval(() => {
-      setDisplayed(text.slice(0, ++i))
-      if (i >= text.length) clearInterval(t)
-    }, speed)
-    return () => clearInterval(t)
-  }, [text, start, speed])
-  return displayed
-}
-
 export default function Home() {
-  const [logoReady, setLogoReady] = useState(false)
-  const [textReady, setTextReady] = useState(false)
-  const [mascotReady, setMascotReady] = useState(false)
-  const [scrollReady, setScrollReady] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const [chaptersData, setChaptersData] = useState([])
+  const [logoReady, setLogoReady]   = useState(false)
+  const [ctaReady, setCtaReady]     = useState(false)
+  const [activePhoto, setActivePhoto] = useState(0)
+  const [chaptersData, setChaptersData]       = useState([])
   const [chaptersLoading, setChaptersLoading] = useState(true)
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery]         = useState('')
+
   const heroRef = useRef(null)
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start','end start'] })
-  const heroY = useTransform(scrollYProgress, [0,1], ['0%', '30%'])
-  const heroO = useTransform(scrollYProgress, [0,0.6], [1, 0])
-  const headlineTyped = useTypewriter('Creating Change in our Community\nby Sparking Curiosity', 36, textReady)
+  const heroY = useTransform(scrollYProgress, [0,1], ['0%', '15%'])
+  const heroO = useTransform(scrollYProgress, [0,0.7], [1, 0])
 
   useEffect(() => {
-    const timers = [
-      setTimeout(() => setLogoReady(true),   900),
-      setTimeout(() => setTextReady(true),   2200),
-      setTimeout(() => setMascotReady(true), 3000),
-      setTimeout(() => setScrollReady(true), 4200),
-    ]
-    return () => timers.forEach(clearTimeout)
+    const t1 = setTimeout(() => setLogoReady(true), 600)
+    const t2 = setTimeout(() => setCtaReady(true), 1400)
+    return () => { clearTimeout(t1); clearTimeout(t2) }
   }, [])
 
+  // Photo slideshow
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 80)
-    window.addEventListener('scroll', fn, { passive:true })
-    return () => window.removeEventListener('scroll', fn)
+    const timer = setInterval(() => setActivePhoto(p => (p + 1) % HERO_PHOTOS.length), 5500)
+    return () => clearInterval(timer)
   }, [])
 
+  // Chapters from Google Sheet
   useEffect(() => {
     const url = import.meta.env.VITE_APPS_SCRIPT_URL
     if (!url) {
@@ -170,255 +152,136 @@ export default function Home() {
 
   return (
     <PageTransition>
-      {/* ─── HERO ─── */}
-      <motion.section ref={heroRef} style={{ y: heroY, opacity: heroO, position:'relative', zIndex:1 }}>
-        <div style={{
-          minHeight:'100vh',
-          display:'flex', flexDirection:'column',
-          alignItems:'center', justifyContent:'center',
-          position:'relative', overflow:'hidden', padding:'0 24px',
-        }}>
-          <div style={{
-            position:'absolute', inset:0,
-            background:'radial-gradient(ellipse 70% 70% at 50% 40%, rgba(10,30,80,0.4) 0%, rgba(3,5,15,0.85) 100%)',
-            zIndex:0,
-          }}/>
-          <div style={{ position:'absolute', inset:0, zIndex:1, pointerEvents:'none', overflow:'hidden' }}>
-            <div style={{
-              position:'absolute', left:0, right:0, height:'1px',
-              background:'linear-gradient(90deg, transparent, rgba(168,212,240,0.06), transparent)',
-              animation:'scanline 8s linear infinite',
-            }}/>
-          </div>
 
-          {/* ── Logo — grand and effective ── */}
-          <motion.div
-            initial={{ opacity:0, scale:0.8, filter:'blur(24px)' }}
-            animate={logoReady ? { opacity:1, scale:1, filter:'blur(0px)' } : { opacity:0 }}
-            transition={{ duration:1.6, ease:[0.4,0,0.2,1] }}
-            style={{ position:'relative', zIndex:2, marginBottom:40, textAlign:'center' }}
-          >
-            <div style={{ position:'relative', display:'inline-block' }}>
-              {/* Outer glow ring */}
-              <div style={{
-                position:'absolute', inset:-48,
-                borderRadius:'50%',
-                background:'radial-gradient(circle, rgba(168,212,240,0.18) 0%, rgba(168,212,240,0.06) 45%, transparent 70%)',
-                animation:'breathe 5s ease-in-out infinite',
-              }}/>
-              {/* Inner glow ring */}
-              <div style={{
-                position:'absolute', inset:-16,
-                borderRadius:'50%',
-                background:'radial-gradient(circle, rgba(168,212,240,0.12) 0%, transparent 70%)',
-                animation:'breathe 3s ease-in-out infinite',
-                animationDelay:'0.8s',
-              }}/>
-              <img
-                src="/images/cclogo.png"
-                alt="CurioCrate"
+      {/* ─── HERO: CINEMATIC PHOTO SLIDESHOW ─── */}
+      <motion.section ref={heroRef} style={{ y: heroY, opacity: heroO, position:'relative', zIndex:1 }}>
+        <div style={{ height:'100vh', position:'relative', overflow:'hidden' }}>
+
+          {/* Cycling photo background with Ken Burns */}
+          <div style={{ position:'absolute', inset:0 }}>
+            <AnimatePresence>
+              <motion.img
+                key={HERO_PHOTOS[activePhoto]}
+                src={HERO_PHOTOS[activePhoto]}
+                alt=""
+                initial={{ opacity:0, scale:1.04 }}
+                animate={{ opacity:1, scale:1.14 }}
+                exit={{ opacity:0 }}
+                transition={{
+                  opacity: { duration:1.8, ease:'easeInOut' },
+                  scale:   { duration:8, ease:'linear' },
+                }}
                 style={{
-                  height:'clamp(180px, 22vw, 280px)',
-                  objectFit:'contain',
-                  filter:'drop-shadow(0 0 40px rgba(168,212,240,0.7)) drop-shadow(0 0 80px rgba(168,212,240,0.35)) drop-shadow(0 0 160px rgba(168,212,240,0.15))',
-                  animation:'drift 6s ease-in-out infinite',
-                  display:'block',
+                  position:'absolute', inset:0,
+                  width:'100%', height:'100%', objectFit:'cover',
                 }}
               />
-            </div>
-          </motion.div>
+            </AnimatePresence>
+          </div>
 
-          {/* Eyebrow */}
-          <motion.div
-            initial={{ opacity:0, letterSpacing:'8px' }}
-            animate={textReady ? { opacity:0.6, letterSpacing:'4px' } : {}}
-            transition={{ duration:1.2 }}
-            className="label"
-            style={{ zIndex:2, marginBottom:24 }}
-          >
-            Est. 2023 · STEM for Every Child
-          </motion.div>
+          {/* Overlay — heavier top/bottom, light in middle so photos breathe */}
+          <div style={{
+            position:'absolute', inset:0, zIndex:2,
+            background:'linear-gradient(to bottom, rgba(3,5,15,0.58) 0%, rgba(3,5,15,0.18) 45%, rgba(3,5,15,0.65) 100%)',
+          }}/>
 
-          {/* Headline */}
-          <motion.h1
-            initial={{ opacity:0 }}
-            animate={textReady ? { opacity:1 } : {}}
-            transition={{ duration:0.5 }}
-            style={{
-              position:'relative', zIndex:2,
-              fontSize:'clamp(36px, 6.5vw, 82px)',
-              fontWeight:300,
-              fontFamily:"'Cormorant Garamond', serif",
-              textAlign:'center',
-              lineHeight:1.12,
-              letterSpacing:'-0.02em',
-              color:'var(--cream)',
-              textShadow:'0 0 60px rgba(168,212,240,0.25)',
-              whiteSpace:'pre-line',
-              marginBottom:52,
-            }}
-          >
-            {headlineTyped}
-            <span style={{ opacity: textReady ? 1 : 0, animation:'breathe 1s ease-in-out infinite' }}>_</span>
-          </motion.h1>
-
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity:0, y:20 }}
-            animate={scrollReady ? { opacity:1, y:0 } : {}}
-            transition={{ duration:0.8, ease:[0.4,0,0.2,1] }}
-            style={{ display:'flex', gap:16, flexWrap:'wrap', justifyContent:'center', zIndex:2, marginBottom:48 }}
-          >
-            <Link to="/kits" style={{
-              fontFamily:"'JetBrains Mono', monospace", fontSize:12,
-              letterSpacing:'3px', textTransform:'uppercase', textDecoration:'none',
-              padding:'14px 32px', border:'1px solid rgba(168,212,240,0.35)', borderRadius:3,
-              color:'var(--cream)', background:'rgba(168,212,240,0.06)', backdropFilter:'blur(10px)',
-              transition:'all 0.4s ease',
-            }}
-            onMouseEnter={e=>{ e.currentTarget.style.background='rgba(168,212,240,0.14)'; e.currentTarget.style.borderColor='rgba(168,212,240,0.6)'; e.currentTarget.style.boxShadow='0 0 30px rgba(168,212,240,0.2)' }}
-            onMouseLeave={e=>{ e.currentTarget.style.background='rgba(168,212,240,0.06)'; e.currentTarget.style.borderColor='rgba(168,212,240,0.35)'; e.currentTarget.style.boxShadow='none' }}
+          {/* Content */}
+          <div style={{
+            position:'absolute', inset:0, zIndex:3,
+            display:'flex', flexDirection:'column',
+            alignItems:'center', justifyContent:'center',
+            padding:'0 24px',
+          }}>
+            {/* Logo */}
+            <motion.div
+              initial={{ opacity:0, scale:0.85, filter:'blur(20px)' }}
+              animate={logoReady ? { opacity:1, scale:1, filter:'blur(0px)' } : {}}
+              transition={{ duration:1.4, ease:[0.4,0,0.2,1] }}
+              style={{ marginBottom:52 }}
             >
-              Explore Kits
-            </Link>
-            <Link to="/mission" style={{
-              fontFamily:"'JetBrains Mono', monospace", fontSize:12,
-              letterSpacing:'3px', textTransform:'uppercase', textDecoration:'none',
-              padding:'14px 32px', border:'1px solid rgba(168,212,240,0.12)', borderRadius:3,
-              color:'var(--muted)', transition:'all 0.4s ease',
-            }}
-            onMouseEnter={e=>{ e.currentTarget.style.color='var(--pastel2)'; e.currentTarget.style.borderColor='rgba(168,212,240,0.3)' }}
-            onMouseLeave={e=>{ e.currentTarget.style.color='var(--muted)'; e.currentTarget.style.borderColor='rgba(168,212,240,0.12)' }}
+              <div style={{ position:'relative', display:'inline-block' }}>
+                <div style={{
+                  position:'absolute', inset:-52, borderRadius:'50%',
+                  background:'radial-gradient(circle, rgba(168,212,240,0.22) 0%, rgba(168,212,240,0.06) 45%, transparent 70%)',
+                  animation:'breathe 5s ease-in-out infinite',
+                }}/>
+                <img
+                  src="/images/cclogo.png" alt="CurioCrate"
+                  style={{
+                    height:'clamp(160px, 20vw, 240px)',
+                    objectFit:'contain',
+                    filter:'drop-shadow(0 0 40px rgba(168,212,240,0.85)) drop-shadow(0 0 100px rgba(168,212,240,0.4))',
+                    animation:'drift 6s ease-in-out infinite',
+                    display:'block',
+                  }}
+                />
+              </div>
+            </motion.div>
+
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity:0, y:20 }}
+              animate={ctaReady ? { opacity:1, y:0 } : {}}
+              transition={{ duration:0.8, ease:[0.4,0,0.2,1] }}
+              style={{ display:'flex', gap:14, flexWrap:'wrap', justifyContent:'center' }}
             >
-              Our Mission
-            </Link>
-          </motion.div>
+              {[
+                { to:'/kits',    label:'Explore Kits', primary:true  },
+                { to:'/mission', label:'Our Mission',  primary:false },
+                { to:'/gallery', label:'View Gallery', primary:false },
+              ].map(btn => (
+                <Link key={btn.to} to={btn.to} style={{
+                  fontFamily:"'JetBrains Mono', monospace", fontSize:12,
+                  letterSpacing:'3px', textTransform:'uppercase', textDecoration:'none',
+                  padding:'14px 32px', borderRadius:3,
+                  border: btn.primary ? '1px solid rgba(168,212,240,0.5)' : '1px solid rgba(168,212,240,0.22)',
+                  color: btn.primary ? 'var(--cream)' : 'rgba(197,227,247,0.7)',
+                  background: btn.primary ? 'rgba(168,212,240,0.12)' : 'transparent',
+                  backdropFilter:'blur(12px)',
+                  transition:'all 0.35s ease',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = 'rgba(168,212,240,0.2)'
+                  e.currentTarget.style.borderColor = 'rgba(168,212,240,0.65)'
+                  e.currentTarget.style.color = 'var(--cream)'
+                  e.currentTarget.style.boxShadow = '0 0 28px rgba(168,212,240,0.22)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = btn.primary ? 'rgba(168,212,240,0.12)' : 'transparent'
+                  e.currentTarget.style.borderColor = btn.primary ? 'rgba(168,212,240,0.5)' : 'rgba(168,212,240,0.22)'
+                  e.currentTarget.style.color = btn.primary ? 'var(--cream)' : 'rgba(197,227,247,0.7)'
+                  e.currentTarget.style.boxShadow = 'none'
+                }}
+                >{btn.label}</Link>
+              ))}
+            </motion.div>
+          </div>
 
-          {/* Mascot */}
-          <motion.img
-            src="/images/mascot1.png"
-            alt="CurioCrate Mascot"
-            initial={{ opacity:0, x:60, y:20 }}
-            animate={mascotReady ? { opacity:0.92, x:0, y:0 } : {}}
-            transition={{ duration:1.2, ease:[0.4,0,0.2,1] }}
-            style={{
-              position:'absolute', right:'6%', bottom:'8%',
-              height:'clamp(140px, 18vw, 260px)', objectFit:'contain',
-              filter:'drop-shadow(0 0 24px rgba(168,212,240,0.4))',
-              zIndex:2, animation:'drift 5s ease-in-out infinite', animationDelay:'0.5s',
-            }}
-          />
-
-          {/* Motto */}
+          {/* Dot nav */}
           <motion.div
             initial={{ opacity:0 }}
-            animate={scrollReady ? { opacity:0.45 } : {}}
-            transition={{ duration:1.5 }}
+            animate={ctaReady ? { opacity:1 } : {}}
+            transition={{ duration:0.8 }}
             style={{
-              fontFamily:"'Cormorant Garamond', serif", fontStyle:'italic',
-              fontSize:'clamp(13px,1.5vw,17px)', color:'var(--pastel2)',
-              letterSpacing:'0.08em', textAlign:'center', zIndex:2, marginBottom:32,
+              position:'absolute', bottom:30, left:'50%', transform:'translateX(-50%)',
+              zIndex:4, display:'flex', gap:7, alignItems:'center',
             }}
           >
-            "Create Change in our Community through Curiosity."
-          </motion.div>
-
-          {/* Scroll indicator */}
-          <motion.div
-            initial={{ opacity:0 }}
-            animate={{ opacity: scrollReady && !scrolled ? 1 : 0 }}
-            transition={{ duration:0.5 }}
-            style={{
-              position:'absolute', bottom:32, left:'50%', transform:'translateX(-50%)',
-              display:'flex', flexDirection:'column', alignItems:'center', gap:10, zIndex:2,
-              pointerEvents:'none',
-            }}
-          >
-            <span className="label" style={{ fontSize:9 }}>Scroll to explore</span>
-            <div style={{
-              width:1, height:48,
-              background:'linear-gradient(to bottom, rgba(168,212,240,0.6), transparent)',
-              animation:'breathe 2s ease-in-out infinite',
-            }}/>
+            {HERO_PHOTOS.map((_, i) => (
+              <button key={i} onClick={() => setActivePhoto(i)} style={{
+                width: i === activePhoto ? 22 : 6, height:6,
+                borderRadius:3,
+                background: i === activePhoto ? 'rgba(168,212,240,0.9)' : 'rgba(255,255,255,0.28)',
+                border:'none', cursor:'pointer',
+                transition:'all 0.4s ease', padding:0,
+              }}/>
+            ))}
           </motion.div>
         </div>
       </motion.section>
 
-      {/* ─── SECTION 2: REAL PHOTOS ─── */}
-      <section style={{ position:'relative', zIndex:1, padding:'120px 0', overflow:'hidden' }}>
-        <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 40px' }}>
-          <motion.div
-            initial={{ opacity:0, y:40 }}
-            whileInView={{ opacity:1, y:0 }}
-            viewport={{ once:true }}
-            transition={{ duration:0.9, ease:[0.4,0,0.2,1] }}
-            style={{ marginBottom:64, textAlign:'center' }}
-          >
-            <div className="label" style={{ marginBottom:16 }}>In the Field</div>
-            <h2 style={{ fontSize:'clamp(32px,5vw,64px)', color:'var(--cream)', lineHeight:1.1 }}>
-              Science happening,<br/>
-              <em style={{ color:'var(--pastel1)', fontStyle:'italic' }}>right now.</em>
-            </h2>
-          </motion.div>
-
-          <div style={{ display:'grid', gridTemplateColumns:'1.6fr 1fr 1fr', gridTemplateRows:'300px 220px', gap:12 }}>
-            {[
-              { src:'/images/IMG_3920.jpg',         style:{ gridRow:'1/3', gridColumn:'1/2' } },
-              { src:'/images/volunteeringimage.jpg', style:{ gridRow:'1/2', gridColumn:'2/3' } },
-              { src:'/images/IMG_9240.jpg',          style:{ gridRow:'1/2', gridColumn:'3/4' } },
-              { src:'/images/P1080258.JPG',          style:{ gridRow:'2/3', gridColumn:'2/3' } },
-              { src:'/images/P1080212.JPG',          style:{ gridRow:'2/3', gridColumn:'3/4' } },
-            ].map((img, i) => (
-              <motion.div key={i}
-                initial={{ opacity:0, scale:0.96 }}
-                whileInView={{ opacity:1, scale:1 }}
-                viewport={{ once:true }}
-                transition={{ duration:0.8, delay:i*0.1, ease:[0.4,0,0.2,1] }}
-                whileHover={{ scale:1.02, zIndex:10 }}
-                style={{
-                  ...img.style, borderRadius:6, overflow:'hidden', position:'relative',
-                  border:'1px solid rgba(168,212,240,0.08)', cursor:'pointer',
-                }}
-              >
-                <img src={img.src} alt=""
-                  style={{ width:'100%', height:'100%', objectFit:'cover', transition:'transform 0.6s ease' }}
-                  onMouseEnter={e=>{ e.currentTarget.style.transform='scale(1.08)' }}
-                  onMouseLeave={e=>{ e.currentTarget.style.transform='scale(1)' }}
-                />
-                <div style={{
-                  position:'absolute', inset:0,
-                  background:'linear-gradient(to top, rgba(6,13,31,0.6) 0%, transparent 50%)',
-                }}/>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            initial={{ opacity:0 }}
-            whileInView={{ opacity:1 }}
-            viewport={{ once:true }}
-            transition={{ delay:0.5, duration:0.8 }}
-            style={{ textAlign:'center', marginTop:48 }}
-          >
-            <Link to="/gallery" style={{
-              fontFamily:"'JetBrains Mono', monospace", fontSize:11,
-              letterSpacing:'3px', textTransform:'uppercase',
-              color:'var(--pastel1)', textDecoration:'none',
-              padding:'12px 28px', border:'1px solid rgba(168,212,240,0.2)', borderRadius:3,
-              transition:'all 0.3s ease',
-            }}
-            onMouseEnter={e=>{ e.currentTarget.style.background='rgba(168,212,240,0.06)'; e.currentTarget.style.borderColor='rgba(168,212,240,0.4)' }}
-            onMouseLeave={e=>{ e.currentTarget.style.background='transparent'; e.currentTarget.style.borderColor='rgba(168,212,240,0.2)' }}
-            >
-              View Full Gallery →
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
       {/* ─── OUR CHAPTERS ─── */}
       <section style={{ position:'relative', zIndex:1, padding:'100px 0 110px' }}>
-        {/* Dot-grid bg */}
         <div style={{
           position:'absolute', inset:0,
           backgroundImage:'radial-gradient(circle, rgba(168,212,240,0.045) 1px, transparent 1px)',
@@ -427,7 +290,6 @@ export default function Home() {
 
         <div style={{ maxWidth:760, margin:'0 auto', padding:'0 24px', position:'relative', zIndex:1 }}>
 
-          {/* Section header */}
           <motion.div
             initial={{ opacity:0, y:28 }}
             whileInView={{ opacity:1, y:0 }}
@@ -488,7 +350,7 @@ export default function Home() {
                   padding:0, display:'flex', alignItems:'center',
                 }}>×</button>
               )}
-              {!chaptersLoading && (
+              {!chaptersLoading && chaptersData.length > 0 && (
                 <span style={{
                   fontFamily:"'JetBrains Mono', monospace",
                   fontSize:9, letterSpacing:2, color:'var(--muted)', opacity:0.35,
@@ -500,7 +362,7 @@ export default function Home() {
             </div>
           </motion.div>
 
-          {/* Scrollable container */}
+          {/* Scrollable list */}
           <motion.div
             initial={{ opacity:0, y:20 }}
             whileInView={{ opacity:1, y:0 }}
@@ -509,8 +371,7 @@ export default function Home() {
             style={{ position:'relative' }}
           >
             <div style={{
-              height:580,
-              overflowY:'auto',
+              height:580, overflowY:'auto',
               background:'rgba(6,12,32,0.55)',
               backdropFilter:'blur(28px)',
               border:'1px solid rgba(168,212,240,0.11)',
@@ -545,14 +406,15 @@ export default function Home() {
                   <div style={{
                     fontFamily:"'JetBrains Mono', monospace",
                     fontSize:10, color:'var(--muted)', opacity:0.4, letterSpacing:2,
-                  }}>No chapters match</div>
+                  }}>
+                    {searchQuery ? 'No chapters match' : 'Chapters launching soon'}
+                  </div>
                 </div>
               ) : filteredChapters.map((chapter, i) => (
                 <ChapterCard key={chapter.school + i} chapter={chapter} index={i} />
               ))}
             </div>
 
-            {/* Bottom fade overlay */}
             <div style={{
               position:'absolute', bottom:0, left:0, right:0, height:64,
               background:'linear-gradient(to top, rgba(6,12,32,0.85) 0%, transparent 100%)',
@@ -561,7 +423,6 @@ export default function Home() {
             }} />
           </motion.div>
 
-          {/* Footer */}
           <motion.p
             initial={{ opacity:0 }}
             whileInView={{ opacity:1 }}
@@ -581,7 +442,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── SECTION 3: IMPACT STATS — redesigned for meaning ─── */}
+      {/* ─── IMPACT STATS ─── */}
       <section style={{ position:'relative', zIndex:1, padding:'100px 40px' }}>
         <div style={{ maxWidth:1200, margin:'0 auto' }}>
           <motion.div
@@ -603,10 +464,8 @@ export default function Home() {
           </motion.div>
 
           <div style={{
-            display:'grid',
-            gridTemplateColumns:'repeat(2, 1fr)',
-            gap:3,
-            borderRadius:20, overflow:'hidden',
+            display:'grid', gridTemplateColumns:'repeat(2, 1fr)',
+            gap:3, borderRadius:20, overflow:'hidden',
             boxShadow:'0 40px 120px rgba(0,0,0,0.5)',
           }}>
             {stats.map((s, i) => (
@@ -617,8 +476,7 @@ export default function Home() {
                 viewport={{ once:true }}
                 transition={{ delay:i*0.12, duration:0.9, ease:[0.4,0,0.2,1] }}
                 style={{
-                  padding:'72px 56px',
-                  position:'relative', overflow:'hidden',
+                  padding:'72px 56px', position:'relative', overflow:'hidden',
                   border:'1px solid rgba(168,212,240,0.07)',
                 }}
                 onMouseEnter={e => {
@@ -634,7 +492,6 @@ export default function Home() {
                   if (ov) ov.style.opacity='1'
                 }}
               >
-                {/* Cinematic photo background */}
                 <img className="stat-bg" src={s.photo} alt="" style={{
                   position:'absolute', inset:0,
                   width:'100%', height:'100%', objectFit:'cover',
@@ -642,18 +499,13 @@ export default function Home() {
                   transition:'transform 0.7s ease, filter 0.7s ease',
                   pointerEvents:'none', userSelect:'none',
                 }} />
-
-                {/* Blue overlay */}
                 <div className="stat-ov" style={{
                   position:'absolute', inset:0,
                   background: i%2===0
                     ? 'linear-gradient(135deg, rgba(10,20,55,0.82) 0%, rgba(6,14,38,0.75) 100%)'
                     : 'linear-gradient(135deg, rgba(6,14,38,0.78) 0%, rgba(10,20,55,0.70) 100%)',
-                  transition:'opacity 0.4s',
-                  pointerEvents:'none',
+                  transition:'opacity 0.4s', pointerEvents:'none',
                 }} />
-
-                {/* Ghost watermark */}
                 <div style={{
                   position:'absolute', bottom:-30, right:-10,
                   fontFamily:"'Cormorant Garamond', serif",
@@ -661,8 +513,6 @@ export default function Home() {
                   color:'rgba(168,212,240,0.045)',
                   userSelect:'none', pointerEvents:'none', zIndex:1,
                 }}>{s.value}</div>
-
-                {/* Top accent rule */}
                 <motion.div
                   initial={{ scaleX:0 }}
                   whileInView={{ scaleX:1 }}
@@ -674,8 +524,6 @@ export default function Home() {
                     transformOrigin:'left', zIndex:2,
                   }}
                 />
-
-                {/* Number */}
                 <div style={{
                   position:'relative', zIndex:2,
                   fontFamily:"'Cormorant Garamond', serif",
@@ -684,79 +532,26 @@ export default function Home() {
                   color:'var(--pastel1)',
                   textShadow:'0 0 80px rgba(168,212,240,0.7), 0 0 160px rgba(168,212,240,0.3)',
                   marginBottom:24, letterSpacing:'-0.04em',
-                }}>
-                  {s.value}
-                </div>
-
-                {/* Label */}
+                }}>{s.value}</div>
                 <div style={{
                   position:'relative', zIndex:2,
                   fontFamily:"'Plus Jakarta Sans', sans-serif",
                   fontWeight:700, fontSize:13,
                   color:'var(--cream)', marginBottom:12,
                   textTransform:'uppercase', letterSpacing:'2.5px',
-                }}>
-                  {s.label}
-                </div>
-
-                {/* Description */}
+                }}>{s.label}</div>
                 <div style={{
                   position:'relative', zIndex:2,
                   fontSize:14, color:'var(--muted)', lineHeight:1.75,
                   maxWidth:320, opacity:0.8,
-                }}>
-                  {s.description}
-                </div>
+                }}>{s.description}</div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ─── SECTION 4: KIT TEASER ─── */}
-      <section style={{ position:'relative', zIndex:1, padding:'100px 40px' }}>
-        <div style={{ maxWidth:1100, margin:'0 auto' }}>
-          <motion.div
-            initial={{ opacity:0, y:30 }}
-            whileInView={{ opacity:1, y:0 }}
-            viewport={{ once:true }}
-            transition={{ duration:0.8 }}
-            style={{ textAlign:'center', marginBottom:64 }}
-          >
-            <div className="label" style={{ marginBottom:16 }}>The Collection</div>
-            <h2 style={{ fontSize:'clamp(30px,5vw,60px)', color:'var(--cream)', lineHeight:1.1, marginBottom:16 }}>
-              Kits in development.
-            </h2>
-            <p style={{ color:'var(--muted)', fontSize:16, maxWidth:480, margin:'0 auto' }}>
-              We're crafting hands-on science kits to bring discovery directly to students. Stay tuned.
-            </p>
-          </motion.div>
-          <motion.div
-            initial={{ opacity:0, y:30 }}
-            whileInView={{ opacity:1, y:0 }}
-            viewport={{ once:true }}
-            transition={{ duration:0.8, delay:0.2 }}
-            style={{ textAlign:'center' }}
-          >
-            <Link to="/kits" style={{
-              display:'inline-flex', alignItems:'center', gap:12,
-              fontFamily:"'JetBrains Mono', monospace", fontSize:12,
-              letterSpacing:'3px', textTransform:'uppercase', textDecoration:'none',
-              padding:'16px 40px',
-              background:'linear-gradient(135deg, rgba(168,212,240,0.12) 0%, rgba(168,212,240,0.04) 100%)',
-              border:'1px solid rgba(168,212,240,0.3)', borderRadius:4,
-              color:'var(--cream)', transition:'all 0.4s ease',
-            }}
-            onMouseEnter={e=>{ e.currentTarget.style.background='rgba(168,212,240,0.18)'; e.currentTarget.style.boxShadow='0 0 40px rgba(168,212,240,0.15), inset 0 0 20px rgba(168,212,240,0.05)'; e.currentTarget.style.borderColor='rgba(168,212,240,0.5)' }}
-            onMouseLeave={e=>{ e.currentTarget.style.background='linear-gradient(135deg, rgba(168,212,240,0.12) 0%, rgba(168,212,240,0.04) 100%)'; e.currentTarget.style.boxShadow='none'; e.currentTarget.style.borderColor='rgba(168,212,240,0.3)' }}
-            >
-              Learn More →
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ─── SECTION 5: PARTNERS ─── */}
+      {/* ─── PARTNERS ─── */}
       <section style={{ position:'relative', zIndex:1, padding:'80px 40px 100px' }}>
         <div style={{ maxWidth:900, margin:'0 auto' }}>
           <motion.div
@@ -779,21 +574,12 @@ export default function Home() {
           </motion.div>
 
           <div style={{
-            display:'grid',
-            gridTemplateColumns:'repeat(2, 1fr)',
+            display:'grid', gridTemplateColumns:'repeat(2, 1fr)',
             gap:20, maxWidth:700, margin:'0 auto',
           }}>
             {[
-              {
-                name: 'Society for Science',
-                type: 'Education Partner',
-                logo: '/logos/sfslogo.png',
-              },
-              {
-                name: 'Connect Key Foundation',
-                type: 'Nonprofit Partner',
-                logo: '/logos/ckflogo.png',
-              },
+              { name:'Society for Science',    type:'Education Partner',  logo:'/logos/sfslogo.png' },
+              { name:'Connect Key Foundation', type:'Nonprofit Partner',  logo:'/logos/ckflogo.png' },
             ].map((p, i) => (
               <motion.div
                 key={p.name}
@@ -818,27 +604,22 @@ export default function Home() {
               >
                 <div style={{
                   height:80, display:'flex',
-                  alignItems:'center', justifyContent:'center',
-                  marginBottom:20,
+                  alignItems:'center', justifyContent:'center', marginBottom:20,
                 }}>
-                  <img
-                    src={p.logo} alt={p.name}
-                    style={{
-                      maxHeight:72, maxWidth:200, objectFit:'contain',
-                      filter:'brightness(0) invert(1) opacity(0.85)',
-                      transition:'filter 0.3s',
-                    }}
-                    onMouseEnter={e=>{ e.currentTarget.style.filter='brightness(0) invert(1) opacity(1)' }}
-                    onMouseLeave={e=>{ e.currentTarget.style.filter='brightness(0) invert(1) opacity(0.85)' }}
+                  <img src={p.logo} alt={p.name} style={{
+                    maxHeight:72, maxWidth:200, objectFit:'contain',
+                    filter:'brightness(0) invert(1) opacity(0.85)',
+                    transition:'filter 0.3s',
+                  }}
+                  onMouseEnter={e=>{ e.currentTarget.style.filter='brightness(0) invert(1) opacity(1)' }}
+                  onMouseLeave={e=>{ e.currentTarget.style.filter='brightness(0) invert(1) opacity(0.85)' }}
                   />
                 </div>
                 <div style={{
                   fontFamily:"'Plus Jakarta Sans', sans-serif",
                   fontWeight:600, fontSize:15,
                   color:'var(--cream)', marginBottom:6,
-                }}>
-                  {p.name}
-                </div>
+                }}>{p.name}</div>
                 <div className="label" style={{ fontSize:9, opacity:0.45 }}>{p.type}</div>
               </motion.div>
             ))}
@@ -863,16 +644,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Mascot cameo */}
-      <div style={{
-        position:'relative', zIndex:1,
-        display:'flex', justifyContent:'flex-end',
-        padding:'0 48px 80px', opacity:0.5,
-      }}>
-        <img src="/images/mascot1.png" alt=""
-          style={{ height:80, filter:'drop-shadow(0 0 16px rgba(168,212,240,0.3))', animation:'drift 7s ease-in-out infinite' }}
-        />
-      </div>
     </PageTransition>
   )
 }
