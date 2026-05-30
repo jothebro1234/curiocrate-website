@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion'
-import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
 import PageTransition from '../components/PageTransition'
 import { stats } from '../data/stats'
 import { chapters as staticChapters } from '../data/chapters'
@@ -24,85 +26,80 @@ const GET_INVOLVED_STEPS = [
   {
     n: '01',
     title: 'Apply as a Volunteer',
-    body: 'Join our volunteer network and connect with a team that\'s passionate about science education.',
+    body: 'Join our volunteer network and connect with a team passionate about science education.',
     href: 'https://portal.curiocrate.org',
+    img: '/images/curiecomputer.png',
   },
   {
     n: '02',
     title: 'Teach or Create a Lesson',
     body: 'Design hands-on science lessons or lead your first kit session with real students.',
+    img: '/images/curieteacher.png',
   },
   {
     n: '03',
     title: 'Become a Kit Developer',
     body: 'Work directly on developing official CurioCrate research kit products distributed to communities.',
+    img: '/images/curiekits.png',
   },
 ]
 
-const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'
+// Custom glowing marker for Leaflet
+const chapterIcon = L.divIcon({
+  html: `<div style="
+    width:14px;height:14px;border-radius:50%;
+    background:rgba(168,212,240,0.9);
+    border:3px solid rgba(168,212,240,0.35);
+    box-shadow:0 0 16px rgba(168,212,240,0.7), 0 0 32px rgba(168,212,240,0.3);
+    cursor:pointer;
+  "></div>`,
+  className: '',
+  iconSize: [14, 14],
+  iconAnchor: [7, 7],
+  popupAnchor: [0, -10],
+})
 
-function WorldMap({ chaptersData }) {
-  const [tooltip, setTooltip] = useState(null)
-
+function LeafletMap({ chaptersData }) {
   const markers = chaptersData
     .filter(c => chapterLocations[c.school])
     .map(c => ({ ...c, coordinates: chapterLocations[c.school] }))
 
-  // Include hardcoded locations not yet in API data
-  const hardcodedMarkers = Object.entries(chapterLocations)
+  const hardcoded = Object.entries(chapterLocations)
     .filter(([school]) => !chaptersData.some(c => c.school === school))
     .map(([school, coordinates]) => ({ school, coordinates }))
 
-  const allMarkers = [...markers, ...hardcodedMarkers]
+  const allMarkers = [...markers, ...hardcoded]
 
   return (
-    <div style={{ position: 'relative' }}>
-      <ComposableMap
-        projectionConfig={{ scale: 147, center: [0, 10] }}
-        style={{ width: '100%', height: 'auto' }}
-      >
-        <Geographies geography={GEO_URL}>
-          {({ geographies }) =>
-            geographies.map(geo => (
-              <Geography
-                key={geo.rsmKey}
-                geography={geo}
-                style={{
-                  default: { fill: 'rgba(15,32,68,0.85)', stroke: 'rgba(168,212,240,0.1)', strokeWidth: 0.5, outline: 'none' },
-                  hover:   { fill: 'rgba(22,42,92,0.9)',  stroke: 'rgba(168,212,240,0.2)', strokeWidth: 0.5, outline: 'none' },
-                  pressed: { outline: 'none' },
-                }}
-              />
-            ))
-          }
-        </Geographies>
-
-        {allMarkers.map((m, i) => (
-          <Marker
-            key={i}
-            coordinates={m.coordinates}
-            onMouseEnter={() => setTooltip(m)}
-            onMouseLeave={() => setTooltip(null)}
-          >
-            <circle r={7} fill="rgba(168,212,240,0.15)" stroke="rgba(168,212,240,0.5)" strokeWidth={1.5} style={{ cursor: 'pointer' }} />
-            <circle r={3.5} fill="var(--pastel1)" style={{ cursor: 'pointer' }} />
-          </Marker>
-        ))}
-      </ComposableMap>
-
-      {tooltip && (
-        <div style={{
-          position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)',
-          background: 'rgba(6,13,31,0.95)', backdropFilter: 'blur(16px)',
-          border: '1px solid rgba(168,212,240,0.2)', borderRadius: 8,
-          padding: '8px 18px', pointerEvents: 'none', whiteSpace: 'nowrap',
-          fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
-          color: 'var(--cream)', letterSpacing: '0.5px',
-        }}>
-          {tooltip.school}
-        </div>
-      )}
-    </div>
+    <MapContainer
+      center={[39.5, -98.35]}
+      zoom={4}
+      minZoom={2}
+      maxZoom={18}
+      style={{ height: '480px', width: '100%', background: '#060d1f' }}
+      zoomControl={true}
+    >
+      <TileLayer
+        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        subdomains="abcd"
+        maxZoom={20}
+      />
+      {allMarkers.map((m, i) => (
+        <Marker key={i} position={[m.coordinates[1], m.coordinates[0]]} icon={chapterIcon}>
+          <Popup>
+            <div style={{
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              minWidth: 180,
+            }}>
+              <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>{m.school}</div>
+              {m.president && <div style={{ fontSize: 12, color: '#666' }}>{m.president}</div>}
+              {m.state && <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>{m.state}</div>}
+            </div>
+          </Popup>
+        </Marker>
+      ))}
+    </MapContainer>
   )
 }
 
@@ -174,7 +171,7 @@ export default function Home() {
             ].join(', '),
           }}/>
 
-          {/* Mission statement + buttons */}
+          {/* Mission + buttons */}
           <div style={{
             position: 'absolute', inset: 0, zIndex: 3,
             display: 'flex', flexDirection: 'column',
@@ -205,7 +202,7 @@ export default function Home() {
                 letterSpacing: '0.02em', lineHeight: 1.6,
                 textShadow: '0 1px 12px rgba(3,5,15,0.7)',
               }}>
-                Free, hands-on science kits for underserved students — everywhere.
+                Accessible, immersive, hands-on science kits for underserved students.
               </p>
             </motion.div>
 
@@ -250,7 +247,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={ctaReady ? { opacity: 1 } : {}}
-            style={{ position: 'absolute', bottom: 100, left: '50%', transform: 'translateX(-50%)', zIndex: 4, display: 'flex', gap: 7 }}
+            style={{ position: 'absolute', bottom: 90, left: '50%', transform: 'translateX(-50%)', zIndex: 4, display: 'flex', gap: 7 }}
           >
             {HERO_PHOTOS.map((_, i) => (
               <button key={i} onClick={() => setActivePhoto(i)} style={{
@@ -269,21 +266,25 @@ export default function Home() {
             style={{
               position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 4,
               borderTop: '1px solid rgba(168,212,240,0.08)',
-              background: 'linear-gradient(to top, rgba(3,5,15,0.7) 0%, transparent 100%)',
-              padding: '16px 40px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 40,
+              background: 'linear-gradient(to top, rgba(3,5,15,0.75) 0%, transparent 100%)',
+              padding: '20px 40px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 48,
             }}
           >
             <span style={{
               fontFamily: "'JetBrains Mono', monospace", fontSize: 9,
               letterSpacing: '3px', textTransform: 'uppercase',
-              color: 'rgba(168,212,240,0.35)',
+              color: 'rgba(168,212,240,0.4)',
             }}>Supported by</span>
             {PARTNERS.map(p => (
               <img key={p.name} src={p.logo} alt={p.name} style={{
-                height: 28, objectFit: 'contain',
-                filter: 'brightness(0) invert(1) opacity(0.5)',
-              }}/>
+                height: 44, objectFit: 'contain',
+                filter: 'brightness(0) invert(1) opacity(0.65)',
+                transition: 'opacity 0.3s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(0.9)' }}
+              onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(0.65)' }}
+              />
             ))}
           </motion.div>
         </div>
@@ -317,32 +318,24 @@ export default function Home() {
               </p>
             </motion.div>
 
+            {/* Photo instead of cards */}
             <motion.div
               initial={{ opacity: 0, x: 32 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.9, delay: 0.1 }}
-              style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
             >
-              {[
-                { icon: '🧪', label: 'Free Science Kits',        desc: 'Hands-on kits designed by students, for students — distributed at zero cost.' },
-                { icon: '🌍', label: 'Community Chapters',        desc: 'Student-led chapters that bring science to life in their own schools.' },
-                { icon: '🎓', label: 'Volunteer-Powered',         desc: 'Run entirely by passionate students and educators who believe in the mission.' },
-              ].map((item, i) => (
-                <div key={item.label} style={{
-                  display: 'flex', gap: 20, alignItems: 'flex-start',
-                  padding: '20px 24px',
-                  border: '1px solid rgba(168,212,240,0.09)',
-                  borderRadius: 14, background: 'rgba(8,16,42,0.4)',
-                  backdropFilter: 'blur(16px)',
-                }}>
-                  <span style={{ fontSize: 24, lineHeight: 1, flexShrink: 0 }}>{item.icon}</span>
-                  <div>
-                    <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: 14, color: 'var(--cream)', marginBottom: 6 }}>{item.label}</div>
-                    <div style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.7 }}>{item.desc}</div>
-                  </div>
-                </div>
-              ))}
+              <div style={{
+                borderRadius: 20, overflow: 'hidden',
+                border: '1px solid rgba(168,212,240,0.1)',
+                boxShadow: '0 32px 80px rgba(0,0,0,0.4)',
+              }}>
+                <img
+                  src="/images/whatiscuriocrate.jpg"
+                  alt="What is CurioCrate"
+                  style={{ width: '100%', display: 'block', objectFit: 'cover' }}
+                />
+              </div>
             </motion.div>
           </div>
         </div>
@@ -368,38 +361,37 @@ export default function Home() {
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(30px,4vw,56px)',
               fontWeight: 300, color: 'var(--cream)', lineHeight: 1.05,
-            }}>
-              Get Involved
-            </h2>
+            }}>Get Involved</h2>
           </motion.div>
 
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 0 }}>
             {GET_INVOLVED_STEPS.map((step, i) => (
               <div key={step.n} style={{ display: 'flex', alignItems: 'flex-start', flex: 1 }}>
-                {/* Step card */}
                 <motion.div
                   initial={{ opacity: 0, y: 32 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.7, delay: i * 0.15 }}
-                  style={{ flex: 1, textAlign: 'center', padding: '0 24px' }}
+                  style={{ flex: 1, textAlign: 'center', padding: '0 20px' }}
                 >
-                  <div style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: 64, fontWeight: 300, lineHeight: 1,
-                    color: 'var(--pastel1)', opacity: 0.25, marginBottom: 20,
-                  }}>{step.n}</div>
+                  {/* Character image */}
+                  <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'center' }}>
+                    <img
+                      src={step.img}
+                      alt={step.title}
+                      style={{
+                        height: 140,
+                        objectFit: 'contain',
+                        filter: 'drop-shadow(0 8px 24px rgba(0,0,0,0.4))',
+                      }}
+                    />
+                  </div>
 
                   <div style={{
-                    width: 56, height: 56, borderRadius: '50%', margin: '0 auto 20px',
-                    border: '1px solid rgba(168,212,240,0.25)',
-                    background: 'rgba(168,212,240,0.06)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: 20, color: 'var(--pastel1)',
-                  }}>
-                    {i === 0 ? '✦' : i === 1 ? '◈' : '◉'}
-                  </div>
+                    fontSize: 52, fontWeight: 300, lineHeight: 1,
+                    color: 'var(--pastel1)', opacity: 0.2, marginBottom: 16,
+                  }}>{step.n}</div>
 
                   <div style={{
                     fontFamily: "'Cormorant Garamond', serif",
@@ -426,7 +418,7 @@ export default function Home() {
                   )}
                 </motion.div>
 
-                {/* Arrow between steps */}
+                {/* Arrow */}
                 {i < GET_INVOLVED_STEPS.length - 1 && (
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -434,9 +426,9 @@ export default function Home() {
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.15 + 0.3, duration: 0.5 }}
                     style={{
-                      flexShrink: 0, paddingTop: 96,
+                      flexShrink: 0, paddingTop: 80,
                       color: 'rgba(168,212,240,0.3)',
-                      fontFamily: "'JetBrains Mono', monospace", fontSize: 22,
+                      fontSize: 22,
                     }}
                   >→</motion.div>
                 )}
@@ -448,44 +440,63 @@ export default function Home() {
 
       {/* ─── START A CHAPTER ─── */}
       <section style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
-        <div style={{ maxWidth: 760, margin: '0 auto', textAlign: 'center' }}>
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="label" style={{ marginBottom: 16 }}>Expand the Network</div>
-            <h2 style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: 'clamp(32px,5vw,68px)',
-              fontWeight: 300, color: 'var(--cream)',
-              lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 20,
-            }}>
-              Start a Chapter<br/>
-              <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>at your school.</em>
-            </h2>
-            <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.8, maxWidth: 520, margin: '0 auto 40px' }}>
-              Bring free science kits and hands-on learning to your community. Starting a chapter is free, student-led, and open to any school.
-            </p>
-            <a
-              href="https://forms.gle/nEBfc84qHXxcmT4k8"
-              target="_blank" rel="noopener noreferrer"
-              style={{
-                display: 'inline-block',
-                fontFamily: "'JetBrains Mono', monospace", fontSize: 12,
-                letterSpacing: '3px', textTransform: 'uppercase', textDecoration: 'none',
-                padding: '16px 40px', borderRadius: 3,
-                border: '1px solid rgba(168,212,240,0.45)',
-                color: 'var(--cream)', background: 'rgba(168,212,240,0.1)',
-                backdropFilter: 'blur(12px)', transition: 'all 0.35s ease',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.2)'; e.currentTarget.style.boxShadow = '0 0 40px rgba(168,212,240,0.2)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.1)'; e.currentTarget.style.boxShadow = 'none' }}
+        <div style={{ maxWidth: 900, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 64, alignItems: 'center' }}>
+            <motion.div
+              initial={{ opacity: 0, x: -24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
             >
-              Get Started →
-            </a>
-          </motion.div>
+              <h2 style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: 'clamp(32px,5vw,68px)',
+                fontWeight: 300, color: 'var(--cream)',
+                lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 20,
+              }}>
+                Start a Chapter<br/>
+                <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>at your school.</em>
+              </h2>
+              <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.8, maxWidth: 480, marginBottom: 36 }}>
+                Lead the program to bring immersive, hands-on science education directly to students at your school and community.
+              </p>
+              <a
+                href="https://forms.gle/nEBfc84qHXxcmT4k8"
+                target="_blank" rel="noopener noreferrer"
+                style={{
+                  display: 'inline-block',
+                  fontFamily: "'JetBrains Mono', monospace", fontSize: 12,
+                  letterSpacing: '3px', textTransform: 'uppercase', textDecoration: 'none',
+                  padding: '16px 40px', borderRadius: 3,
+                  border: '1px solid rgba(168,212,240,0.45)',
+                  color: 'var(--cream)', background: 'rgba(168,212,240,0.1)',
+                  backdropFilter: 'blur(12px)', transition: 'all 0.35s ease',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.2)'; e.currentTarget.style.boxShadow = '0 0 40px rgba(168,212,240,0.2)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.1)'; e.currentTarget.style.boxShadow = 'none' }}
+              >
+                Get Started →
+              </a>
+            </motion.div>
+
+            {/* curielead image */}
+            <motion.div
+              initial={{ opacity: 0, x: 24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+            >
+              <img
+                src="/images/curielead.png"
+                alt="Start a chapter"
+                style={{
+                  height: 260,
+                  objectFit: 'contain',
+                  filter: 'drop-shadow(0 12px 40px rgba(0,0,0,0.4))',
+                }}
+              />
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -510,27 +521,21 @@ export default function Home() {
             </h2>
           </motion.div>
 
-          {/* World map */}
+          {/* Leaflet map */}
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 1 }}
             style={{
-              background: 'rgba(6,13,31,0.7)', backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(168,212,240,0.1)', borderRadius: 20,
-              overflow: 'hidden', marginBottom: 24,
+              borderRadius: 20, overflow: 'hidden',
+              border: '1px solid rgba(168,212,240,0.12)',
+              boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
+              marginBottom: 64,
             }}
           >
-            <WorldMap chaptersData={chaptersData} />
+            <LeafletMap chaptersData={chaptersData} />
           </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-            style={{ textAlign: 'center', fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '2px', color: 'var(--muted)', opacity: 0.3, marginBottom: 64 }}
-          >
-            Hover a marker to see the chapter · More chapters being added
-          </motion.p>
 
           {/* Stats grid */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 3, borderRadius: 20, overflow: 'hidden', boxShadow: '0 40px 120px rgba(0,0,0,0.5)' }}>

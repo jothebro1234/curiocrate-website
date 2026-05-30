@@ -1,21 +1,18 @@
-// ─── IMPACT STATS ─────────────────────────────────────────────────────────────
-// Edit these values to update the numbers shown on the home page.
-
 export const stats = [
   {
-    value: '500+',
-    label: 'Kits Delivered',
-    description: 'hands-on science kits distributed free to students in underserved communities',
+    value: '500',
+    label: 'Students Reached',
+    description: 'students introduced to hands-on science through our kits and workshops',
     photo: '/images/IMG_3920.jpg',
   },
   {
     value: '20+',
-    label: 'Events Hosted',
-    description: 'community science workshops, fairs, and STEM sessions run since founding',
+    label: 'Workshops',
+    description: 'community science workshops and STEM sessions hosted since founding',
     photo: '/images/volunteeringimage.jpg',
   },
   {
-    value: '15+',
+    value: '10+',
     label: 'Communities',
     description: 'neighborhoods, schools, and districts reached across the region',
     photo: '/images/P1080258.JPG',

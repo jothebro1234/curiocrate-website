@@ -72,32 +72,10 @@ function ChapterCard({ chapter, index }) {
 }
 
 const HOW_TO_STEPS = [
-  {
-    n: '01',
-    title: 'Fill Out the Application',
-    body: 'Complete our chapter application form. Tell us about your school, your team, and why you want to bring CurioCrate to your community.',
-    action: { label: 'Apply Now', href: 'https://forms.gle/nEBfc84qHXxcmT4k8' },
-  },
-  {
-    n: '02',
-    title: 'Build Your Core Team',
-    body: 'Recruit 3–5 motivated students at your school who are passionate about science and community service.',
-  },
-  {
-    n: '03',
-    title: 'Connect With Your Advisor',
-    body: 'Once approved, you\'ll be matched with a CurioCrate chapter advisor who will guide you through onboarding.',
-  },
-  {
-    n: '04',
-    title: 'Host Your First Event',
-    body: 'Organize your first STEM lesson, kit distribution, or science fair. We provide the resources — you provide the energy.',
-  },
-  {
-    n: '05',
-    title: 'Join the Network',
-    body: 'You\'re now an official CurioCrate chapter. Your school joins our growing national network of student scientists.',
-  },
+  { n: '01', title: 'Fill Out the Application' },
+  { n: '02', title: 'Meet with one of our Chapter Development Officers' },
+  { n: '03', title: 'Build Your Leadership Structure' },
+  { n: '04', title: 'Host Your First Workshop' },
 ]
 
 export default function OurChapters() {
@@ -260,14 +238,6 @@ export default function OurChapters() {
             }} />
           </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            style={{ textAlign: 'center', marginTop: 20, fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: '2px', color: 'var(--muted)', opacity: 0.38 }}
-          >
-            Want to start a chapter? ·{' '}
-            <a href="mailto:ckf.curiocrate@curiocrate.org" style={{ color: 'var(--pastel1)', textDecoration: 'none' }}>reach out to us</a>
-          </motion.p>
         </div>
       </section>
 
@@ -323,27 +293,8 @@ export default function OurChapters() {
                   <div style={{
                     fontFamily: "'Cormorant Garamond', serif",
                     fontSize: 24, fontWeight: 400,
-                    color: 'var(--cream)', marginBottom: 10, lineHeight: 1.2,
+                    color: 'var(--cream)', lineHeight: 1.2,
                   }}>{step.title}</div>
-                  <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.8 }}>
-                    {step.body}
-                  </p>
-                  {step.action && (
-                    <a
-                      href={step.action.href}
-                      target="_blank" rel="noopener noreferrer"
-                      style={{
-                        display: 'inline-block', marginTop: 16,
-                        fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
-                        letterSpacing: '2px', textTransform: 'uppercase', textDecoration: 'none',
-                        padding: '10px 24px', borderRadius: 3,
-                        border: '1px solid rgba(168,212,240,0.35)',
-                        color: 'var(--pastel1)', transition: 'all 0.3s ease',
-                      }}
-                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.08)' }}
-                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
-                    >{step.action.label} →</a>
-                  )}
                 </div>
               </motion.div>
             ))}

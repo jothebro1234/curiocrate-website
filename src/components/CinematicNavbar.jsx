@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 
 const NAV_LEFT = [
-  { path: '/',        label: 'Discover' },
-  { path: '/kits',    label: 'Kits'     },
+  { path: '/',         label: 'Discover'     },
+  { path: '/kits',     label: 'Kits'         },
+  { path: '/chapters', label: 'Our Chapters' },
+  { path: '/contact',  label: 'Contact Us'   },
 ]
 
 const ABOUT_ITEMS = [
@@ -12,10 +14,7 @@ const ABOUT_ITEMS = [
   { path: '/team',    label: 'Team'    },
 ]
 
-const NAV_RIGHT = [
-  { path: '/chapters', label: 'Our Chapters' },
-  { path: '/contact',  label: 'Contact Us'   },
-]
+const NAV_RIGHT = []
 
 function NavItem({ path, label, end }) {
   return (
@@ -101,7 +100,7 @@ export default function CinematicNavbar() {
         {/* Left links */}
         {NAV_LEFT.map(r => <NavItem key={r.path} path={r.path} label={r.label} end={r.path === '/'} />)}
 
-        {/* About Us dropdown */}
+        {/* About Us dropdown — rightmost before the external CTA */}
         <div
           style={{ position: 'relative' }}
           onMouseEnter={openAbout}
@@ -121,15 +120,12 @@ export default function CinematicNavbar() {
             <span style={{
               fontSize: 8, opacity: 0.6,
               transform: aboutOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-              transition: 'transform 0.25s ease',
-              display: 'inline-block',
+              transition: 'transform 0.25s ease', display: 'inline-block',
             }}>▾</span>
           </button>
 
-          {/* Dropdown */}
           <div style={{
             position: 'absolute', top: 'calc(100% + 8px)', left: '50%',
-            transform: 'translateX(-50%)',
             background: 'rgba(6,13,31,0.95)', backdropFilter: 'blur(24px)',
             border: '1px solid rgba(168,212,240,0.12)', borderRadius: 12,
             padding: '8px', minWidth: 160,
@@ -155,21 +151,13 @@ export default function CinematicNavbar() {
                   transition: 'all 0.2s ease',
                 })}
                 onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.06)'; e.currentTarget.style.color = 'var(--pastel2)' }}
-                onMouseLeave={e => {
-                  if (!location.pathname === item.path) {
-                    e.currentTarget.style.background = 'transparent'
-                    e.currentTarget.style.color = 'var(--muted)'
-                  }
-                }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--muted)' }}
               >{item.label}</NavLink>
             ))}
           </div>
         </div>
 
-        {/* Right links */}
-        {NAV_RIGHT.map(r => <NavItem key={r.path} path={r.path} label={r.label} />)}
-
-        {/* Volunteering Opportunities (external) */}
+        {/* Volunteer Hours (external) */}
         <a
           href="https://portal.curiocrate.org"
           target="_blank" rel="noopener noreferrer"
@@ -183,7 +171,7 @@ export default function CinematicNavbar() {
           onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.1)'; e.currentTarget.style.boxShadow = '0 0 20px rgba(168,212,240,0.15)' }}
           onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none' }}
         >
-          Volunteering
+          Volunteer Hours
         </a>
       </div>
 
