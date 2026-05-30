@@ -8,6 +8,8 @@ import Kits from './pages/Kits'
 import Gallery from './pages/Gallery'
 import Mission from './pages/Mission'
 import Team from './pages/Team'
+import OurChapters from './pages/OurChapters'
+import Contact from './pages/Contact'
 import './index.css'
 
 function AnimatedRoutes() {
@@ -15,11 +17,13 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Home />} />
-        <Route path="/kits" element={<Kits />} />
-        <Route path="/gallery" element={<Gallery />} />
-        <Route path="/mission" element={<Mission />} />
-        <Route path="/team" element={<Team />} />
+        <Route path="/"         element={<Home />} />
+        <Route path="/kits"     element={<Kits />} />
+        <Route path="/gallery"  element={<Gallery />} />
+        <Route path="/mission"  element={<Mission />} />
+        <Route path="/team"     element={<Team />} />
+        <Route path="/chapters" element={<OurChapters />} />
+        <Route path="/contact"  element={<Contact />} />
       </Routes>
     </AnimatePresence>
   )

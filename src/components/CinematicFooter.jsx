@@ -27,9 +27,9 @@ export default function CinematicFooter() {
           </div>
           {/* Nav */}
           {[
-            { label:'Explore', links:[{l:'Kits',p:'/kits'},{l:'Gallery',p:'/gallery'},{l:'Mission',p:'/mission'},{l:'Team',p:'/team'}] },
-            { label:'Connect', links:[{l:'ckf.curiocrate@curiocrate.org',p:'mailto:ckf.curiocrate@curiocrate.org'},{l:'Instagram',p:'#'},{l:'Twitter',p:'#'}] },
-            { label:'Program', links:[{l:'Volunteer Portal',p:'https://portal.curiocrate.org'},{l:'Donate a Kit',p:'https://buy.stripe.com/YOUR_LINK'},{l:'Partner With Us',p:'mailto:ckf.curiocrate@curiocrate.org'}] },
+            { label:'Explore', links:[{l:'Kits',p:'/kits'},{l:'Our Chapters',p:'/chapters'},{l:'Mission',p:'/mission'},{l:'Gallery',p:'/gallery'},{l:'Team',p:'/team'}] },
+            { label:'Connect', links:[{l:'Contact Us',p:'/contact'},{l:'ckf.curiocrate@curiocrate.org',p:'mailto:ckf.curiocrate@curiocrate.org'}] },
+            { label:'Program', links:[{l:'Volunteering Opportunities',p:'https://portal.curiocrate.org'},{l:'Start a Chapter',p:'https://forms.gle/nEBfc84qHXxcmT4k8'},{l:'Partner With Us',p:'mailto:ckf.curiocrate@curiocrate.org'}] },
           ].map(col => (
             <div key={col.label}>
               <div className="label" style={{ marginBottom:20, fontSize:9 }}>{col.label}</div>
