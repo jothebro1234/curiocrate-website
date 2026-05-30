@@ -180,10 +180,13 @@ export default function Home() {
             </AnimatePresence>
           </div>
 
-          {/* Overlay — heavier top/bottom, light in middle so photos breathe */}
+          {/* Overlay — radial vignette darkens center (behind logo/buttons) + edges */}
           <div style={{
             position:'absolute', inset:0, zIndex:2,
-            background:'linear-gradient(to bottom, rgba(3,5,15,0.58) 0%, rgba(3,5,15,0.18) 45%, rgba(3,5,15,0.65) 100%)',
+            background:[
+              'radial-gradient(ellipse 70% 65% at 50% 48%, rgba(3,5,15,0.72) 0%, rgba(3,5,15,0.1) 75%, transparent 100%)',
+              'linear-gradient(to bottom, rgba(3,5,15,0.55) 0%, transparent 35%, transparent 65%, rgba(3,5,15,0.6) 100%)',
+            ].join(', '),
           }}/>
 
           {/* Content */}
@@ -201,9 +204,16 @@ export default function Home() {
               style={{ marginBottom:52 }}
             >
               <div style={{ position:'relative', display:'inline-block' }}>
+                {/* Dark halo behind logo so it reads on bright photos */}
+                <div style={{
+                  position:'absolute', inset:-60, borderRadius:'50%',
+                  background:'radial-gradient(circle, rgba(3,5,15,0.55) 0%, rgba(3,5,15,0.25) 45%, transparent 72%)',
+                  pointerEvents:'none',
+                }}/>
+                {/* Blue glow ring */}
                 <div style={{
                   position:'absolute', inset:-52, borderRadius:'50%',
-                  background:'radial-gradient(circle, rgba(168,212,240,0.22) 0%, rgba(168,212,240,0.06) 45%, transparent 70%)',
+                  background:'radial-gradient(circle, rgba(168,212,240,0.18) 0%, rgba(168,212,240,0.05) 50%, transparent 75%)',
                   animation:'breathe 5s ease-in-out infinite',
                 }}/>
                 <img
@@ -211,7 +221,11 @@ export default function Home() {
                   style={{
                     height:'clamp(160px, 20vw, 240px)',
                     objectFit:'contain',
-                    filter:'drop-shadow(0 0 40px rgba(168,212,240,0.85)) drop-shadow(0 0 100px rgba(168,212,240,0.4))',
+                    filter:[
+                      'drop-shadow(0 0 2px rgba(3,5,15,0.9))',
+                      'drop-shadow(0 0 40px rgba(168,212,240,0.85))',
+                      'drop-shadow(0 0 100px rgba(168,212,240,0.4))',
+                    ].join(' '),
                     animation:'drift 6s ease-in-out infinite',
                     display:'block',
                   }}
