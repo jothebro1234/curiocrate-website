@@ -282,27 +282,17 @@ export default function Home() {
             <div style={{ width: 1, height: 20, background: 'rgba(168,212,240,0.12)' }}/>
 
             {/* Each logo in a normalized container */}
-            {PARTNERS.map((p, i) => (
-              <div key={p.name} style={{
-                display: 'flex', flexDirection: 'column',
-                alignItems: 'center', gap: 5,
-              }}>
-                <div style={{ width: 120, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <img src={p.logo} alt={p.name} style={{
-                    maxWidth: '100%', maxHeight: '100%',
-                    objectFit: 'contain',
-                    filter: 'brightness(0) invert(1) opacity(0.55)',
-                    transition: 'filter 0.3s',
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(0.85)' }}
-                  onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(0.55)' }}
-                  />
-                </div>
-                <span style={{
-                  fontFamily: "'JetBrains Mono', monospace", fontSize: 7,
-                  letterSpacing: '1.5px', textTransform: 'uppercase',
-                  color: 'rgba(168,212,240,0.25)',
-                }}>{p.name}</span>
+            {PARTNERS.map((p) => (
+              <div key={p.name} style={{ width: 120, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <img src={p.logo} alt={p.name} style={{
+                  maxWidth: '100%', maxHeight: '100%',
+                  objectFit: 'contain',
+                  filter: 'brightness(0) invert(1) opacity(0.55)',
+                  transition: 'filter 0.3s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(0.85)' }}
+                onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(0.55)' }}
+                />
               </div>
             ))}
           </motion.div>
