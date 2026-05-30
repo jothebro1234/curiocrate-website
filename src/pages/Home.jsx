@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
 import { stats } from '../data/stats'
+import { chapters as staticChapters } from '../data/chapters'
 
 const HERO_PHOTOS = [
   '/images/IMG_3920.jpg',
