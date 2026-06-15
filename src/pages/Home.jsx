@@ -330,7 +330,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={ctaReady ? { opacity: 1 } : {}}
-            style={{ position: 'absolute', bottom: 90, left: '50%', transform: 'translateX(-50%)', zIndex: 4, display: 'flex', gap: 7 }}
+            style={{ position: 'absolute', bottom: 148, left: '50%', transform: 'translateX(-50%)', zIndex: 4, display: 'flex', gap: 7 }}
           >
             {HERO_PHOTOS.map((_, i) => (
               <button key={i} onClick={() => setActivePhoto(i)} style={{
@@ -348,33 +348,32 @@ export default function Home() {
             transition={{ delay: 0.4 }}
             style={{
               position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 4,
-              background: 'linear-gradient(to top, rgba(3,5,15,0.82) 0%, rgba(3,5,15,0.4) 60%, transparent 100%)',
-              padding: '18px 48px 14px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 32,
+              background: 'linear-gradient(to top, rgba(3,5,15,0.94) 0%, rgba(3,5,15,0.6) 55%, transparent 100%)',
+              padding: '28px 48px 22px',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16,
             }}
           >
             <span style={{
               fontFamily: "'JetBrains Mono', monospace", fontSize: 8,
-              letterSpacing: '3px', textTransform: 'uppercase',
-              color: 'rgba(168,212,240,0.35)', whiteSpace: 'nowrap',
+              letterSpacing: '4px', textTransform: 'uppercase',
+              color: 'rgba(168,212,240,0.5)',
             }}>Supported by</span>
 
-            <div style={{ width: 1, height: 20, background: 'rgba(168,212,240,0.12)' }}/>
-
-            {/* Each logo in a normalized container */}
-            {PARTNERS.map((p) => (
-              <div key={p.name} style={{ width: 120, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src={p.logo} alt={p.name} style={{
-                  maxWidth: '100%', maxHeight: '100%',
-                  objectFit: 'contain',
-                  filter: 'brightness(0) invert(1) opacity(0.55)',
-                  transition: 'filter 0.3s',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(0.85)' }}
-                onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(0.55)' }}
-                />
-              </div>
-            ))}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 52 }}>
+              {PARTNERS.map((p) => (
+                <div key={p.name} style={{ width: 160, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <img src={p.logo} alt={p.name} style={{
+                    maxWidth: '100%', maxHeight: '100%',
+                    objectFit: 'contain',
+                    filter: 'brightness(0) invert(1) opacity(0.72)',
+                    transition: 'filter 0.3s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(1)' }}
+                  onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(0.72)' }}
+                  />
+                </div>
+              ))}
+            </div>
           </motion.div>
         </div>
       </motion.section>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
@@ -164,7 +164,7 @@ function YearModal({ data, onClose, onOpenPhoto }) {
 }
 
 // ─── CHRONICLE HERO ───────────────────────────────────────────────────────────
-function ChronicleHero({ onOpenYear }) {
+function ChronicleHero({ onOpenYear, onScrollDown }) {
   const [idx, setIdx] = useState(0)
   const [dir, setDir] = useState(1)
   const current = chronicle[idx]
@@ -452,15 +452,30 @@ function ChronicleHero({ onOpenYear }) {
         </div>
       </div>
 
-      {/* Top-left label */}
-      <div style={{ position:'absolute', top:40, left:48, zIndex:10 }}>
-        <div className="label" style={{ fontSize:9, marginBottom:4, opacity:0.55 }}>The Gallery</div>
-        <div style={{
-          fontFamily:"'Cormorant Garamond', serif",
-          fontSize:20, fontWeight:300,
-          color:'var(--cream)', opacity:0.55, letterSpacing:'-0.01em',
-        }}>The Chronicle</div>
-      </div>
+      {/* Explore photos button */}
+      <motion.button
+        initial={{ opacity:0, y:8 }}
+        animate={{ opacity:1, y:0 }}
+        transition={{ delay:1.1, duration:0.7 }}
+        onClick={onScrollDown}
+        style={{
+          position:'absolute', bottom:112, left:'50%', transform:'translateX(-50%)',
+          zIndex:10,
+          background:'rgba(168,212,240,0.07)',
+          border:'1px solid rgba(168,212,240,0.28)',
+          borderRadius:32, padding:'12px 30px',
+          color:'var(--pastel1)', cursor:'pointer',
+          display:'flex', alignItems:'center', gap:10,
+          fontFamily:"'JetBrains Mono', monospace",
+          fontSize:9, letterSpacing:'3px', textTransform:'uppercase',
+          backdropFilter:'blur(10px)', transition:'all 0.3s',
+          whiteSpace:'nowrap',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.16)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.55)'; e.currentTarget.style.boxShadow = '0 0 28px rgba(168,212,240,0.18)' }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.07)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.28)'; e.currentTarget.style.boxShadow = 'none' }}
+      >
+        Explore Photos ↓
+      </motion.button>
 
       {/* Top-right counter */}
       <div style={{
@@ -481,15 +496,27 @@ export default function Gallery() {
   const [featuredLightbox, setFeaturedLightbox] = useState(null)
   const [activeYear, setActiveYear]             = useState(null)
   const [yearLightbox, setYearLightbox]         = useState(null)
+  const featuredRef = useRef(null)
+
+  useEffect(() => {
+    document.documentElement.style.scrollSnapType = 'y mandatory'
+    return () => { document.documentElement.style.scrollSnapType = '' }
+  }, [])
 
   return (
     <PageTransition>
       <div style={{ position:'relative', zIndex:1, minHeight:'100vh' }}>
 
-        {/* ── CHRONICLE HERO — full screen, first thing ── */}
-        <ChronicleHero onOpenYear={setActiveYear} />
+        {/* ── CHRONICLE HERO — full screen, snaps here ── */}
+        <div style={{ scrollSnapAlign:'start', scrollSnapStop:'always' }}>
+          <ChronicleHero
+            onOpenYear={setActiveYear}
+            onScrollDown={() => featuredRef.current?.scrollIntoView({ behavior:'smooth' })}
+          />
+        </div>
 
-        {/* ── FEATURED PHOTOS ── */}
+        {/* ── FEATURED PHOTOS — snaps here ── */}
+        <div ref={featuredRef} style={{ scrollSnapAlign:'start' }}>
         <section style={{ padding:'100px 40px 120px' }}>
           <div style={{ maxWidth:1200, margin:'0 auto' }}>
             <motion.div
@@ -540,6 +567,7 @@ export default function Gallery() {
             </motion.div>
           </div>
         </section>
+        </div>
 
         {/* ── FEATURED LIGHTBOX ── */}
         <AnimatePresence>
