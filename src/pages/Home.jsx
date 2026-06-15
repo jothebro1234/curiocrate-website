@@ -396,9 +396,9 @@ export default function Home() {
               color: 'rgba(168,212,240,0.5)',
             }}>Supported by</span>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 52 }}>
+            <div className="home-partners-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 52 }}>
               {PARTNERS.map((p) => (
-                <div key={p.name} style={{ width: 160, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div key={p.name} className="home-partner-logo" style={{ width: 160, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <img src={p.logo} alt={p.name} style={{
                     maxWidth: '100%', maxHeight: '100%',
                     objectFit: 'contain',
@@ -479,7 +479,7 @@ export default function Home() {
           </motion.div>
         </div>}
 
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 40px' }}>
+        <div className="home-news-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 40px' }}>
 
           {/* Section header */}
           <motion.div
@@ -522,7 +522,7 @@ export default function Home() {
           </motion.div>
 
           {/* Main grid: featured left, stacked right */}
-          {newsData && <div style={{ display: 'grid', gridTemplateColumns: '1.18fr 0.82fr', gap: 20, alignItems: 'start' }}>
+          {newsData && <div className="home-news-grid" style={{ display: 'grid', gridTemplateColumns: '1.18fr 0.82fr', gap: 20, alignItems: 'start' }}>
 
             {/* ── FEATURED CARD ── */}
             <motion.div
@@ -783,9 +783,9 @@ export default function Home() {
       </section>
 
       {/* ─── WHAT IS CURIOCRATE ─── */}
-      <section style={{ position: 'relative', zIndex: 1, padding: '120px 40px' }}>
+      <section className="home-section" style={{ position: 'relative', zIndex: 1, padding: '120px 40px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
+          <div className="home-what-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
             <motion.div
               initial={{ opacity: 0, x: -32 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -834,7 +834,7 @@ export default function Home() {
       </section>
 
       {/* ─── GET INVOLVED ─── */}
-      <section style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
+      <section className="home-section" style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
         <div style={{
           position: 'absolute', inset: 0,
           backgroundImage: 'radial-gradient(circle, rgba(168,212,240,0.04) 1px, transparent 1px)',
@@ -856,7 +856,7 @@ export default function Home() {
             }}>Get Involved</h2>
           </motion.div>
 
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 0 }}>
+          <div className="home-involved-row" style={{ display: 'flex', alignItems: 'flex-start', gap: 0 }}>
             {GET_INVOLVED_STEPS.map((step, i) => (
               <div key={step.n} style={{ display: 'flex', alignItems: 'flex-start', flex: 1 }}>
                 <motion.div
@@ -913,6 +913,7 @@ export default function Home() {
                 {/* Arrow */}
                 {i < GET_INVOLVED_STEPS.length - 1 && (
                   <motion.div
+                    className="home-arrow"
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
@@ -931,9 +932,9 @@ export default function Home() {
       </section>
 
       {/* ─── START A CHAPTER ─── */}
-      <section style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
+      <section className="home-section" style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 64, alignItems: 'center' }}>
+          <div className="home-chapter-grid" style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 64, alignItems: 'center' }}>
             <motion.div
               initial={{ opacity: 0, x: -24 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -981,6 +982,7 @@ export default function Home() {
               <img
                 src="/images/curielead.png"
                 alt="Start a chapter"
+                className="home-chapter-img"
                 style={{
                   height: 340,
                   objectFit: 'contain',
@@ -993,7 +995,7 @@ export default function Home() {
       </section>
 
       {/* ─── IMPACT: MAP + STATS ─── */}
-      <section style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
+      <section className="home-section" style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1030,7 +1032,7 @@ export default function Home() {
           </motion.div>
 
           {/* Stats grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 3, borderRadius: 20, overflow: 'hidden', boxShadow: '0 40px 120px rgba(0,0,0,0.5)' }}>
+          <div className="home-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 3, borderRadius: 20, overflow: 'hidden', boxShadow: '0 40px 120px rgba(0,0,0,0.5)' }}>
             {stats.map((s, i) => (
               <motion.div
                 key={s.label}
@@ -1068,6 +1070,27 @@ export default function Home() {
           </AnimatePresence>
         </div>
       </section>
+
+      <style>{`
+        @media(max-width:768px){
+          .home-section { padding-left: 20px !important; padding-right: 20px !important; padding-top: 72px !important; padding-bottom: 72px !important; }
+          .home-news-inner { padding: 0 20px !important; }
+          .home-news-grid { grid-template-columns: 1fr !important; }
+          .home-what-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+          .home-involved-row { flex-direction: column !important; align-items: center !important; gap: 24px !important; }
+          .home-involved-row > div { width: 100% !important; max-width: 360px !important; }
+          .home-arrow { display: none !important; }
+          .home-chapter-grid { grid-template-columns: 1fr !important; gap: 20px !important; text-align: center !important; }
+          .home-chapter-img { height: 200px !important; }
+          .home-stats-grid > div { padding: 44px 24px !important; }
+          .home-partners-row { gap: 24px !important; flex-wrap: wrap !important; }
+          .home-partner-logo { width: 100px !important; height: 36px !important; }
+        }
+        @media(max-width:480px){
+          .home-stats-grid { grid-template-columns: 1fr !important; }
+          .home-stats-grid > div { padding: 36px 20px !important; }
+        }
+      `}</style>
 
     </PageTransition>
   )

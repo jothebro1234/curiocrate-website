@@ -321,7 +321,7 @@ export default function OurChapters() {
     <PageTransition>
 
       {/* ─── HERO ─── */}
-      <section style={{ position: 'relative', zIndex: 1, padding: '160px 40px 100px', textAlign: 'center' }}>
+      <section className="chapters-hero" style={{ position: 'relative', zIndex: 1, padding: '160px 40px 100px', textAlign: 'center' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }}>
           <div className="label" style={{ marginBottom: 16 }}>The Network</div>
           <h1 style={{
@@ -351,7 +351,7 @@ export default function OurChapters() {
       </section>
 
       {/* ─── CHAPTER LIST ─── */}
-      <section style={{ position: 'relative', zIndex: 1, padding: '0 40px 100px' }}>
+      <section className="chapters-list" style={{ position: 'relative', zIndex: 1, padding: '0 40px 100px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
 
           {/* Search */}
@@ -431,7 +431,7 @@ export default function OurChapters() {
       </section>
 
       {/* ─── HOW TO START A CHAPTER ─── */}
-      <section style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
+      <section className="chapters-how" style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
         <div style={{
           position: 'absolute', inset: 0,
           backgroundImage: 'radial-gradient(circle, rgba(168,212,240,0.04) 1px, transparent 1px)',
@@ -537,6 +537,14 @@ export default function OurChapters() {
           <ChapterModal chapter={selectedChapter} onClose={() => setSelectedChapter(null)} />
         )}
       </AnimatePresence>
+
+      <style>{`
+        @media(max-width:768px){
+          .chapters-hero { padding: 100px 20px 72px !important; }
+          .chapters-list { padding: 0 20px 72px !important; }
+          .chapters-how  { padding: 72px 20px !important; }
+        }
+      `}</style>
 
     </PageTransition>
   )

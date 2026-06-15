@@ -19,7 +19,7 @@ const contacts = [
 export default function Contact() {
   return (
     <PageTransition>
-      <section style={{ minHeight: '100vh', position: 'relative', zIndex: 1, padding: '140px 40px 100px' }}>
+      <section className="contact-section" style={{ minHeight: '100vh', position: 'relative', zIndex: 1, padding: '140px 40px 100px' }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
 
           <motion.div
@@ -44,6 +44,7 @@ export default function Contact() {
             {contacts.map((c, i) => (
               <motion.div
                 key={c.audience}
+                className="contact-card"
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: i * 0.12 }}
@@ -55,7 +56,7 @@ export default function Contact() {
                   backdropFilter: 'blur(24px)',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+                <div className="contact-card-inner" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
                   <img
                     src={c.img}
                     alt={c.audience}
@@ -104,6 +105,13 @@ export default function Contact() {
           </motion.p>
         </div>
       </section>
+      <style>{`
+        @media(max-width:768px){
+          .contact-section { padding: 100px 20px 72px !important; }
+          .contact-card { padding: 28px 24px !important; }
+          .contact-card-inner { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
+        }
+      `}</style>
     </PageTransition>
   )
 }

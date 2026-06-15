@@ -109,7 +109,7 @@ function YearModal({ data, onClose, onOpenPhoto }) {
         lineHeight:1, userSelect:'none', pointerEvents:'none', zIndex:0,
       }}>{data.year}</div>
 
-      <div style={{ position:'sticky', top:0, zIndex:10, padding:'28px 48px', display:'flex', alignItems:'center', justifyContent:'space-between', background:'rgba(2,6,18,0.85)', backdropFilter:'blur(12px)', borderBottom:`1px solid ${data.color}15` }}>
+      <div className="year-modal-header" style={{ position:'sticky', top:0, zIndex:10, padding:'28px 48px', display:'flex', alignItems:'center', justifyContent:'space-between', background:'rgba(2,6,18,0.85)', backdropFilter:'blur(12px)', borderBottom:`1px solid ${data.color}15` }}>
         <div>
           <div className="label" style={{ color:data.color, fontSize:9, marginBottom:6 }}>{data.era}</div>
           <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:40, fontWeight:300, color:'var(--cream)', lineHeight:1 }}>{data.year}</div>
@@ -127,6 +127,7 @@ function YearModal({ data, onClose, onOpenPhoto }) {
       <motion.div
         initial={{ opacity:0, y:40 }} animate={{ opacity:1, y:0 }}
         transition={{ delay:.15, duration:.55, ease:[.4,0,.2,1] }}
+        className="year-modal-body"
         style={{ position:'relative', zIndex:1, padding:'48px 48px 80px' }}
       >
         {data.photos.length === 0 ? (
@@ -137,7 +138,7 @@ function YearModal({ data, onClose, onOpenPhoto }) {
             <p style={{ fontSize:13, color:'var(--muted)', opacity:.5, marginTop:8 }}>Photos from this chapter will be added soon.</p>
           </div>
         ) : (
-          <div style={{ columns:3, columnGap:12 }}>
+          <div className="year-modal-columns" style={{ columns:3, columnGap:12 }}>
             {data.photos.map((photo, i) => (
               <motion.div key={photo.src}
                 initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }}
@@ -370,7 +371,7 @@ function ChronicleHero({ onOpenYear, onScrollDown }) {
       </button>
 
       {/* Timeline */}
-      <div style={{
+      <div className="gallery-timeline" style={{
         position:'absolute', bottom:0, left:0, right:0, zIndex:10,
         background:'linear-gradient(to top, rgba(3,5,15,0.98) 0%, rgba(3,5,15,0.72) 52%, transparent 100%)',
         padding:'0 80px 30px',
@@ -517,7 +518,7 @@ export default function Gallery() {
 
         {/* ── FEATURED PHOTOS — snaps here ── */}
         <div ref={featuredRef} style={{ scrollSnapAlign:'start' }}>
-        <section style={{ padding:'100px 40px 120px' }}>
+        <section className="gallery-featured-section" style={{ padding:'100px 40px 120px', scrollSnapAlign:'start' }}>
           <div style={{ maxWidth:1200, margin:'0 auto' }}>
             <motion.div
               initial={{ opacity:0, y:24 }} whileInView={{ opacity:1, y:0 }}
@@ -538,6 +539,7 @@ export default function Gallery() {
             <motion.div
               initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }}
               viewport={{ once:true }} transition={{ duration:.9, delay:.15 }}
+              className="gallery-featured-grid"
               style={{
                 display:'grid', gridTemplateColumns:'2fr 1fr',
                 gridTemplateRows:'1fr 1fr', gap:10,
@@ -599,6 +601,26 @@ export default function Gallery() {
         </AnimatePresence>
 
       </div>
+
+      <style>{`
+        @media(max-width:768px){
+          .gallery-featured-section { padding: 80px 20px 80px !important; }
+          .gallery-featured-grid {
+            grid-template-columns: 1fr !important;
+            grid-template-rows: 260px 160px 160px !important;
+            height: auto !important;
+          }
+          .gallery-featured-grid > div:first-child {
+            grid-row: auto !important;
+            border-radius: 16px !important;
+          }
+          .year-modal-header { padding: 20px 20px !important; }
+          .year-modal-body   { padding: 24px 20px 48px !important; }
+          .year-modal-columns { columns: 1 !important; }
+          .gallery-timeline { padding: 0 16px 20px !important; }
+        }
+      `}</style>
+
     </PageTransition>
   )
 }

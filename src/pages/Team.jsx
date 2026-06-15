@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
+import { useMobile } from '../hooks/useMobile'
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 
@@ -148,6 +149,50 @@ function PanelStage({ members, height = 580, expandFlex = 3.5 }) {
   const [active, setActive] = useState(null)
   const [hovered, setHovered] = useState(null)
   const focus = hovered ?? active
+  const isMobile = useMobile()
+
+  if (isMobile) {
+    return (
+      <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {members.map((m) => (
+          <div key={m.id} style={{
+            borderRadius: 16, overflow: 'hidden',
+            background: m.dark,
+            border: `1px solid ${m.color}22`,
+            padding: '20px 20px',
+            display: 'flex', alignItems: 'center', gap: 20,
+            boxShadow: `0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px ${m.color}0a`,
+          }}>
+            {m.photo ? (
+              <img src={m.photo} alt={m.name} style={{
+                height: 80, width: 64, objectFit: 'contain', objectPosition: 'top',
+                flexShrink: 0,
+                filter: `drop-shadow(0 0 12px ${m.glow.replace('0.5','0.4')})`,
+              }} />
+            ) : (
+              <div style={{
+                width: 72, height: 72, borderRadius: '50%', flexShrink: 0,
+                background: `radial-gradient(circle, ${m.glow.replace('0.5','0.3')} 0%, ${m.dark} 70%)`,
+                border: `1px solid ${m.color}33`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28,
+              }}>{m.emoji}</div>
+            )}
+            <div>
+              <div style={{
+                fontFamily: "'JetBrains Mono', monospace", fontSize: 8,
+                letterSpacing: '2px', textTransform: 'uppercase', color: m.color, marginBottom: 6,
+              }}>{m.role}</div>
+              <div style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: 22, fontWeight: 300, color: 'var(--cream)', lineHeight: 1.1, marginBottom: 7,
+              }}>{m.name}</div>
+              <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.65 }}>{m.bio}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
 
   return (
     <motion.div
@@ -353,7 +398,7 @@ export default function Team() {
       <div style={{ minHeight:'100vh', position:'relative', zIndex:1 }}>
 
         {/* ── PAGE HEADER ── */}
-        <div style={{ padding:'120px 56px 64px', textAlign:'center' }}>
+        <div className="team-header" style={{ padding:'120px 56px 64px', textAlign:'center' }}>
           <motion.div
             initial={{ opacity:0, y:24 }}
             animate={{ opacity:1, y:0 }}
@@ -421,6 +466,7 @@ export default function Team() {
           whileInView={{ opacity:1 }}
           viewport={{ once:true }}
           transition={{ duration:1.2, ease:[0.4,0,0.2,1] }}
+          className="team-founder"
           style={{
             position:'relative',
             margin:'72px 40px 20px',
@@ -611,6 +657,7 @@ export default function Team() {
           whileInView={{ opacity:1, y:0 }}
           viewport={{ once:true }}
           transition={{ duration:0.9 }}
+          className="team-join-cta"
           style={{
             margin:'72px 40px 100px', textAlign:'center',
             padding:'64px 40px',
@@ -649,6 +696,15 @@ export default function Team() {
         </motion.div>
 
       </div>
+
+      <style>{`
+        @media(max-width:768px){
+          .team-header  { padding: 96px 20px 48px !important; }
+          .team-founder { margin: 40px 20px 20px !important; min-height: 70vh !important; }
+          .team-join-cta { margin: 40px 20px 72px !important; padding: 40px 24px !important; }
+        }
+      `}</style>
+
     </PageTransition>
   )
 }

@@ -56,6 +56,7 @@ export default function Mission() {
             initial={{ opacity:0, y:24 }}
             animate={{ opacity:1, y:0 }}
             transition={{ duration:1.1, delay:0.4, ease:[0.4,0,0.2,1] }}
+            className="mission-hero-text"
             style={{
               position:'absolute', bottom:80, left:56,
               zIndex:2, maxWidth:600,
@@ -101,6 +102,7 @@ export default function Mission() {
           whileInView={{ opacity:1, y:0 }}
           viewport={{ once:true, margin:'-60px' }}
           transition={{ duration:0.9, ease:[0.4,0,0.2,1] }}
+          className="mission-body"
           style={{ padding:'80px 40px 120px', maxWidth:900, margin:'0 auto' }}
         >
           <div className="label" style={{ marginBottom:24, opacity:0.6 }}>Our Mission</div>
@@ -119,6 +121,12 @@ export default function Mission() {
 
 
       </div>
+      <style>{`
+        @media(max-width:768px){
+          .mission-hero-text { left: 20px !important; bottom: 48px !important; right: 20px !important; }
+          .mission-body { padding: 56px 20px 80px !important; }
+        }
+      `}</style>
     </PageTransition>
   )
 }

@@ -3,7 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 
 const NAV_LEFT = [
   { path: '/',         label: 'Discover'     },
-  { path: '/kits',     label: 'Kits'          },
+  { path: '/kits',     label: 'Kits'         },
   { path: '/chapters', label: 'Our Chapters' },
   { path: '/mission',  label: 'Mission'      },
 ]
@@ -14,7 +14,7 @@ const ABOUT_ITEMS = [
   { path: '/contact', label: 'Contact Us' },
 ]
 
-const NAV_RIGHT = []
+const ALL_NAV = [...NAV_LEFT, ...ABOUT_ITEMS]
 
 function NavItem({ path, label, end }) {
   return (
@@ -43,12 +43,13 @@ function NavItem({ path, label, end }) {
 }
 
 export default function CinematicNavbar() {
-  const [visible,    setVisible]    = useState(true)
-  const [lastY,      setLastY]      = useState(0)
-  const [atTop,      setAtTop]      = useState(true)
-  const [aboutOpen,  setAboutOpen]  = useState(false)
+  const [visible,   setVisible]   = useState(true)
+  const [lastY,     setLastY]     = useState(0)
+  const [atTop,     setAtTop]     = useState(true)
+  const [aboutOpen, setAboutOpen] = useState(false)
+  const [menuOpen,  setMenuOpen]  = useState(false)
   const aboutTimer = useRef(null)
-  const location = useLocation()
+  const location   = useLocation()
 
   useEffect(() => {
     const onScroll = () => {
@@ -61,128 +62,212 @@ export default function CinematicNavbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [lastY])
 
-  useEffect(() => { setVisible(true) }, [location])
+  useEffect(() => { setVisible(true); setMenuOpen(false) }, [location])
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
 
   const openAbout  = () => { clearTimeout(aboutTimer.current); setAboutOpen(true) }
   const closeAbout = () => { aboutTimer.current = setTimeout(() => setAboutOpen(false), 120) }
-
   const isAboutActive = ABOUT_ITEMS.some(i => location.pathname === i.path)
 
   return (
-    <nav style={{
-      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '18px 36px',
-      transition: 'transform 0.5s cubic-bezier(0.4,0,0.2,1), background 0.4s',
-      transform: visible ? 'translateY(0)' : 'translateY(-100%)',
-      background: atTop
-        ? 'transparent'
-        : 'linear-gradient(to bottom, rgba(6,13,31,0.92) 0%, transparent 100%)',
-      backdropFilter: atTop ? 'none' : 'blur(18px)',
-    }}>
+    <>
+      <nav style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '18px 36px',
+        transition: 'transform 0.5s cubic-bezier(0.4,0,0.2,1), background 0.4s',
+        transform: visible ? 'translateY(0)' : 'translateY(-100%)',
+        background: atTop
+          ? 'transparent'
+          : 'linear-gradient(to bottom, rgba(6,13,31,0.92) 0%, transparent 100%)',
+        backdropFilter: atTop ? 'none' : 'blur(18px)',
+      }}>
 
-      {/* Brand */}
-      <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-        <img
-          src="/images/cclogo.png" alt="CurioCrate"
-          style={{ height: 34, objectFit: 'contain', filter: 'drop-shadow(0 0 10px rgba(168,212,240,0.5))' }}
-        />
-        <span style={{
-          fontFamily: "'Cormorant Garamond', serif", fontWeight: 300,
-          fontSize: 19, letterSpacing: '0.12em',
-          color: 'var(--pastel2)', textShadow: '0 0 20px rgba(168,212,240,0.35)',
-        }}>CurioCrate<sup style={{ fontSize: '0.5em', letterSpacing: 0, verticalAlign: 'super', opacity: 0.7 }}>™</sup></span>
-      </NavLink>
+        {/* Brand */}
+        <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+          <img
+            src="/images/cclogo.png" alt="CurioCrate"
+            style={{ height: 34, objectFit: 'contain', filter: 'drop-shadow(0 0 10px rgba(168,212,240,0.5))' }}
+          />
+          <span style={{
+            fontFamily: "'Cormorant Garamond', serif", fontWeight: 300,
+            fontSize: 19, letterSpacing: '0.12em',
+            color: 'var(--pastel2)', textShadow: '0 0 20px rgba(168,212,240,0.35)',
+          }}>CurioCrate<sup style={{ fontSize: '0.5em', letterSpacing: 0, verticalAlign: 'super', opacity: 0.7 }}>™</sup></span>
+        </NavLink>
 
-      {/* Nav */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+        {/* Desktop nav */}
+        <div className="nav-desktop" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
 
-        {/* Left links */}
-        {NAV_LEFT.map(r => <NavItem key={r.path} path={r.path} label={r.label} end={r.path === '/'} />)}
+          {NAV_LEFT.map(r => <NavItem key={r.path} path={r.path} label={r.label} end={r.path === '/'} />)}
 
-        {/* About Us dropdown — rightmost before the external CTA */}
-        <div
-          style={{ position: 'relative' }}
-          onMouseEnter={openAbout}
-          onMouseLeave={closeAbout}
-        >
-          <button style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
-            background: isAboutActive ? 'rgba(168,212,240,0.08)' : 'transparent',
-            border: isAboutActive ? '1px solid rgba(168,212,240,0.15)' : '1px solid transparent',
-            borderRadius: 4, padding: '8px 14px',
-            color: isAboutActive || aboutOpen ? 'var(--cream)' : 'var(--muted)',
-            cursor: 'pointer', transition: 'all 0.3s ease',
-            display: 'flex', alignItems: 'center', gap: 6,
-          }}>
-            About Us
-            <span style={{
-              fontSize: 8, opacity: 0.6,
-              transform: aboutOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-              transition: 'transform 0.25s ease', display: 'inline-block',
-            }}>▾</span>
-          </button>
+          {/* About dropdown */}
+          <div style={{ position: 'relative' }} onMouseEnter={openAbout} onMouseLeave={closeAbout}>
+            <button style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
+              background: isAboutActive ? 'rgba(168,212,240,0.08)' : 'transparent',
+              border: isAboutActive ? '1px solid rgba(168,212,240,0.15)' : '1px solid transparent',
+              borderRadius: 4, padding: '8px 14px',
+              color: isAboutActive || aboutOpen ? 'var(--cream)' : 'var(--muted)',
+              cursor: 'pointer', transition: 'all 0.3s ease',
+              display: 'flex', alignItems: 'center', gap: 6,
+            }}>
+              About Us
+              <span style={{
+                fontSize: 8, opacity: 0.6,
+                transform: aboutOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 0.25s ease', display: 'inline-block',
+              }}>▾</span>
+            </button>
 
-          <div style={{
-            position: 'absolute', top: 'calc(100% + 8px)', left: '50%',
-            background: 'rgba(6,13,31,0.95)', backdropFilter: 'blur(24px)',
-            border: '1px solid rgba(168,212,240,0.12)', borderRadius: 12,
-            padding: '8px', minWidth: 160,
-            opacity: aboutOpen ? 1 : 0,
-            pointerEvents: aboutOpen ? 'auto' : 'none',
-            transform: aboutOpen
-              ? 'translateX(-50%) translateY(0)'
-              : 'translateX(-50%) translateY(-8px)',
-            transition: 'opacity 0.2s ease, transform 0.2s ease',
-            boxShadow: '0 16px 48px rgba(0,0,0,0.4)',
-          }}>
-            {ABOUT_ITEMS.map(item => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                style={({ isActive }) => ({
-                  display: 'block', padding: '10px 16px', borderRadius: 8,
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase',
-                  textDecoration: 'none',
-                  color: isActive ? 'var(--cream)' : 'var(--muted)',
-                  background: isActive ? 'rgba(168,212,240,0.08)' : 'transparent',
-                  transition: 'all 0.2s ease',
-                })}
-                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.06)'; e.currentTarget.style.color = 'var(--pastel2)' }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--muted)' }}
-              >{item.label}</NavLink>
-            ))}
+            <div style={{
+              position: 'absolute', top: 'calc(100% + 8px)', left: '50%',
+              background: 'rgba(6,13,31,0.95)', backdropFilter: 'blur(24px)',
+              border: '1px solid rgba(168,212,240,0.12)', borderRadius: 12,
+              padding: '8px', minWidth: 160,
+              opacity: aboutOpen ? 1 : 0,
+              pointerEvents: aboutOpen ? 'auto' : 'none',
+              transform: aboutOpen
+                ? 'translateX(-50%) translateY(0)'
+                : 'translateX(-50%) translateY(-8px)',
+              transition: 'opacity 0.2s ease, transform 0.2s ease',
+              boxShadow: '0 16px 48px rgba(0,0,0,0.4)',
+            }}>
+              {ABOUT_ITEMS.map(item => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  style={({ isActive }) => ({
+                    display: 'block', padding: '10px 16px', borderRadius: 8,
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase',
+                    textDecoration: 'none',
+                    color: isActive ? 'var(--cream)' : 'var(--muted)',
+                    background: isActive ? 'rgba(168,212,240,0.08)' : 'transparent',
+                    transition: 'all 0.2s ease',
+                  })}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.06)'; e.currentTarget.style.color = 'var(--pastel2)' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--muted)' }}
+                >{item.label}</NavLink>
+              ))}
+            </div>
           </div>
+
+          {/* Volunteer Hours (external CTA) */}
+          <a
+            href="https://portal.curiocrate.org"
+            target="_blank" rel="noopener noreferrer"
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
+              textDecoration: 'none', padding: '8px 14px', borderRadius: 4,
+              color: 'var(--pastel1)', border: '1px solid rgba(168,212,240,0.25)',
+              transition: 'all 0.3s ease', marginLeft: 4,
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.1)'; e.currentTarget.style.boxShadow = '0 0 20px rgba(168,212,240,0.15)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none' }}
+          >Volunteer Hours</a>
         </div>
 
-        {/* Volunteer Hours (external) */}
-        <a
-          href="https://portal.curiocrate.org"
-          target="_blank" rel="noopener noreferrer"
+        {/* Hamburger (mobile only) */}
+        <button
+          className="nav-hamburger"
+          onClick={() => setMenuOpen(true)}
+          aria-label="Open navigation menu"
           style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
-            textDecoration: 'none', padding: '8px 14px', borderRadius: 4,
-            color: 'var(--pastel1)', border: '1px solid rgba(168,212,240,0.25)',
-            transition: 'all 0.3s ease', marginLeft: 4,
+            flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 5,
+            background: 'none', border: '1px solid rgba(168,212,240,0.2)',
+            borderRadius: 8, padding: '10px 12px', cursor: 'pointer',
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.1)'; e.currentTarget.style.boxShadow = '0 0 20px rgba(168,212,240,0.15)' }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none' }}
         >
-          Volunteer Hours
-        </a>
+          <span style={{ display: 'block', width: 20, height: 1.5, background: 'var(--pastel1)', borderRadius: 1 }} />
+          <span style={{ display: 'block', width: 20, height: 1.5, background: 'var(--pastel1)', borderRadius: 1 }} />
+          <span style={{ display: 'block', width: 20, height: 1.5, background: 'var(--pastel1)', borderRadius: 1 }} />
+        </button>
+      </nav>
+
+      {/* ── Mobile menu overlay ── */}
+      <div style={{
+        position: 'fixed', inset: 0, zIndex: 200,
+        background: 'rgba(3,5,15,0.98)', backdropFilter: 'blur(24px)',
+        display: 'flex', flexDirection: 'column',
+        padding: '24px 28px',
+        opacity: menuOpen ? 1 : 0,
+        pointerEvents: menuOpen ? 'auto' : 'none',
+        transition: 'opacity 0.25s ease',
+        overflowY: 'auto',
+      }}>
+        {/* Overlay header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 48 }}>
+          <NavLink to="/" onClick={() => setMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+            <img src="/images/cclogo.png" alt="CurioCrate" style={{ height: 30, objectFit: 'contain', filter: 'drop-shadow(0 0 8px rgba(168,212,240,0.4))' }} />
+            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 17, color: 'var(--pastel2)', fontWeight: 300 }}>CurioCrate</span>
+          </NavLink>
+          <button
+            onClick={() => setMenuOpen(false)}
+            style={{
+              background: 'none', border: '1px solid rgba(168,212,240,0.2)',
+              borderRadius: 8, color: 'var(--muted)', fontSize: 11,
+              cursor: 'pointer', padding: '8px 14px',
+              fontFamily: "'JetBrains Mono', monospace", letterSpacing: '2px',
+            }}
+          >ESC</button>
+        </div>
+
+        {/* Nav links */}
+        <nav style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+          {ALL_NAV.map(item => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              end={item.path === '/'}
+              onClick={() => setMenuOpen(false)}
+              style={({ isActive }) => ({
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: 38, fontWeight: 300,
+                letterSpacing: '-0.01em',
+                textDecoration: 'none',
+                color: isActive ? 'var(--cream)' : 'rgba(197,227,247,0.4)',
+                padding: '12px 0',
+                borderBottom: '1px solid rgba(168,212,240,0.06)',
+                transition: 'color 0.2s',
+                display: 'block',
+              })}
+            >{item.label}</NavLink>
+          ))}
+        </nav>
+
+        {/* Bottom CTA */}
+        <div style={{ paddingTop: 32 }}>
+          <a
+            href="https://portal.curiocrate.org"
+            target="_blank" rel="noopener noreferrer"
+            onClick={() => setMenuOpen(false)}
+            style={{
+              display: 'block', textAlign: 'center',
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
+              textDecoration: 'none', padding: '16px 24px', borderRadius: 6,
+              color: 'var(--pastel1)', border: '1px solid rgba(168,212,240,0.3)',
+            }}
+          >Volunteer Hours →</a>
+        </div>
       </div>
 
       <style>{`
-        @media(max-width:900px){
-          nav { padding:14px 16px !important; }
-          nav > div:last-child { gap:1px !important; }
-          nav span:not([style*="rotate"]) { display:none !important; }
-          nav a, nav button { padding:6px 8px !important; font-size:9px !important; letter-spacing:1.5px !important; }
+        .nav-hamburger { display: none; }
+        .nav-desktop   { display: flex; }
+        @media(max-width:768px){
+          .nav-desktop   { display: none !important; }
+          .nav-hamburger { display: flex !important; }
+          nav { padding: 14px 20px !important; }
         }
       `}</style>
-    </nav>
+    </>
   )
 }

@@ -68,6 +68,10 @@ export default function CinematicFooter() {
       <style>{`
         @media(max-width:768px){
           footer > div > div:first-child { grid-template-columns:1fr 1fr !important; }
+          footer { padding: 44px 24px 32px !important; }
+        }
+        @media(max-width:480px){
+          footer > div > div:first-child { grid-template-columns:1fr !important; }
         }
       `}</style>
     </footer>
