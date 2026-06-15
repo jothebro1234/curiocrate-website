@@ -18,8 +18,10 @@ export const chronicle = [
     era: 'Chapter Expansion',
     color: '#e8c96e',
     glow: 'rgba(232,201,110,0.5)',
-    cover: null,
-    photos: [],
+    cover: '/images/volunteeringimage.jpg',
+    photos: [
+      { src: '/images/volunteeringimage.jpg', caption: 'Chapters expanding across the country' },
+    ],
   },
   {
     year: 2025,
@@ -49,7 +51,9 @@ export const chronicle = [
     era: 'The Beginning',
     color: '#a8e8c8',
     glow: 'rgba(168,232,200,0.5)',
-    cover: null,
-    photos: [],
+    cover: '/images/whatiscuriocrate.jpg',
+    photos: [
+      { src: '/images/whatiscuriocrate.jpg', caption: 'The founding of CurioCrate' },
+    ],
   },
 ]

@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
-import { motion } from 'framer-motion'
+import { createPortal } from 'react-dom'
+import { motion, AnimatePresence } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
 import { chapters as staticChapters } from '../data/chapters'
 
@@ -9,7 +10,158 @@ function resolveLogoUrl(url) {
   return url
 }
 
-function ChapterCard({ chapter, index }) {
+function ChapterModal({ chapter, onClose }) {
+  const [imgError, setImgError] = useState(false)
+  const [presidentImgError, setPresidentImgError] = useState(false)
+  const initials = chapter.school
+    .split(' ').filter(w => w.length > 2).slice(0, 2)
+    .map(w => w[0].toUpperCase()).join('')
+  const logoSrc = resolveLogoUrl(chapter.logo)
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    const fn = e => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', fn)
+    return () => { window.removeEventListener('keydown', fn); document.body.style.overflow = '' }
+  }, [onClose])
+
+  const ROLES = [
+    { title: 'President', name: chapter.president, photo: chapter.presidentPhoto },
+    { title: 'Vice President', name: chapter.vicePresident },
+    { title: 'Treasurer', name: chapter.treasurer },
+    { title: 'Secretary', name: chapter.secretary },
+    { title: 'Social Media Manager', name: chapter.socialMedia },
+  ].filter(r => r.name)
+
+  return createPortal(
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 700,
+        background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(20px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '20px',
+      }}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.35 }}
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: 'rgba(6,12,32,0.98)',
+          border: '1px solid rgba(168,212,240,0.15)',
+          borderRadius: 24,
+          overflow: 'hidden',
+          maxWidth: 600,
+          width: '100%',
+          maxHeight: '88vh',
+          overflowY: 'auto',
+          boxShadow: '0 40px 120px rgba(0,0,0,0.8)',
+        }}
+      >
+        {/* Header */}
+        <div style={{ padding: '36px 36px 28px', borderBottom: '1px solid rgba(168,212,240,0.08)', position: 'relative' }}>
+          <button onClick={onClose} style={{
+            position: 'absolute', top: 20, right: 20,
+            background: 'none', border: '1px solid rgba(168,212,240,0.2)',
+            borderRadius: 8, color: 'var(--muted)', fontSize: 11, cursor: 'pointer',
+            padding: '7px 14px', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '2px',
+          }}>ESC · CLOSE</button>
+
+          <div style={{
+            width: 68, height: 68, borderRadius: '50%',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: (logoSrc && !imgError) ? 'rgba(255,255,255,0.96)' : 'rgba(168,212,240,0.08)',
+            border: '2px solid rgba(168,212,240,0.2)',
+            overflow: 'hidden', marginBottom: 18,
+          }}>
+            {logoSrc && !imgError ? (
+              <img src={logoSrc} alt={chapter.school}
+                style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 8 }}
+                onError={() => setImgError(true)} />
+            ) : (
+              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, fontWeight: 300, color: 'var(--pastel1)' }}>{initials || '?'}</span>
+            )}
+          </div>
+
+          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 400, color: 'var(--cream)', lineHeight: 1.2, marginBottom: 8 }}>
+            {chapter.school}
+          </div>
+          {[chapter.city, chapter.state].filter(Boolean).length > 0 && (
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'var(--muted)', letterSpacing: '1.5px', textTransform: 'uppercase', opacity: 0.5 }}>
+              {[chapter.city, chapter.state].filter(Boolean).join(', ')}
+            </div>
+          )}
+        </div>
+
+        {/* Leadership Cabinet */}
+        <div style={{ padding: '28px 36px 40px' }}>
+          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--muted)', opacity: 0.45, marginBottom: 24 }}>
+            Leadership Cabinet
+          </div>
+
+          {ROLES.length === 0 ? (
+            <p style={{ fontSize: 14, color: 'var(--muted)', opacity: 0.5, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif" }}>Cabinet details coming soon.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {ROLES.map((role, i) => (
+                <div key={role.title} style={{
+                  display: 'flex', alignItems: 'center', gap: 16,
+                  padding: '14px 18px',
+                  background: i === 0 ? 'rgba(168,212,240,0.06)' : 'rgba(168,212,240,0.02)',
+                  border: i === 0 ? '1px solid rgba(168,212,240,0.14)' : '1px solid rgba(168,212,240,0.05)',
+                  borderRadius: 12,
+                }}>
+                  {i === 0 && role.photo && !presidentImgError ? (
+                    <img src={role.photo} alt={role.name}
+                      style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover', border: '1px solid rgba(168,212,240,0.2)', flexShrink: 0 }}
+                      onError={() => setPresidentImgError(true)} />
+                  ) : (
+                    <div style={{
+                      width: i === 0 ? 44 : 36, height: i === 0 ? 44 : 36,
+                      borderRadius: '50%', flexShrink: 0,
+                      background: 'rgba(168,212,240,0.08)',
+                      border: '1px solid rgba(168,212,240,0.15)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}>
+                      <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: i === 0 ? 18 : 14, color: 'var(--pastel1)', opacity: 0.7 }}>
+                        {role.name?.[0]?.toUpperCase() || '?'}
+                      </span>
+                    </div>
+                  )}
+                  <div>
+                    <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: 14, color: 'var(--cream)', marginBottom: 3 }}>
+                      {role.name}
+                    </div>
+                    <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'var(--muted)', letterSpacing: '1.5px', textTransform: 'uppercase', opacity: 0.55 }}>
+                      {role.title}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {chapter.email && (
+            <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid rgba(168,212,240,0.07)' }}>
+              <a href={`mailto:${chapter.email}`} style={{
+                fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
+                color: 'var(--pastel1)', textDecoration: 'none', letterSpacing: '0.5px', opacity: 0.7,
+              }}>{chapter.email}</a>
+            </div>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>,
+    document.body
+  )
+}
+
+function ChapterCard({ chapter, index, onClick }) {
   const [imgError, setImgError] = useState(false)
   const [hovered, setHovered] = useState(false)
   const initials = chapter.school
@@ -25,6 +177,7 @@ function ChapterCard({ chapter, index }) {
       transition={{ duration: 0.45, delay: Math.min(index * 0.06, 0.4) }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={onClick}
       style={{
         padding: '36px 32px',
         background: hovered ? 'rgba(12,24,60,0.75)' : 'rgba(6,12,32,0.6)',
@@ -38,7 +191,7 @@ function ChapterCard({ chapter, index }) {
           : '0 4px 24px rgba(0,0,0,0.2)',
         transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
         transition: 'all 0.3s ease',
-        cursor: 'default',
+        cursor: 'pointer',
         position: 'relative', overflow: 'hidden',
       }}
     >
@@ -113,6 +266,16 @@ function ChapterCard({ chapter, index }) {
           {location}
         </div>
       )}
+
+      {/* Tap hint */}
+      <div style={{
+        position: 'absolute', bottom: 14, right: 18,
+        fontFamily: "'JetBrains Mono', monospace",
+        fontSize: 8, color: 'rgba(168,212,240,0.3)',
+        letterSpacing: '1.5px', textTransform: 'uppercase',
+        opacity: hovered ? 1 : 0,
+        transition: 'opacity 0.3s',
+      }}>view cabinet →</div>
     </motion.div>
   )
 }
@@ -125,9 +288,10 @@ const HOW_TO_STEPS = [
 ]
 
 export default function OurChapters() {
-  const [chaptersData, setChaptersData] = useState([])
+  const [chaptersData,    setChaptersData]    = useState([])
   const [chaptersLoading, setChaptersLoading] = useState(true)
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery,     setSearchQuery]     = useState('')
+  const [selectedChapter, setSelectedChapter] = useState(null)
   const videoRef = useRef(null)
 
   useEffect(() => {
@@ -258,7 +422,7 @@ export default function OurChapters() {
                 gap: 20,
               }}>
                 {filteredChapters.map((chapter, i) => (
-                  <ChapterCard key={chapter.school + i} chapter={chapter} index={i} />
+                  <ChapterCard key={chapter.school + i} chapter={chapter} index={i} onClick={() => setSelectedChapter(chapter)} />
                 ))}
               </div>
             </div>
@@ -366,6 +530,13 @@ export default function OurChapters() {
           </motion.div>
         </div>
       </section>
+
+      {/* Chapter detail modal */}
+      <AnimatePresence>
+        {selectedChapter && (
+          <ChapterModal chapter={selectedChapter} onClose={() => setSelectedChapter(null)} />
+        )}
+      </AnimatePresence>
 
     </PageTransition>
   )

@@ -1,37 +1,6 @@
 import { motion } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
 
-const chapters = [
-  {
-    n:'01', title:'The Problem',
-    body:'Millions of children grow up without access to quality STEM education. Not because they lack curiosity, but because quality resources never reached them.',
-    icon:'🔍',
-  },
-  {
-    n:'02', title:'Our Answer',
-    body:'CurioCrate builds hands-on science kits and delivers them directly into underserved communities, turning curiosity into structured discovery.',
-    icon:'📦',
-  },
-  {
-    n:'03', title:'The Impact',
-    body:'Every kit reaches a child who might not otherwise have held a real microscope, built a circuit, or mixed a chemical reaction. That moment matters.',
-    icon:'⭐',
-  },
-]
-
-function InViewFade({ children, delay=0 }) {
-  return (
-    <motion.div
-      initial={{ opacity:0, y:40 }}
-      whileInView={{ opacity:1, y:0 }}
-      viewport={{ once:true, margin:'-60px' }}
-      transition={{ duration:0.9, delay, ease:[0.4,0,0.2,1] }}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
 export default function Mission() {
   return (
     <PageTransition>
@@ -126,41 +95,27 @@ export default function Mission() {
           </motion.div>
         </div>
 
-        {/* Chapter scroll */}
-        <div style={{ padding:'80px 40px', maxWidth:900, margin:'0 auto' }}>
-          {chapters.map((ch, i) => (
-            <InViewFade key={ch.n} delay={i*0.1}>
-              <div style={{
-                marginBottom:80,
-                paddingBottom:80,
-                borderBottom: i < chapters.length-1
-                  ? '1px solid rgba(168,212,240,0.06)'
-                  : 'none',
-              }}>
-                {/* Content */}
-                <div>
-                  <div style={{
-                    fontSize:32, marginBottom:16,
-                    filter:'drop-shadow(0 0 12px rgba(168,212,240,0.3))',
-                  }}>
-                    {ch.icon}
-                  </div>
-                  <h2 style={{
-                    fontFamily:"'Cormorant Garamond', serif",
-                    fontSize:42, fontWeight:300,
-                    color:'var(--cream)', marginBottom:16,
-                    lineHeight:1.1,
-                  }}>
-                    {ch.title}
-                  </h2>
-                  <p style={{ fontSize:17, color:'var(--muted)', lineHeight:1.85, maxWidth:580 }}>
-                    {ch.body}
-                  </p>
-                </div>
-              </div>
-            </InViewFade>
-          ))}
-        </div>
+        {/* Mission Statement */}
+        <motion.div
+          initial={{ opacity:0, y:40 }}
+          whileInView={{ opacity:1, y:0 }}
+          viewport={{ once:true, margin:'-60px' }}
+          transition={{ duration:0.9, ease:[0.4,0,0.2,1] }}
+          style={{ padding:'80px 40px 120px', maxWidth:900, margin:'0 auto' }}
+        >
+          <div className="label" style={{ marginBottom:24, opacity:0.6 }}>Our Mission</div>
+          <p style={{
+            fontFamily:"'Cormorant Garamond', serif",
+            fontStyle:'italic',
+            fontSize:'clamp(22px, 3vw, 34px)',
+            color:'var(--cream)',
+            lineHeight:1.7,
+            letterSpacing:'-0.01em',
+            opacity:0.9,
+          }}>
+            Curio Crate's mission is to empower every child by eliminating barriers to STEM education and providing free, hands-on and immersive learning experiences that spark curiosity.
+          </p>
+        </motion.div>
 
 
       </div>

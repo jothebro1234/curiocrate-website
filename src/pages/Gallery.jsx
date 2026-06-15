@@ -323,33 +323,51 @@ function ChronicleHero({ onOpenYear }) {
       <button
         onClick={() => { setDir(-1); setIdx(i => (i - 1 + chronicle.length) % chronicle.length) }}
         style={{
-          position:'absolute', left:32, top:'50%', transform:'translateY(-50%)',
-          zIndex:10, background:'rgba(168,212,240,0.05)',
-          border:'1px solid rgba(168,212,240,0.13)',
-          borderRadius:'50%', width:56, height:56,
+          position:'absolute', left:24, top:'50%', transform:'translateY(-50%)',
+          zIndex:10, background:'rgba(3,5,15,0.65)',
+          border:'1px solid rgba(168,212,240,0.22)',
+          borderRadius:48, padding:'16px 20px',
           color:'var(--pastel1)', cursor:'pointer',
-          display:'flex', alignItems:'center', justifyContent:'center',
-          fontSize:28, transition:'all 0.3s', backdropFilter:'blur(8px)',
+          display:'flex', alignItems:'center', gap:12,
+          transition:'all 0.3s', backdropFilter:'blur(12px)',
+          boxShadow:'0 8px 32px rgba(0,0,0,0.5)',
         }}
-        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.14)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.38)' }}
-        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.05)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.13)' }}
-      >‹</button>
+        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.12)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.45)'; e.currentTarget.style.boxShadow = '0 8px 40px rgba(168,212,240,0.15)' }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(3,5,15,0.65)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.22)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.5)' }}
+      >
+        <span style={{ fontSize:22, lineHeight:1 }}>←</span>
+        <div style={{ textAlign:'left' }}>
+          <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:8, letterSpacing:'2.5px', color:'var(--muted)', opacity:0.5, textTransform:'uppercase', marginBottom:3 }}>Prev</div>
+          <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:20, fontWeight:300, color:'var(--cream)', lineHeight:1 }}>
+            {chronicle[(idx - 1 + chronicle.length) % chronicle.length].year}
+          </div>
+        </div>
+      </button>
 
       {/* Right arrow */}
       <button
         onClick={() => { setDir(1); setIdx(i => (i + 1) % chronicle.length) }}
         style={{
-          position:'absolute', right:32, top:'50%', transform:'translateY(-50%)',
-          zIndex:10, background:'rgba(168,212,240,0.05)',
-          border:'1px solid rgba(168,212,240,0.13)',
-          borderRadius:'50%', width:56, height:56,
+          position:'absolute', right:24, top:'50%', transform:'translateY(-50%)',
+          zIndex:10, background:'rgba(3,5,15,0.65)',
+          border:'1px solid rgba(168,212,240,0.22)',
+          borderRadius:48, padding:'16px 20px',
           color:'var(--pastel1)', cursor:'pointer',
-          display:'flex', alignItems:'center', justifyContent:'center',
-          fontSize:28, transition:'all 0.3s', backdropFilter:'blur(8px)',
+          display:'flex', alignItems:'center', gap:12,
+          transition:'all 0.3s', backdropFilter:'blur(12px)',
+          boxShadow:'0 8px 32px rgba(0,0,0,0.5)',
         }}
-        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.14)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.38)' }}
-        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.05)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.13)' }}
-      >›</button>
+        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.12)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.45)'; e.currentTarget.style.boxShadow = '0 8px 40px rgba(168,212,240,0.15)' }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(3,5,15,0.65)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.22)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.5)' }}
+      >
+        <div style={{ textAlign:'right' }}>
+          <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:8, letterSpacing:'2.5px', color:'var(--muted)', opacity:0.5, textTransform:'uppercase', marginBottom:3 }}>Next</div>
+          <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:20, fontWeight:300, color:'var(--cream)', lineHeight:1 }}>
+            {chronicle[(idx + 1) % chronicle.length].year}
+          </div>
+        </div>
+        <span style={{ fontSize:22, lineHeight:1 }}>→</span>
+      </button>
 
       {/* Timeline */}
       <div style={{

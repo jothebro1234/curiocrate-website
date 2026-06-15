@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
@@ -20,6 +21,7 @@ const HERO_PHOTOS = [
 const PARTNERS = [
   { name: 'Society for Science',    logo: '/logos/sfslogo.png' },
   { name: 'Connect Key Foundation', logo: '/logos/ckflogo.png' },
+  { name: 'YMCA',                   logo: '/logos/ymcamainpng.png' },
 ]
 
 const GET_INVOLVED_STEPS = [
@@ -43,6 +45,83 @@ const GET_INVOLVED_STEPS = [
     img: '/images/curiekits.png',
   },
 ]
+
+function StatModal({ stat, onClose }) {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    const fn = e => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', fn)
+    return () => { window.removeEventListener('keydown', fn); document.body.style.overflow = '' }
+  }, [onClose])
+
+  return createPortal(
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 700,
+        background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(20px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '20px',
+      }}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.35 }}
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: 'rgba(6,12,32,0.98)',
+          border: '1px solid rgba(168,212,240,0.15)',
+          borderRadius: 24,
+          overflow: 'hidden',
+          maxWidth: 580,
+          width: '100%',
+          boxShadow: '0 40px 120px rgba(0,0,0,0.8)',
+        }}
+      >
+        <div style={{ position: 'relative', height: 280, overflow: 'hidden' }}>
+          <img src={stat.photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.45) saturate(0.6)' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 20%, rgba(6,12,32,0.97) 100%)' }} />
+          <div style={{ position: 'absolute', bottom: 28, left: 36 }}>
+            <div style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: 'clamp(60px,10vw,96px)', fontWeight: 300, lineHeight: 0.9,
+              color: 'var(--pastel1)',
+              textShadow: '0 0 60px rgba(168,212,240,0.5)',
+              letterSpacing: '-0.04em',
+            }}>{stat.value}</div>
+            <div style={{
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontWeight: 700, fontSize: 11,
+              color: 'var(--cream)', textTransform: 'uppercase', letterSpacing: '2.5px',
+              marginTop: 10,
+            }}>{stat.label}</div>
+          </div>
+          <button onClick={onClose} style={{
+            position: 'absolute', top: 20, right: 20,
+            background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(168,212,240,0.2)',
+            borderRadius: 8, color: 'var(--muted)', fontSize: 11, cursor: 'pointer',
+            padding: '7px 14px', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '2px',
+          }}>ESC · CLOSE</button>
+        </div>
+        <div style={{ padding: '24px 36px 36px' }}>
+          <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.85, marginBottom: 16 }}>
+            {stat.description}
+          </p>
+          {stat.detail && (
+            <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.8, opacity: 0.7, borderTop: '1px solid rgba(168,212,240,0.07)', paddingTop: 16 }}>
+              {stat.detail}
+            </p>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>,
+    document.body
+  )
+}
 
 // Custom glowing marker for Leaflet
 const chapterIcon = L.divIcon({
@@ -105,9 +184,10 @@ function LeafletMap({ chaptersData }) {
 }
 
 export default function Home() {
-  const [ctaReady,     setCtaReady]     = useState(false)
-  const [activePhoto,  setActivePhoto]  = useState(0)
-  const [chaptersData, setChaptersData] = useState([])
+  const [ctaReady,      setCtaReady]      = useState(false)
+  const [activePhoto,   setActivePhoto]   = useState(0)
+  const [chaptersData,  setChaptersData]  = useState([])
+  const [selectedStat,  setSelectedStat]  = useState(null)
 
   const heroRef = useRef(null)
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
@@ -555,7 +635,8 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.12, duration: 0.9, ease: [0.4, 0, 0.2, 1] }}
-                style={{ padding: '72px 56px', position: 'relative', overflow: 'hidden', border: '1px solid rgba(168,212,240,0.07)' }}
+                onClick={() => setSelectedStat(s)}
+                style={{ padding: '72px 56px', position: 'relative', overflow: 'hidden', border: '1px solid rgba(168,212,240,0.07)', cursor: 'pointer' }}
                 onMouseEnter={e => {
                   const img = e.currentTarget.querySelector('img.stat-bg')
                   if (img) { img.style.transform = 'scale(1.07)'; img.style.filter = 'brightness(0.32) saturate(0.55)' }
@@ -571,9 +652,17 @@ export default function Home() {
                 <div style={{ position: 'relative', zIndex: 2, fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(80px,11vw,140px)', fontWeight: 300, lineHeight: 0.9, color: 'var(--pastel1)', textShadow: '0 0 80px rgba(168,212,240,0.7)', marginBottom: 24, letterSpacing: '-0.04em' }}>{s.value}</div>
                 <div style={{ position: 'relative', zIndex: 2, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: 13, color: 'var(--cream)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '2.5px' }}>{s.label}</div>
                 <div style={{ position: 'relative', zIndex: 2, fontSize: 14, color: 'var(--muted)', lineHeight: 1.75, maxWidth: 320, opacity: 0.8 }}>{s.description}</div>
+                <div style={{ position: 'absolute', bottom: 20, right: 24, zIndex: 2, fontFamily: "'JetBrains Mono', monospace", fontSize: 8, letterSpacing: '2px', color: 'rgba(168,212,240,0.3)', textTransform: 'uppercase' }}>tap for details</div>
               </motion.div>
             ))}
           </div>
+
+          {/* Stat detail modal */}
+          <AnimatePresence>
+            {selectedStat && (
+              <StatModal stat={selectedStat} onClose={() => setSelectedStat(null)} />
+            )}
+          </AnimatePresence>
         </div>
       </section>
 
