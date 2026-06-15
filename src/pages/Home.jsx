@@ -47,6 +47,13 @@ const GET_INVOLVED_STEPS = [
   },
 ]
 
+function driveUrl(url) {
+  if (!url) return ''
+  const m = url.match(/\/file\/d\/([^/]+)/)
+  if (m) return `https://drive.google.com/uc?export=view&id=${m[1]}`
+  return url
+}
+
 const NEWS_COLORS = {
   Chapters:     '#a8d4f0',
   Events:       '#a8e8c8',
@@ -201,7 +208,7 @@ export default function Home() {
   const [activePhoto,   setActivePhoto]   = useState(0)
   const [chaptersData,  setChaptersData]  = useState([])
   const [selectedStat,  setSelectedStat]  = useState(null)
-  const [newsData,      setNewsData]      = useState(news)
+  const [newsData,      setNewsData]      = useState(null)
 
   const heroRef = useRef(null)
   const newsRef = useRef(null)
@@ -222,14 +229,16 @@ export default function Home() {
 
   useEffect(() => {
     const url = import.meta.env.VITE_APPS_SCRIPT_URL
-    if (!url) return
+    if (!url) { setNewsData(news); return }
     fetch(`${url}?action=get_updates`)
       .then(r => r.json())
       .then(data => {
         if (data.ok && Array.isArray(data.updates) && data.updates.length > 0)
           setNewsData(data.updates)
+        else
+          setNewsData(news)
       })
-      .catch(() => {})
+      .catch(() => setNewsData(news))
   }, [])
 
   useEffect(() => {
@@ -434,8 +443,8 @@ export default function Home() {
           whiteSpace: 'nowrap', lineHeight: 1,
         }}>DISPATCH</div>
 
-        {/* ── Scrolling ticker ── */}
-        <div style={{
+        {/* ── Scrolling ticker (only when data ready) ── */}
+        {newsData && <div style={{
           overflow: 'hidden', marginBottom: 80,
           borderTop: '1px solid rgba(168,212,240,0.07)',
           borderBottom: '1px solid rgba(168,212,240,0.07)',
@@ -468,7 +477,7 @@ export default function Home() {
               </span>
             ))}
           </motion.div>
-        </div>
+        </div>}
 
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 40px' }}>
 
@@ -513,7 +522,7 @@ export default function Home() {
           </motion.div>
 
           {/* Main grid: featured left, stacked right */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1.18fr 0.82fr', gap: 20, alignItems: 'start' }}>
+          {newsData && <div style={{ display: 'grid', gridTemplateColumns: '1.18fr 0.82fr', gap: 20, alignItems: 'start' }}>
 
             {/* ── FEATURED CARD ── */}
             <motion.div
@@ -549,7 +558,7 @@ export default function Home() {
                 {/* Photo background */}
                 {newsData[0].image && (
                   <>
-                    <img src={newsData[0].image} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.25) saturate(0.45)', pointerEvents: 'none' }} />
+                    <img src={driveUrl(newsData[0].image)} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.25) saturate(0.45)', pointerEvents: 'none' }} />
                     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, rgba(4,8,22,0.45) 0%, rgba(4,8,22,0.88) 100%)', pointerEvents: 'none' }} />
                   </>
                 )}
@@ -628,11 +637,25 @@ export default function Home() {
                       lineHeight: 1.18, letterSpacing: '-0.025em', marginBottom: 22,
                     }}>{newsData[0].title}</h3>
                     <p style={{
-                      fontSize: 13.5, color: 'var(--muted)',
-                      lineHeight: 1.85, opacity: 0.72, maxWidth: 440,
+                      fontSize: 13.5, color: 'rgba(210,232,248,0.88)',
+                      lineHeight: 1.85, maxWidth: 440,
                     }}>
                       {newsData[0].body}<span className="news-cursor">_</span>
                     </p>
+                    {newsData[0].link && (
+                      <a href={newsData[0].link} target="_blank" rel="noopener noreferrer" style={{
+                        display: 'inline-block', marginTop: 20,
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 9, letterSpacing: '2.5px', textTransform: 'uppercase',
+                        color: newsColor(newsData[0].category), textDecoration: 'none',
+                        border: `1px solid ${newsColor(newsData[0].category)}40`,
+                        borderRadius: 4, padding: '7px 16px',
+                        transition: 'all 0.25s ease',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = `${newsColor(newsData[0].category)}14` }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+                      >Read More →</a>
+                    )}
                   </div>
 
                   {/* Footer */}
@@ -680,7 +703,7 @@ export default function Home() {
                     {/* Photo background */}
                     {item.image && (
                       <>
-                        <img src={item.image} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.18) saturate(0.4)', pointerEvents: 'none' }} />
+                        <img src={driveUrl(item.image)} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.18) saturate(0.4)', pointerEvents: 'none' }} />
                         <div style={{ position: 'absolute', inset: 0, background: 'rgba(4,8,22,0.74)', pointerEvents: 'none' }} />
                       </>
                     )}
@@ -725,20 +748,32 @@ export default function Home() {
                       lineHeight: 1.22, marginBottom: 10,
                     }}>{item.title}</h3>
 
-                    <p style={{ fontSize: 12.5, color: 'var(--muted)', lineHeight: 1.75, opacity: 0.62 }}>{item.body}</p>
+                    <p style={{ fontSize: 12.5, color: 'rgba(210,232,248,0.82)', lineHeight: 1.75 }}>{item.body}</p>
 
-                    <div style={{
-                      marginTop: 18, textAlign: 'right',
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 7.5, letterSpacing: '1.5px',
-                      color: 'rgba(168,212,240,0.16)',
-                    }}>{(i + 2).toString().padStart(2, '0')} / {newsData.length.toString().padStart(2, '0')}</div>
+                    <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      {item.link ? (
+                        <a href={item.link} target="_blank" rel="noopener noreferrer" style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 7.5, letterSpacing: '2px', textTransform: 'uppercase',
+                          color: newsColor(item.category), textDecoration: 'none',
+                          opacity: 0.85, transition: 'opacity 0.2s',
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.opacity = '1' }}
+                        onMouseLeave={e => { e.currentTarget.style.opacity = '0.85' }}
+                        >Read More →</a>
+                      ) : <span />}
+                      <span style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 7.5, letterSpacing: '1.5px',
+                        color: 'rgba(168,212,240,0.16)',
+                      }}>{(i + 2).toString().padStart(2, '0')} / {newsData.length.toString().padStart(2, '0')}</span>
+                    </div>
                   </div>
                 </motion.div>
               ))}
             </div>
 
-          </div>
+          </div>}
         </div>
       </section>
 
