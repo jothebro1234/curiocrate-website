@@ -558,8 +558,8 @@ export default function Home() {
                 {/* Photo background */}
                 {newsData[0].image && (
                   <>
-                    <img src={driveUrl(newsData[0].image)} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.25) saturate(0.45)', pointerEvents: 'none' }} />
-                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, rgba(4,8,22,0.45) 0%, rgba(4,8,22,0.88) 100%)', pointerEvents: 'none' }} />
+                    <img src={driveUrl(newsData[0].image)} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.65) saturate(0.8)', pointerEvents: 'none' }} />
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(4,8,22,0.05) 0%, rgba(4,8,22,0.15) 35%, rgba(4,8,22,0.88) 62%, rgba(4,8,22,0.97) 100%)', pointerEvents: 'none' }} />
                   </>
                 )}
 
@@ -608,10 +608,10 @@ export default function Home() {
                 }} />
 
                 {/* Content */}
-                <div style={{ padding: '44px 44px 36px 54px', display: 'flex', flexDirection: 'column', minHeight: 500 }}>
+                <div style={{ padding: '44px 44px 36px 54px', display: 'flex', flexDirection: 'column', minHeight: 500, justifyContent: 'flex-end', position: 'relative', zIndex: 2 }}>
 
                   {/* Top: category + date */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'auto' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
                     <span style={{
                       fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 8, letterSpacing: '2.5px', textTransform: 'uppercase',
@@ -629,16 +629,18 @@ export default function Home() {
                   </div>
 
                   {/* Headline + body */}
-                  <div style={{ margin: 'auto 0', padding: '52px 0 40px' }}>
+                  <div style={{ padding: '0 0 28px' }}>
                     <h3 style={{
                       fontFamily: "'Cormorant Garamond', serif",
                       fontSize: 'clamp(26px, 2.8vw, 40px)',
-                      fontWeight: 300, color: 'var(--cream)',
+                      fontWeight: 300, color: '#ffffff',
                       lineHeight: 1.18, letterSpacing: '-0.025em', marginBottom: 22,
+                      textShadow: '0 2px 12px rgba(0,0,0,0.9)',
                     }}>{newsData[0].title}</h3>
                     <p style={{
-                      fontSize: 13.5, color: 'rgba(210,232,248,0.88)',
+                      fontSize: 13.5, color: 'rgba(230,243,255,0.95)',
                       lineHeight: 1.85, maxWidth: 440,
+                      textShadow: '0 1px 8px rgba(0,0,0,0.8)',
                     }}>
                       {newsData[0].body}<span className="news-cursor">_</span>
                     </p>
@@ -703,8 +705,8 @@ export default function Home() {
                     {/* Photo background */}
                     {item.image && (
                       <>
-                        <img src={driveUrl(item.image)} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.18) saturate(0.4)', pointerEvents: 'none' }} />
-                        <div style={{ position: 'absolute', inset: 0, background: 'rgba(4,8,22,0.74)', pointerEvents: 'none' }} />
+                        <img src={driveUrl(item.image)} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.45) saturate(0.65)', pointerEvents: 'none' }} />
+                        <div style={{ position: 'absolute', inset: 0, background: 'rgba(4,8,22,0.58)', pointerEvents: 'none' }} />
                       </>
                     )}
 
@@ -721,6 +723,8 @@ export default function Home() {
                       background: `linear-gradient(to bottom, transparent, ${newsColor(item.category)}90, transparent)`,
                     }} />
 
+                    {/* Content (above image via z-index) */}
+                    <div style={{ position: 'relative', zIndex: 2 }}>
                     {/* Category + date */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 15 }}>
                       <span style={{
@@ -768,6 +772,7 @@ export default function Home() {
                         color: 'rgba(168,212,240,0.16)',
                       }}>{(i + 2).toString().padStart(2, '0')} / {newsData.length.toString().padStart(2, '0')}</span>
                     </div>
+                    </div>{/* end content z-index wrapper */}
                   </div>
                 </motion.div>
               ))}
