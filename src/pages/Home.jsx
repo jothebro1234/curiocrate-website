@@ -7,6 +7,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import PageTransition from '../components/PageTransition'
 import { stats } from '../data/stats'
+import { news } from '../data/news'
 import { chapters as staticChapters } from '../data/chapters'
 import { chapterLocations } from '../data/chapterLocations'
 
@@ -45,6 +46,18 @@ const GET_INVOLVED_STEPS = [
     img: '/images/curiekits.png',
   },
 ]
+
+const NEWS_COLORS = {
+  Chapters:     '#a8d4f0',
+  Events:       '#a8e8c8',
+  Milestones:   '#e8c96e',
+  Partnerships: '#c5b4f8',
+}
+function newsColor(cat) { return NEWS_COLORS[cat] || '#a8d4f0' }
+function formatNewsDate(str) {
+  const d = new Date(str + 'T00:00:00')
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
 
 function StatModal({ stat, onClose }) {
   useEffect(() => {
@@ -377,6 +390,82 @@ export default function Home() {
           </motion.div>
         </div>
       </motion.section>
+
+      {/* ─── RECENT NEWS ─── */}
+      <section style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            style={{ marginBottom: 52 }}
+          >
+            <div className="label" style={{ marginBottom: 14 }}>Updates</div>
+            <h2 style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: 'clamp(30px,4vw,52px)',
+              fontWeight: 300, color: 'var(--cream)', lineHeight: 1.05,
+            }}>Recent News</h2>
+          </motion.div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gap: 20,
+          }}>
+            {news.map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.7 }}
+                style={{
+                  padding: '32px 28px',
+                  background: 'rgba(6,12,32,0.6)',
+                  backdropFilter: 'blur(24px)',
+                  border: '1px solid rgba(168,212,240,0.09)',
+                  borderRadius: 16,
+                  position: 'relative', overflow: 'hidden',
+                }}
+              >
+                {/* Color accent line at top */}
+                <div style={{
+                  position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+                  background: `linear-gradient(to right, transparent, ${newsColor(item.category)}90, transparent)`,
+                }}/>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
+                  <span style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 8, letterSpacing: '2px', textTransform: 'uppercase',
+                    color: newsColor(item.category),
+                    background: `${newsColor(item.category)}18`,
+                    border: `1px solid ${newsColor(item.category)}35`,
+                    borderRadius: 4, padding: '4px 9px',
+                    flexShrink: 0,
+                  }}>{item.category}</span>
+                  <span style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 9, letterSpacing: '1px',
+                    color: 'var(--muted)', opacity: 0.4,
+                  }}>{formatNewsDate(item.date)}</span>
+                </div>
+
+                <h3 style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: 22, fontWeight: 400,
+                  color: 'var(--cream)', lineHeight: 1.25, marginBottom: 12,
+                }}>{item.title}</h3>
+                <p style={{
+                  fontSize: 13, color: 'var(--muted)', lineHeight: 1.8, opacity: 0.75,
+                }}>{item.body}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ─── WHAT IS CURIOCRATE ─── */}
       <section style={{ position: 'relative', zIndex: 1, padding: '120px 40px' }}>
