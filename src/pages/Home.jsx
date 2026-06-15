@@ -201,6 +201,7 @@ export default function Home() {
   const [activePhoto,   setActivePhoto]   = useState(0)
   const [chaptersData,  setChaptersData]  = useState([])
   const [selectedStat,  setSelectedStat]  = useState(null)
+  const [newsData,      setNewsData]      = useState(news)
 
   const heroRef = useRef(null)
   const newsRef = useRef(null)
@@ -217,6 +218,18 @@ export default function Home() {
   useEffect(() => {
     const timer = setInterval(() => setActivePhoto(p => (p + 1) % HERO_PHOTOS.length), 5500)
     return () => clearInterval(timer)
+  }, [])
+
+  useEffect(() => {
+    const url = import.meta.env.VITE_APPS_SCRIPT_URL
+    if (!url) return
+    fetch(`${url}?action=get_updates`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.ok && Array.isArray(data.updates) && data.updates.length > 0)
+          setNewsData(data.updates)
+      })
+      .catch(() => {})
   }, [])
 
   useEffect(() => {
@@ -433,7 +446,7 @@ export default function Home() {
             transition={{ duration: 26, repeat: Infinity, ease: 'linear' }}
             style={{ display: 'flex', width: 'max-content' }}
           >
-            {[...news, ...news, ...news].map((item, i) => (
+            {[...newsData, ...newsData, ...newsData].map((item, i) => (
               <span key={i} style={{ display: 'inline-flex', alignItems: 'center', padding: '9px 0', whiteSpace: 'nowrap' }}>
                 <span style={{
                   display: 'inline-block', width: 5, height: 5, borderRadius: '50%',
@@ -516,7 +529,7 @@ export default function Home() {
                   const dx = (e.clientX - r.left - r.width / 2) / (r.width / 2)
                   const dy = (e.clientY - r.top - r.height / 2) / (r.height / 2)
                   e.currentTarget.style.transform = `perspective(1400px) rotateY(${dx * 6}deg) rotateX(${dy * -6}deg) scale(1.008)`
-                  e.currentTarget.style.boxShadow = `0 48px 140px rgba(0,0,0,0.7), 0 0 60px ${newsColor(news[0].category)}12`
+                  e.currentTarget.style.boxShadow = `0 48px 140px rgba(0,0,0,0.7), 0 0 60px ${newsColor(newsData[0].category)}12`
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.transform = ''
@@ -533,30 +546,38 @@ export default function Home() {
                   cursor: 'default',
                 }}
               >
+                {/* Photo background */}
+                {newsData[0].image && (
+                  <>
+                    <img src={newsData[0].image} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.25) saturate(0.45)', pointerEvents: 'none' }} />
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, rgba(4,8,22,0.45) 0%, rgba(4,8,22,0.88) 100%)', pointerEvents: 'none' }} />
+                  </>
+                )}
+
                 {/* Corner glow */}
                 <div style={{
                   position: 'absolute', top: -80, right: -80, width: 300, height: 300,
                   borderRadius: '50%', pointerEvents: 'none',
-                  background: `radial-gradient(ellipse, ${newsColor(news[0].category)}1C 0%, transparent 65%)`,
+                  background: `radial-gradient(ellipse, ${newsColor(newsData[0].category)}1C 0%, transparent 65%)`,
                 }} />
                 {/* Bottom-left glow */}
                 <div style={{
                   position: 'absolute', bottom: -60, left: -40, width: 220, height: 220,
                   borderRadius: '50%', pointerEvents: 'none',
-                  background: `radial-gradient(ellipse, ${newsColor(news[0].category)}0E 0%, transparent 65%)`,
+                  background: `radial-gradient(ellipse, ${newsColor(newsData[0].category)}0E 0%, transparent 65%)`,
                 }} />
 
                 {/* Left signal bar */}
                 <div style={{
                   position: 'absolute', left: 0, top: 50, bottom: 50, width: 2, borderRadius: 2,
-                  background: `linear-gradient(to bottom, transparent, ${newsColor(news[0].category)}, transparent)`,
+                  background: `linear-gradient(to bottom, transparent, ${newsColor(newsData[0].category)}, transparent)`,
                 }} />
 
                 {/* Scan line (fires once on section scroll-in) */}
                 {newsInView && (
                   <div style={{
                     position: 'absolute', left: 0, right: 0, height: 1,
-                    background: `linear-gradient(to right, transparent 0%, ${newsColor(news[0].category)}80 30%, ${newsColor(news[0].category)} 50%, ${newsColor(news[0].category)}80 70%, transparent 100%)`,
+                    background: `linear-gradient(to right, transparent 0%, ${newsColor(newsData[0].category)}80 30%, ${newsColor(newsData[0].category)} 50%, ${newsColor(newsData[0].category)}80 70%, transparent 100%)`,
                     animation: 'newsScan 1.6s ease-in-out 0.3s both',
                     pointerEvents: 'none', zIndex: 10,
                   }} />
@@ -573,7 +594,7 @@ export default function Home() {
                 {/* Border pulse (CSS hover) */}
                 <div className="news-border-pulse" style={{
                   position: 'absolute', inset: 0, borderRadius: 20,
-                  border: `1px solid ${newsColor(news[0].category)}60`,
+                  border: `1px solid ${newsColor(newsData[0].category)}60`,
                   opacity: 0, pointerEvents: 'none',
                 }} />
 
@@ -585,17 +606,17 @@ export default function Home() {
                     <span style={{
                       fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 8, letterSpacing: '2.5px', textTransform: 'uppercase',
-                      color: newsColor(news[0].category),
-                      background: `${newsColor(news[0].category)}12`,
-                      border: `1px solid ${newsColor(news[0].category)}35`,
+                      color: newsColor(newsData[0].category),
+                      background: `${newsColor(newsData[0].category)}12`,
+                      border: `1px solid ${newsColor(newsData[0].category)}35`,
                       borderRadius: 4, padding: '5px 12px',
-                      boxShadow: `0 0 16px ${newsColor(news[0].category)}18`,
-                    }}>{news[0].category}</span>
+                      boxShadow: `0 0 16px ${newsColor(newsData[0].category)}18`,
+                    }}>{newsData[0].category}</span>
                     <span style={{
                       fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 8, letterSpacing: '1.5px', textTransform: 'uppercase',
                       color: 'rgba(168,212,240,0.28)',
-                    }}>{formatNewsDate(news[0].date)}</span>
+                    }}>{formatNewsDate(newsData[0].date)}</span>
                   </div>
 
                   {/* Headline + body */}
@@ -605,19 +626,19 @@ export default function Home() {
                       fontSize: 'clamp(26px, 2.8vw, 40px)',
                       fontWeight: 300, color: 'var(--cream)',
                       lineHeight: 1.18, letterSpacing: '-0.025em', marginBottom: 22,
-                    }}>{news[0].title}</h3>
+                    }}>{newsData[0].title}</h3>
                     <p style={{
                       fontSize: 13.5, color: 'var(--muted)',
                       lineHeight: 1.85, opacity: 0.72, maxWidth: 440,
                     }}>
-                      {news[0].body}<span className="news-cursor">_</span>
+                      {newsData[0].body}<span className="news-cursor">_</span>
                     </p>
                   </div>
 
                   {/* Footer */}
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 20, borderTop: '1px solid rgba(168,212,240,0.06)' }}>
                     <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 7.5, letterSpacing: '2px', textTransform: 'uppercase', color: 'rgba(168,212,240,0.18)' }}>FEATURED DISPATCH</span>
-                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 7.5, letterSpacing: '2px', color: 'rgba(168,212,240,0.18)' }}>01 / {news.length.toString().padStart(2, '0')}</span>
+                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 7.5, letterSpacing: '2px', color: 'rgba(168,212,240,0.18)' }}>01 / {newsData.length.toString().padStart(2, '0')}</span>
                   </div>
                 </div>
               </div>
@@ -625,7 +646,7 @@ export default function Home() {
 
             {/* ── STACKED SIDE CARDS ── */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-              {news.slice(1).map((item, i) => (
+              {newsData.slice(1).map((item, i) => (
                 <motion.div
                   key={i + 1}
                   initial={{ opacity: 0, y: 28 }}
@@ -656,6 +677,14 @@ export default function Home() {
                       cursor: 'default',
                     }}
                   >
+                    {/* Photo background */}
+                    {item.image && (
+                      <>
+                        <img src={item.image} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.18) saturate(0.4)', pointerEvents: 'none' }} />
+                        <div style={{ position: 'absolute', inset: 0, background: 'rgba(4,8,22,0.74)', pointerEvents: 'none' }} />
+                      </>
+                    )}
+
                     {/* Clipped corner triangle */}
                     <div style={{
                       position: 'absolute', top: 0, right: 0, width: 0, height: 0,
@@ -703,7 +732,7 @@ export default function Home() {
                       fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 7.5, letterSpacing: '1.5px',
                       color: 'rgba(168,212,240,0.16)',
-                    }}>{(i + 2).toString().padStart(2, '0')} / {news.length.toString().padStart(2, '0')}</div>
+                    }}>{(i + 2).toString().padStart(2, '0')} / {newsData.length.toString().padStart(2, '0')}</div>
                   </div>
                 </motion.div>
               ))}
