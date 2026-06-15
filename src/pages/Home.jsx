@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
-import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion'
+import { AnimatePresence, motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -203,6 +203,8 @@ export default function Home() {
   const [selectedStat,  setSelectedStat]  = useState(null)
 
   const heroRef = useRef(null)
+  const newsRef = useRef(null)
+  const newsInView = useInView(newsRef, { once: true, amount: 0.25 })
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
   const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '15%'])
   const heroO = useTransform(scrollYProgress, [0, 0.7], [1, 0])
@@ -391,9 +393,73 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* ─── RECENT NEWS ─── */}
-      <section style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+      {/* ─── RECENT NEWS: DISPATCH BOARD ─── */}
+      <section ref={newsRef} style={{ position: 'relative', zIndex: 1, padding: '120px 0 140px', overflow: 'hidden' }}>
+
+        {/* Atmospheric orbs */}
+        <div style={{ position: 'absolute', top: '-8%', left: '-6%', width: 700, height: 700, borderRadius: '50%', pointerEvents: 'none', background: 'radial-gradient(ellipse, rgba(168,212,240,0.032) 0%, transparent 65%)' }} />
+        <div style={{ position: 'absolute', bottom: '0%', right: '-5%', width: 580, height: 580, borderRadius: '50%', pointerEvents: 'none', background: 'radial-gradient(ellipse, rgba(197,180,248,0.038) 0%, transparent 65%)' }} />
+
+        {/* Hexagonal grid */}
+        <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.024, pointerEvents: 'none' }} xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="newsHex" x="0" y="0" width="70" height="60.62" patternUnits="userSpaceOnUse">
+              <polygon points="35,2 68,19 68,53 35,70 2,53 2,19" fill="none" stroke="rgba(168,212,240,1)" strokeWidth="0.7"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#newsHex)" />
+        </svg>
+
+        {/* Giant watermark */}
+        <div style={{
+          position: 'absolute', top: '50%', left: '50%',
+          transform: 'translate(-50%, -50%)',
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: 'clamp(160px, 26vw, 380px)',
+          fontWeight: 300, color: 'rgba(168,212,240,0.016)',
+          letterSpacing: '-0.06em', pointerEvents: 'none', userSelect: 'none',
+          whiteSpace: 'nowrap', lineHeight: 1,
+        }}>DISPATCH</div>
+
+        {/* ── Scrolling ticker ── */}
+        <div style={{
+          overflow: 'hidden', marginBottom: 80,
+          borderTop: '1px solid rgba(168,212,240,0.07)',
+          borderBottom: '1px solid rgba(168,212,240,0.07)',
+          background: 'rgba(168,212,240,0.018)',
+        }}>
+          <motion.div
+            animate={{ x: ['0%', '-33.33%'] }}
+            transition={{ duration: 26, repeat: Infinity, ease: 'linear' }}
+            style={{ display: 'flex', width: 'max-content' }}
+          >
+            {[...news, ...news, ...news].map((item, i) => (
+              <span key={i} style={{ display: 'inline-flex', alignItems: 'center', padding: '9px 0', whiteSpace: 'nowrap' }}>
+                <span style={{
+                  display: 'inline-block', width: 5, height: 5, borderRadius: '50%',
+                  background: newsColor(item.category),
+                  boxShadow: `0 0 6px ${newsColor(item.category)}90`,
+                  margin: '0 16px', flexShrink: 0,
+                }} />
+                <span style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 8, letterSpacing: '2px', textTransform: 'uppercase',
+                  color: newsColor(item.category), opacity: 0.85, marginRight: 10,
+                }}>{item.category}</span>
+                <span style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 8, letterSpacing: '1.5px',
+                  color: 'rgba(168,212,240,0.32)',
+                }}>{item.title}</span>
+                <span style={{ margin: '0 36px', color: 'rgba(168,212,240,0.1)', fontFamily: "'JetBrains Mono', monospace", fontSize: 8 }}>·</span>
+              </span>
+            ))}
+          </motion.div>
+        </div>
+
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 40px' }}>
+
+          {/* Section header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -401,68 +467,248 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             style={{ marginBottom: 52 }}
           >
-            <div className="label" style={{ marginBottom: 14 }}>Updates</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 22 }}>
+              <span className="news-live-dot" style={{
+                display: 'inline-block', width: 7, height: 7, borderRadius: '50%',
+                background: '#ef4444', flexShrink: 0,
+              }} />
+              <span style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 8, letterSpacing: '3px', textTransform: 'uppercase',
+                color: '#ef4444',
+              }}>LIVE</span>
+              <div style={{ width: 1, height: 12, background: 'rgba(168,212,240,0.15)' }} />
+              <span style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 8, letterSpacing: '2.5px', textTransform: 'uppercase',
+                color: 'rgba(168,212,240,0.35)',
+              }}>CURIOCRATE DISPATCH</span>
+              <motion.div
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.4, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                style={{ flex: 1, height: 1, background: 'linear-gradient(to right, rgba(168,212,240,0.15), transparent)', transformOrigin: 'left' }}
+              />
+            </div>
             <h2 style={{
               fontFamily: "'Cormorant Garamond', serif",
-              fontSize: 'clamp(30px,4vw,52px)',
-              fontWeight: 300, color: 'var(--cream)', lineHeight: 1.05,
-            }}>Recent News</h2>
+              fontSize: 'clamp(32px,4.5vw,60px)',
+              fontWeight: 300, color: 'var(--cream)',
+              lineHeight: 1.0, letterSpacing: '-0.03em',
+            }}>Recent <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>News</em></h2>
           </motion.div>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-            gap: 20,
-          }}>
-            {news.map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.7 }}
+          {/* Main grid: featured left, stacked right */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1.18fr 0.82fr', gap: 20, alignItems: 'start' }}>
+
+            {/* ── FEATURED CARD ── */}
+            <motion.div
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
+            >
+              <div
+                className="news-featured"
+                onMouseMove={e => {
+                  const r = e.currentTarget.getBoundingClientRect()
+                  const dx = (e.clientX - r.left - r.width / 2) / (r.width / 2)
+                  const dy = (e.clientY - r.top - r.height / 2) / (r.height / 2)
+                  e.currentTarget.style.transform = `perspective(1400px) rotateY(${dx * 6}deg) rotateX(${dy * -6}deg) scale(1.008)`
+                  e.currentTarget.style.boxShadow = `0 48px 140px rgba(0,0,0,0.7), 0 0 60px ${newsColor(news[0].category)}12`
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = ''
+                  e.currentTarget.style.boxShadow = '0 40px 120px rgba(0,0,0,0.6)'
+                }}
                 style={{
-                  padding: '32px 28px',
-                  background: 'rgba(6,12,32,0.6)',
-                  backdropFilter: 'blur(24px)',
-                  border: '1px solid rgba(168,212,240,0.09)',
-                  borderRadius: 16,
-                  position: 'relative', overflow: 'hidden',
+                  position: 'relative', overflow: 'hidden', borderRadius: 20,
+                  minHeight: 500,
+                  background: 'linear-gradient(135deg, rgba(4,8,22,0.97) 0%, rgba(7,14,36,0.95) 100%)',
+                  border: '1px solid rgba(168,212,240,0.12)',
+                  boxShadow: '0 40px 120px rgba(0,0,0,0.6)',
+                  transition: 'transform 0.2s ease, box-shadow 0.35s ease',
+                  display: 'flex', flexDirection: 'column',
+                  cursor: 'default',
                 }}
               >
-                {/* Color accent line at top */}
+                {/* Corner glow */}
                 <div style={{
-                  position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-                  background: `linear-gradient(to right, transparent, ${newsColor(item.category)}90, transparent)`,
-                }}/>
+                  position: 'absolute', top: -80, right: -80, width: 300, height: 300,
+                  borderRadius: '50%', pointerEvents: 'none',
+                  background: `radial-gradient(ellipse, ${newsColor(news[0].category)}1C 0%, transparent 65%)`,
+                }} />
+                {/* Bottom-left glow */}
+                <div style={{
+                  position: 'absolute', bottom: -60, left: -40, width: 220, height: 220,
+                  borderRadius: '50%', pointerEvents: 'none',
+                  background: `radial-gradient(ellipse, ${newsColor(news[0].category)}0E 0%, transparent 65%)`,
+                }} />
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
-                  <span style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 8, letterSpacing: '2px', textTransform: 'uppercase',
-                    color: newsColor(item.category),
-                    background: `${newsColor(item.category)}18`,
-                    border: `1px solid ${newsColor(item.category)}35`,
-                    borderRadius: 4, padding: '4px 9px',
-                    flexShrink: 0,
-                  }}>{item.category}</span>
-                  <span style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 9, letterSpacing: '1px',
-                    color: 'var(--muted)', opacity: 0.4,
-                  }}>{formatNewsDate(item.date)}</span>
+                {/* Left signal bar */}
+                <div style={{
+                  position: 'absolute', left: 0, top: 50, bottom: 50, width: 2, borderRadius: 2,
+                  background: `linear-gradient(to bottom, transparent, ${newsColor(news[0].category)}, transparent)`,
+                }} />
+
+                {/* Scan line (fires once on section scroll-in) */}
+                {newsInView && (
+                  <div style={{
+                    position: 'absolute', left: 0, right: 0, height: 1,
+                    background: `linear-gradient(to right, transparent 0%, ${newsColor(news[0].category)}80 30%, ${newsColor(news[0].category)} 50%, ${newsColor(news[0].category)}80 70%, transparent 100%)`,
+                    animation: 'newsScan 1.6s ease-in-out 0.3s both',
+                    pointerEvents: 'none', zIndex: 10,
+                  }} />
+                )}
+
+                {/* Shimmer stripe (CSS hover) */}
+                <div className="news-shimmer" style={{
+                  position: 'absolute', top: 0, bottom: 0, width: '38%',
+                  background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.032) 50%, transparent 65%)',
+                  transform: 'skewX(-10deg)',
+                  pointerEvents: 'none', zIndex: 9,
+                }} />
+
+                {/* Border pulse (CSS hover) */}
+                <div className="news-border-pulse" style={{
+                  position: 'absolute', inset: 0, borderRadius: 20,
+                  border: `1px solid ${newsColor(news[0].category)}60`,
+                  opacity: 0, pointerEvents: 'none',
+                }} />
+
+                {/* Content */}
+                <div style={{ padding: '44px 44px 36px 54px', display: 'flex', flexDirection: 'column', minHeight: 500 }}>
+
+                  {/* Top: category + date */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'auto' }}>
+                    <span style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 8, letterSpacing: '2.5px', textTransform: 'uppercase',
+                      color: newsColor(news[0].category),
+                      background: `${newsColor(news[0].category)}12`,
+                      border: `1px solid ${newsColor(news[0].category)}35`,
+                      borderRadius: 4, padding: '5px 12px',
+                      boxShadow: `0 0 16px ${newsColor(news[0].category)}18`,
+                    }}>{news[0].category}</span>
+                    <span style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 8, letterSpacing: '1.5px', textTransform: 'uppercase',
+                      color: 'rgba(168,212,240,0.28)',
+                    }}>{formatNewsDate(news[0].date)}</span>
+                  </div>
+
+                  {/* Headline + body */}
+                  <div style={{ margin: 'auto 0', padding: '52px 0 40px' }}>
+                    <h3 style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: 'clamp(26px, 2.8vw, 40px)',
+                      fontWeight: 300, color: 'var(--cream)',
+                      lineHeight: 1.18, letterSpacing: '-0.025em', marginBottom: 22,
+                    }}>{news[0].title}</h3>
+                    <p style={{
+                      fontSize: 13.5, color: 'var(--muted)',
+                      lineHeight: 1.85, opacity: 0.72, maxWidth: 440,
+                    }}>
+                      {news[0].body}<span className="news-cursor">_</span>
+                    </p>
+                  </div>
+
+                  {/* Footer */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 20, borderTop: '1px solid rgba(168,212,240,0.06)' }}>
+                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 7.5, letterSpacing: '2px', textTransform: 'uppercase', color: 'rgba(168,212,240,0.18)' }}>FEATURED DISPATCH</span>
+                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 7.5, letterSpacing: '2px', color: 'rgba(168,212,240,0.18)' }}>01 / {news.length.toString().padStart(2, '0')}</span>
+                  </div>
                 </div>
+              </div>
+            </motion.div>
 
-                <h3 style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: 22, fontWeight: 400,
-                  color: 'var(--cream)', lineHeight: 1.25, marginBottom: 12,
-                }}>{item.title}</h3>
-                <p style={{
-                  fontSize: 13, color: 'var(--muted)', lineHeight: 1.8, opacity: 0.75,
-                }}>{item.body}</p>
-              </motion.div>
-            ))}
+            {/* ── STACKED SIDE CARDS ── */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+              {news.slice(1).map((item, i) => (
+                <motion.div
+                  key={i + 1}
+                  initial={{ opacity: 0, y: 28 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.85, delay: (i + 1) * 0.14 }}
+                >
+                  <div
+                    onMouseMove={e => {
+                      const r = e.currentTarget.getBoundingClientRect()
+                      const dx = (e.clientX - r.left - r.width / 2) / (r.width / 2)
+                      const dy = (e.clientY - r.top - r.height / 2) / (r.height / 2)
+                      e.currentTarget.style.transform = `perspective(800px) rotateY(${dx * 4}deg) rotateX(${dy * -4}deg) translateY(-4px)`
+                      e.currentTarget.style.boxShadow = `0 24px 64px rgba(0,0,0,0.55), 0 0 28px ${newsColor(item.category)}14`
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.transform = ''
+                      e.currentTarget.style.boxShadow = '0 8px 28px rgba(0,0,0,0.3)'
+                    }}
+                    style={{
+                      position: 'relative', overflow: 'hidden',
+                      borderRadius: 16, padding: '28px 30px 24px 38px',
+                      background: 'linear-gradient(135deg, rgba(4,8,22,0.95) 0%, rgba(6,12,28,0.92) 100%)',
+                      border: '1px solid rgba(168,212,240,0.09)',
+                      boxShadow: '0 8px 28px rgba(0,0,0,0.3)',
+                      transition: 'transform 0.22s ease, box-shadow 0.3s ease',
+                      clipPath: 'polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 0 100%)',
+                      cursor: 'default',
+                    }}
+                  >
+                    {/* Clipped corner triangle */}
+                    <div style={{
+                      position: 'absolute', top: 0, right: 0, width: 0, height: 0,
+                      borderStyle: 'solid', borderWidth: '26px 26px 0 0',
+                      borderColor: `${newsColor(item.category)}30 transparent transparent transparent`,
+                    }} />
+
+                    {/* Left accent bar */}
+                    <div style={{
+                      position: 'absolute', left: 0, top: '18%', bottom: '18%', width: 2, borderRadius: 2,
+                      background: `linear-gradient(to bottom, transparent, ${newsColor(item.category)}90, transparent)`,
+                    }} />
+
+                    {/* Category + date */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 15 }}>
+                      <span style={{
+                        width: 5, height: 5, borderRadius: '50%', flexShrink: 0,
+                        background: newsColor(item.category),
+                        boxShadow: `0 0 7px ${newsColor(item.category)}`,
+                        display: 'inline-block',
+                      }} />
+                      <span style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 7.5, letterSpacing: '2px', textTransform: 'uppercase',
+                        color: newsColor(item.category), opacity: 0.9,
+                      }}>{item.category}</span>
+                      <span style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 7.5, letterSpacing: '1px',
+                        color: 'rgba(168,212,240,0.22)', marginLeft: 'auto',
+                      }}>{formatNewsDate(item.date)}</span>
+                    </div>
+
+                    <h3 style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: 'clamp(17px, 1.8vw, 22px)',
+                      fontWeight: 400, color: 'var(--cream)',
+                      lineHeight: 1.22, marginBottom: 10,
+                    }}>{item.title}</h3>
+
+                    <p style={{ fontSize: 12.5, color: 'var(--muted)', lineHeight: 1.75, opacity: 0.62 }}>{item.body}</p>
+
+                    <div style={{
+                      marginTop: 18, textAlign: 'right',
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 7.5, letterSpacing: '1.5px',
+                      color: 'rgba(168,212,240,0.16)',
+                    }}>{(i + 2).toString().padStart(2, '0')} / {news.length.toString().padStart(2, '0')}</div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
           </div>
         </div>
       </section>

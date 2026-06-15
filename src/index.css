@@ -114,7 +114,44 @@ h1, h2, h3 {
   to   { transform: scale(1.14) translate(-1.5%, -1%); }
 }
 
-/* Leaflet map dark theme overrides */
+/* ─── News Dispatch animations ─── */
+@keyframes newsLiveDot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(239,68,68,0.9), 0 0 14px rgba(239,68,68,0.45) }
+  50%       { opacity: 0.1; box-shadow: none }
+}
+@keyframes newsCursor {
+  0%, 100% { opacity: 1 }
+  50%       { opacity: 0 }
+}
+@keyframes newsScan {
+  0%   { top: 0; opacity: 0 }
+  6%   { opacity: 1 }
+  88%  { opacity: 0.65 }
+  100% { top: 100%; opacity: 0 }
+}
+@keyframes newsShimmerSwipe {
+  from { left: -45% }
+  to   { left: 165% }
+}
+@keyframes newsBorderFlash {
+  0%   { opacity: 0.8 }
+  100% { opacity: 0 }
+}
+.news-live-dot {
+  animation: newsLiveDot 1.5s ease-in-out infinite;
+}
+.news-cursor {
+  color: rgba(168,212,240,0.55);
+  animation: newsCursor 1.1s step-end infinite;
+}
+.news-featured:hover .news-shimmer {
+  animation: newsShimmerSwipe 1s ease-in-out both;
+}
+.news-featured:hover .news-border-pulse {
+  animation: newsBorderFlash 0.9s ease-out both;
+}
+
+/* ─── Leaflet map dark theme overrides ─── */
 .leaflet-container { background: #060d1f; font-family: 'Plus Jakarta Sans', sans-serif; }
 .leaflet-tile-pane { filter: brightness(0.95); }
 .leaflet-control-zoom a {
