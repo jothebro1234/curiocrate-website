@@ -6,6 +6,7 @@
  *
  * Chapters sheet columns:
  *   A = Email | B = President Name | C = School | D = Logo URL | E = State | F = City
+ *   G = President Photo URL | H = Vice President | I = Treasurer | J = Secretary | K = Social Media Manager
  */
 
 function doGet(e) {
@@ -32,12 +33,17 @@ function getChapters() {
     const chapters = rows.slice(1)
       .filter(r => String(r[2]).trim()) // must have a school name in col C
       .map(r => ({
-        email:     String(r[0] || '').trim(),
-        president: String(r[1] || '').trim(),
-        school:    String(r[2] || '').trim(),
-        logo:      String(r[3] || '').trim(),
-        state:     String(r[4] || '').trim(),
-        city:      String(r[5] || '').trim(),
+        email:          String(r[0]  || '').trim(),
+        president:      String(r[1]  || '').trim(),
+        school:         String(r[2]  || '').trim(),
+        logo:           String(r[3]  || '').trim(),
+        state:          String(r[4]  || '').trim(),
+        city:           String(r[5]  || '').trim(),
+        presidentPhoto: String(r[6]  || '').trim(),
+        vicePresident:  String(r[7]  || '').trim(),
+        treasurer:      String(r[8]  || '').trim(),
+        secretary:      String(r[9]  || '').trim(),
+        socialMedia:    String(r[10] || '').trim(),
       }))
 
     return json({ ok: true, chapters })
