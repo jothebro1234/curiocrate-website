@@ -17,7 +17,6 @@ export default function Mission() {
           {/* Video */}
           <video
             autoPlay
-            muted
             loop
             playsInline
             style={{
@@ -27,7 +26,7 @@ export default function Mission() {
               zIndex:0,
             }}
           >
-            <source src="/missionvideo.mp4" type="video/mp4" />
+            <source src="/missionvid.mp4" type="video/mp4" />
           </video>
 
           {/* Top fade — blends with nav */}
