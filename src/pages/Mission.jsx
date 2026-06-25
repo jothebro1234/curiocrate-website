@@ -7,7 +7,7 @@ export default function Mission() {
   const [revealed, setRevealed] = useState(false)
 
   function handleTimeUpdate() {
-    if (!revealed && videoRef.current?.currentTime >= 4) {
+    if (!revealed && videoRef.current?.currentTime >= 5) {
       setRevealed(true)
     }
   }
