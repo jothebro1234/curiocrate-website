@@ -1,7 +1,17 @@
-import { motion } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
 
 export default function Mission() {
+  const videoRef = useRef(null)
+  const [revealed, setRevealed] = useState(false)
+
+  function handleTimeUpdate() {
+    if (!revealed && videoRef.current?.currentTime >= 14) {
+      setRevealed(true)
+    }
+  }
+
   return (
     <PageTransition>
       <div style={{ minHeight:'100vh', position:'relative', zIndex:1, overflow:'hidden' }}>
@@ -14,9 +24,11 @@ export default function Mission() {
         }}>
           {/* Video */}
           <video
+            ref={videoRef}
             autoPlay
             loop
             playsInline
+            onTimeUpdate={handleTimeUpdate}
             style={{
               display:'block',
               width:'100%',
@@ -34,12 +46,21 @@ export default function Mission() {
             zIndex:1, pointerEvents:'none',
           }}/>
 
-          {/* Bottom fade — blends into next section */}
-          <div style={{
-            position:'absolute', bottom:0, left:0, right:0, height:220,
-            background:'linear-gradient(to top, var(--void, #03050f) 0%, transparent 100%)',
-            zIndex:1, pointerEvents:'none',
-          }}/>
+          {/* Bottom fade — fades in after 14s */}
+          <AnimatePresence>
+            {revealed && (
+              <motion.div
+                initial={{ opacity:0 }}
+                animate={{ opacity:1 }}
+                transition={{ duration:1.2, ease:'easeInOut' }}
+                style={{
+                  position:'absolute', bottom:0, left:0, right:0, height:220,
+                  background:'linear-gradient(to top, var(--void, #03050f) 0%, transparent 100%)',
+                  zIndex:1, pointerEvents:'none',
+                }}
+              />
+            )}
+          </AnimatePresence>
 
           {/* Subtle vignette */}
           <div style={{
@@ -48,30 +69,34 @@ export default function Mission() {
             zIndex:1, pointerEvents:'none',
           }}/>
 
-          {/* Text overlay — bottom left */}
-          <motion.div
-            initial={{ opacity:0, y:24 }}
-            animate={{ opacity:1, y:0 }}
-            transition={{ duration:1.1, delay:0.4, ease:[0.4,0,0.2,1] }}
-            className="mission-hero-text"
-            style={{
-              position:'absolute', bottom:80, left:56,
-              zIndex:2, maxWidth:600,
-            }}
-          >
-            <div className="label" style={{ marginBottom:14, opacity:0.7 }}>Our Purpose</div>
-            <h1 style={{
-              fontFamily:"'Cormorant Garamond', serif",
-              fontSize:'clamp(40px, 7vw, 88px)',
-              fontWeight:300, color:'var(--cream)',
-              lineHeight:1.05, letterSpacing:'-0.02em',
-              marginBottom:0,
-              textShadow:'0 2px 40px rgba(0,0,0,0.6)',
-            }}>
-              Science belongs<br/>
-              <em style={{ color:'var(--pastel1)', fontStyle:'italic' }}>to everyone.</em>
-            </h1>
-          </motion.div>
+          {/* Text overlay — fades in after 14s */}
+          <AnimatePresence>
+            {revealed && (
+              <motion.div
+                initial={{ opacity:0, y:24 }}
+                animate={{ opacity:1, y:0 }}
+                transition={{ duration:1.1, ease:[0.4,0,0.2,1] }}
+                className="mission-hero-text"
+                style={{
+                  position:'absolute', bottom:80, left:56,
+                  zIndex:2, maxWidth:600,
+                }}
+              >
+                <div className="label" style={{ marginBottom:14, opacity:0.7 }}>Our Purpose</div>
+                <h1 style={{
+                  fontFamily:"'Cormorant Garamond', serif",
+                  fontSize:'clamp(40px, 7vw, 88px)',
+                  fontWeight:300, color:'var(--cream)',
+                  lineHeight:1.05, letterSpacing:'-0.02em',
+                  marginBottom:0,
+                  textShadow:'0 2px 40px rgba(0,0,0,0.6)',
+                }}>
+                  Science belongs<br/>
+                  <em style={{ color:'var(--pastel1)', fontStyle:'italic' }}>to everyone.</em>
+                </h1>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Scroll indicator */}
           <motion.div
