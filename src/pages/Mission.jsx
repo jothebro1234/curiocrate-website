@@ -7,7 +7,7 @@ export default function Mission() {
   const [revealed, setRevealed] = useState(false)
 
   function handleTimeUpdate() {
-    if (!revealed && videoRef.current?.currentTime >= 14) {
+    if (!revealed && videoRef.current?.currentTime >= 2) {
       setRevealed(true)
     }
   }
@@ -26,7 +26,6 @@ export default function Mission() {
           <video
             ref={videoRef}
             autoPlay
-            loop
             playsInline
             onTimeUpdate={handleTimeUpdate}
             style={{
