@@ -114,8 +114,7 @@ const directors = [
     name: 'Abigail Son',
     role: 'Director of Publicity',
     bio: 'Spreads the CurioCrate story through engaging outreach and media, growing awareness one community at a time.',
-    photo: null,
-    emoji: '⚙️',
+    photo: '/boardmembers/abigailsondirectorofpublicity.png',
     color: '#86efac',
     glow: 'rgba(134,239,172,0.5)',
     dark: '#001208',
@@ -126,8 +125,7 @@ const directors = [
     name: 'Yashitha Teekaraman',
     role: 'Director of Curriculum',
     bio: 'Crafts engaging, standards-aligned curriculum that turns everyday materials into extraordinary learning experiences.',
-    photo: null,
-    emoji: '📚',
+    photo: '/boardmembers/yashithateekaramandirectorofcurriculum.png',
     color: '#f0abfc',
     glow: 'rgba(240,171,252,0.5)',
     dark: '#0e0018',
@@ -450,9 +448,9 @@ export default function Team() {
         </div>
 
         {/* ══════════════════════════════════════════════════════════════════════
-            FOUNDER SPOTLIGHT: Chief Executive Founder
+            FOUNDER SPOTLIGHT: Chief Executive Founder (temporarily hidden)
         ══════════════════════════════════════════════════════════════════════ */}
-        <motion.div
+        {false && <motion.div
           initial={{ opacity:0 }}
           whileInView={{ opacity:1 }}
           viewport={{ once:true }}
@@ -638,7 +636,7 @@ export default function Team() {
               transformOrigin:'center', zIndex:6,
             }}
           />
-        </motion.div>
+        </motion.div>}
 
         {/* ══════════════════════════════════════════════════════════════════════
             JOIN CTA
