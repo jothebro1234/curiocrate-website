@@ -26,7 +26,7 @@ export default function Mission() {
               zIndex:0,
             }}
           >
-            <source src="/missionvid.mp4" type="video/mp4" />
+            <source src="https://pub-e7374d03fa9c42bfb531206a5e81830b.r2.dev/thetransfertowindows-1.mp4" type="video/mp4" />
           </video>
 
           {/* Top fade — blends with nav */}
