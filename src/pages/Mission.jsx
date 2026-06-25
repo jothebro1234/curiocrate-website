@@ -10,8 +10,6 @@ export default function Mission() {
         <div style={{
           position:'relative',
           width:'100%',
-          height:'100vh',
-          overflow:'hidden',
           flexShrink:0,
         }}>
           {/* Video */}
@@ -20,9 +18,9 @@ export default function Mission() {
             loop
             playsInline
             style={{
-              position:'absolute', inset:0,
-              width:'100%', height:'100%',
-              objectFit:'contain',
+              display:'block',
+              width:'100%',
+              height:'auto',
               zIndex:0,
             }}
           >
