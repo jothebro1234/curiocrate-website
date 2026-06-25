@@ -33,3 +33,6 @@ dist-ssr
 
 # Windows
 desktop.ini
+
+# Large video files (exceed Cloudflare Pages 25 MiB limit)
+*.mp4
