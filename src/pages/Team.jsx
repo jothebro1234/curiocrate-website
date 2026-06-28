@@ -457,7 +457,7 @@ export default function Team() {
         {/* ══════════════════════════════════════════════════════════════════════
             FOUNDER SPOTLIGHT: Chief Executive Founder (temporarily hidden)
         ══════════════════════════════════════════════════════════════════════ */}
-        {false && <motion.div
+        <motion.div
           initial={{ opacity:0 }}
           whileInView={{ opacity:1 }}
           viewport={{ once:true }}
@@ -643,7 +643,7 @@ export default function Team() {
               transformOrigin:'center', zIndex:6,
             }}
           />
-        </motion.div>}
+        </motion.div>
 
         {/* ══════════════════════════════════════════════════════════════════════
             JOIN CTA
