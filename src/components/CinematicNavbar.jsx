@@ -234,7 +234,7 @@ export default function CinematicNavbar() {
             }}
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.1)'; e.currentTarget.style.boxShadow = '0 0 20px rgba(168,212,240,0.15)' }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none' }}
-          >Get Involved</a>
+          >Become a Member</a>
         </div>
 
         {/* Hamburger (mobile only) */}
@@ -318,7 +318,7 @@ export default function CinematicNavbar() {
               textDecoration: 'none', padding: '16px 24px', borderRadius: 6,
               color: 'var(--pastel1)', border: '1px solid rgba(168,212,240,0.3)',
             }}
-          >Get Involved →</a>
+          >Become a Member →</a>
         </div>
       </div>
 
