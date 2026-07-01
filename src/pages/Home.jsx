@@ -876,6 +876,83 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ─── IMPACT: MAP + STATS ─── */}
+      <section className="home-section" style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            style={{ textAlign: 'center', marginBottom: 60 }}
+          >
+            <div className="label" style={{ marginBottom: 14 }}>Our Reach</div>
+            <h2 style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: 'clamp(30px,4vw,52px)',
+              fontWeight: 300, color: 'var(--cream)', lineHeight: 1.1,
+            }}>
+              Every dot is a community<br/>
+              <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>we've reached.</em>
+            </h2>
+          </motion.div>
+
+          {/* Leaflet map */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+            style={{
+              borderRadius: 20, overflow: 'hidden',
+              border: '1px solid rgba(168,212,240,0.12)',
+              boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
+              marginBottom: 64,
+            }}
+          >
+            <LeafletMap chaptersData={chaptersData} />
+          </motion.div>
+
+          {/* Stats grid */}
+          <div className="home-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 3, borderRadius: 20, overflow: 'hidden', boxShadow: '0 40px 120px rgba(0,0,0,0.5)' }}>
+            {stats.map((s, i) => (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.12, duration: 0.9, ease: [0.4, 0, 0.2, 1] }}
+                onClick={() => setSelectedStat(s)}
+                style={{ padding: '72px 56px', position: 'relative', overflow: 'hidden', border: '1px solid rgba(168,212,240,0.07)', cursor: 'pointer' }}
+                onMouseEnter={e => {
+                  const img = e.currentTarget.querySelector('img.stat-bg')
+                  if (img) { img.style.transform = 'scale(1.07)'; img.style.filter = 'brightness(0.32) saturate(0.55)' }
+                }}
+                onMouseLeave={e => {
+                  const img = e.currentTarget.querySelector('img.stat-bg')
+                  if (img) { img.style.transform = 'scale(1)'; img.style.filter = 'brightness(0.22) saturate(0.45)' }
+                }}
+              >
+                <img className="stat-bg" src={s.photo} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.22) saturate(0.45)', transition: 'transform 0.7s ease, filter 0.7s ease', pointerEvents: 'none' }} />
+                <div style={{ position: 'absolute', inset: 0, background: i % 2 === 0 ? 'linear-gradient(135deg, rgba(10,20,55,0.82) 0%, rgba(6,14,38,0.75) 100%)' : 'linear-gradient(135deg, rgba(6,14,38,0.78) 0%, rgba(10,20,55,0.70) 100%)', pointerEvents: 'none' }} />
+                <div style={{ position: 'absolute', bottom: -30, right: -10, fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(120px,14vw,200px)', fontWeight: 300, lineHeight: 1, color: 'rgba(168,212,240,0.045)', userSelect: 'none', pointerEvents: 'none', zIndex: 1 }}>{s.value}</div>
+                <div style={{ position: 'relative', zIndex: 2, fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(80px,11vw,140px)', fontWeight: 300, lineHeight: 0.9, color: 'var(--pastel1)', textShadow: '0 0 80px rgba(168,212,240,0.7)', marginBottom: 24, letterSpacing: '-0.04em' }}>{s.value}</div>
+                <div style={{ position: 'relative', zIndex: 2, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: 13, color: 'var(--cream)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '2.5px' }}>{s.label}</div>
+                <div style={{ position: 'relative', zIndex: 2, fontSize: 14, color: 'var(--muted)', lineHeight: 1.75, maxWidth: 320, opacity: 0.8 }}>{s.description}</div>
+                <div style={{ position: 'absolute', bottom: 20, right: 24, zIndex: 2, fontFamily: "'JetBrains Mono', monospace", fontSize: 8, letterSpacing: '2px', color: 'rgba(168,212,240,0.3)', textTransform: 'uppercase' }}>tap for details</div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Stat detail modal */}
+          <AnimatePresence>
+            {selectedStat && (
+              <StatModal stat={selectedStat} onClose={() => setSelectedStat(null)} />
+            )}
+          </AnimatePresence>
+        </div>
+      </section>
+
       {/* ─── WHAT IS CURIOCRATE ─── */}
       <section className="home-section" style={{ position: 'relative', zIndex: 1, padding: '120px 40px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
@@ -1085,83 +1162,6 @@ export default function Home() {
               />
             </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* ─── IMPACT: MAP + STATS ─── */}
-      <section className="home-section" style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            style={{ textAlign: 'center', marginBottom: 60 }}
-          >
-            <div className="label" style={{ marginBottom: 14 }}>Our Reach</div>
-            <h2 style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: 'clamp(30px,4vw,52px)',
-              fontWeight: 300, color: 'var(--cream)', lineHeight: 1.1,
-            }}>
-              Every dot is a community<br/>
-              <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>we've reached.</em>
-            </h2>
-          </motion.div>
-
-          {/* Leaflet map */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            style={{
-              borderRadius: 20, overflow: 'hidden',
-              border: '1px solid rgba(168,212,240,0.12)',
-              boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
-              marginBottom: 64,
-            }}
-          >
-            <LeafletMap chaptersData={chaptersData} />
-          </motion.div>
-
-          {/* Stats grid */}
-          <div className="home-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 3, borderRadius: 20, overflow: 'hidden', boxShadow: '0 40px 120px rgba(0,0,0,0.5)' }}>
-            {stats.map((s, i) => (
-              <motion.div
-                key={s.label}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.12, duration: 0.9, ease: [0.4, 0, 0.2, 1] }}
-                onClick={() => setSelectedStat(s)}
-                style={{ padding: '72px 56px', position: 'relative', overflow: 'hidden', border: '1px solid rgba(168,212,240,0.07)', cursor: 'pointer' }}
-                onMouseEnter={e => {
-                  const img = e.currentTarget.querySelector('img.stat-bg')
-                  if (img) { img.style.transform = 'scale(1.07)'; img.style.filter = 'brightness(0.32) saturate(0.55)' }
-                }}
-                onMouseLeave={e => {
-                  const img = e.currentTarget.querySelector('img.stat-bg')
-                  if (img) { img.style.transform = 'scale(1)'; img.style.filter = 'brightness(0.22) saturate(0.45)' }
-                }}
-              >
-                <img className="stat-bg" src={s.photo} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.22) saturate(0.45)', transition: 'transform 0.7s ease, filter 0.7s ease', pointerEvents: 'none' }} />
-                <div style={{ position: 'absolute', inset: 0, background: i % 2 === 0 ? 'linear-gradient(135deg, rgba(10,20,55,0.82) 0%, rgba(6,14,38,0.75) 100%)' : 'linear-gradient(135deg, rgba(6,14,38,0.78) 0%, rgba(10,20,55,0.70) 100%)', pointerEvents: 'none' }} />
-                <div style={{ position: 'absolute', bottom: -30, right: -10, fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(120px,14vw,200px)', fontWeight: 300, lineHeight: 1, color: 'rgba(168,212,240,0.045)', userSelect: 'none', pointerEvents: 'none', zIndex: 1 }}>{s.value}</div>
-                <div style={{ position: 'relative', zIndex: 2, fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(80px,11vw,140px)', fontWeight: 300, lineHeight: 0.9, color: 'var(--pastel1)', textShadow: '0 0 80px rgba(168,212,240,0.7)', marginBottom: 24, letterSpacing: '-0.04em' }}>{s.value}</div>
-                <div style={{ position: 'relative', zIndex: 2, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: 13, color: 'var(--cream)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '2.5px' }}>{s.label}</div>
-                <div style={{ position: 'relative', zIndex: 2, fontSize: 14, color: 'var(--muted)', lineHeight: 1.75, maxWidth: 320, opacity: 0.8 }}>{s.description}</div>
-                <div style={{ position: 'absolute', bottom: 20, right: 24, zIndex: 2, fontFamily: "'JetBrains Mono', monospace", fontSize: 8, letterSpacing: '2px', color: 'rgba(168,212,240,0.3)', textTransform: 'uppercase' }}>tap for details</div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Stat detail modal */}
-          <AnimatePresence>
-            {selectedStat && (
-              <StatModal stat={selectedStat} onClose={() => setSelectedStat(null)} />
-            )}
-          </AnimatePresence>
         </div>
       </section>
 

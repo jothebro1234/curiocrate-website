@@ -308,14 +308,15 @@ export default function OurChapters() {
       .finally(() => setChaptersLoading(false))
   }, [])
 
+  const chapterOnly = chaptersData.filter(c => c.type !== 'Impact')
   const q = searchQuery.trim().toLowerCase()
   const filteredChapters = q
-    ? chaptersData.filter(c =>
+    ? chapterOnly.filter(c =>
         c.school?.toLowerCase().includes(q) ||
         c.president?.toLowerCase().includes(q) ||
         c.city?.toLowerCase().includes(q) ||
         c.state?.toLowerCase().includes(q))
-    : chaptersData
+    : chapterOnly
 
   return (
     <PageTransition>
@@ -388,12 +389,12 @@ export default function OurChapters() {
                   color: 'var(--muted)', fontSize: 20, lineHeight: 1, opacity: 0.5, padding: 0,
                 }}>×</button>
               )}
-              {!chaptersLoading && chaptersData.length > 0 && (
+              {!chaptersLoading && chapterOnly.length > 0 && (
                 <span style={{
                   fontFamily: "'JetBrains Mono', monospace",
                   fontSize: 10, letterSpacing: 2, color: 'var(--muted)', opacity: 0.4,
                   whiteSpace: 'nowrap',
-                }}>{filteredChapters.length} / {chaptersData.length}</span>
+                }}>{filteredChapters.length} / {chapterOnly.length}</span>
               )}
             </div>
           </motion.div>
