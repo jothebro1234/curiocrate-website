@@ -143,6 +143,26 @@ function StatModal({ stat, onClose }) {
   )
 }
 
+// Concentric rings that fade outward — no hard border
+const GRADIENT_LAYERS = [
+  { pct: 1.00, opacity: 0.03 },
+  { pct: 0.65, opacity: 0.05 },
+  { pct: 0.35, opacity: 0.08 },
+  { pct: 0.12, opacity: 0.12 },
+]
+
+function ImpactArea({ center, radiusKm, color }) {
+  const radiusM = radiusKm * 1000
+  return GRADIENT_LAYERS.map(({ pct, opacity }) => (
+    <Circle
+      key={pct}
+      center={center}
+      radius={radiusM * pct}
+      pathOptions={{ color: 'transparent', fillColor: color, fillOpacity: opacity, weight: 0 }}
+    />
+  ))
+}
+
 // Blue circle = chapter
 const chapterIcon = L.divIcon({
   html: `<div style="
@@ -217,17 +237,7 @@ function LeafletMap({ chaptersData }) {
 
         {[...chapterMarkers, ...hardcoded].map((m, i) => (
           <>
-            <Circle
-              key={`chapter-circle-${i}`}
-              center={m.coords}
-              radius={12000}
-              pathOptions={{
-                color: 'rgba(168,212,240,0.45)',
-                fillColor: 'rgba(168,212,240,0.07)',
-                fillOpacity: 1,
-                weight: 1,
-              }}
-            />
+            <ImpactArea key={`chapter-area-${i}`} center={m.coords} radiusKm={m.radius || 12} color="rgba(168,212,240,1)" />
             <Marker key={`chapter-${i}`} position={m.coords} icon={chapterIcon}>
               <Popup>
                 <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", minWidth: 180 }}>
@@ -247,17 +257,7 @@ function LeafletMap({ chaptersData }) {
 
         {teachingMarkers.map((m, i) => (
           <>
-            <Circle
-              key={`impact-circle-${i}`}
-              center={[m.latitude, m.longitude]}
-              radius={12000}
-              pathOptions={{
-                color: 'rgba(251,191,36,0.45)',
-                fillColor: 'rgba(251,191,36,0.07)',
-                fillOpacity: 1,
-                weight: 1,
-              }}
-            />
+            <ImpactArea key={`impact-area-${i}`} center={[m.latitude, m.longitude]} radiusKm={m.radius || 12} color="rgba(251,191,36,1)" />
             <Marker key={`teaching-${i}`} position={[m.latitude, m.longitude]} icon={teachingIcon}>
               <Popup>
                 <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", minWidth: 180 }}>

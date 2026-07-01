@@ -28,8 +28,9 @@
  *   A=Email  B=Name  C=School  D=Logo  E=State  F=City
  *   G=PresidentPhoto  H=VicePresident  I=Treasurer  J=Secretary  K=SocialMedia
  *   L=AuthorizedDirectors (comma-separated emails)
- *   M=Type  N=Latitude  O=Longitude
+ *   M=Type  N=Latitude  O=Longitude  P=Radius (km, default 12)
  *   (Type: "Chapter" or "Impact". Leave blank = "Chapter".)
+ *   (Radius: area of impact in kilometres. Leave blank = 12 km.)
  *
  * DIRECTORS SHEET columns (A–C):
  *   A=Email  B=Name  C=Role
@@ -58,7 +59,7 @@ function initSheetHeaders(sh, name) {
     const headers = {
         Curriculum: ['AssignmentName','DueDate','Hours','Contributors','SlidesLink','StartDate','MaxVolunteers','RegisteredVolunteers','Instructions','CardColor','CardDeco','CardLabel','ChapterLabel'],
         Events:     ['EventName','Date','Hours','Attendees','IsAssembly','IsLeadership','MaxVolunteers','RegisteredList','SignupCloseDate','Instructions','ChapterLabel','CardColor','CardDeco','CardLabel','RequiresYMCA'],
-        Chapters:   ['Email','Name','School','Logo','State','City','PresidentPhoto','VicePresident','Treasurer','Secretary','SocialMedia','AuthorizedDirectors','Type','Latitude','Longitude'],
+        Chapters:   ['Email','Name','School','Logo','State','City','PresidentPhoto','VicePresident','Treasurer','Secretary','SocialMedia','AuthorizedDirectors','Type','Latitude','Longitude','Radius'],
         Directors:  ['Email','Name','Role'],
     };
     if (headers[name]) sh.appendRow(headers[name]);
@@ -211,6 +212,7 @@ function getChapters() {
                     type:                String(r[12] || '').trim() || 'Chapter',
                     latitude:            isNaN(lat) ? null : lat,
                     longitude:           isNaN(lng) ? null : lng,
+                    radius:              parseFloat(r[15]) || 12,
                 };
             });
         return ContentService.createTextOutput(JSON.stringify({ ok: true, chapters: chapters }))
