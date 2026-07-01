@@ -7,6 +7,7 @@ import Home from './pages/Home'
 import Kits from './pages/Kits'
 import Gallery from './pages/Gallery'
 import Mission from './pages/Mission'
+import KitDevelopment from './pages/KitDevelopment'
 import Team from './pages/Team'
 import OurChapters from './pages/OurChapters'
 import Contact from './pages/Contact'
@@ -21,7 +22,7 @@ function AnimatedRoutes() {
         <Route path="/kits"     element={<Kits />} />
         <Route path="/gallery"  element={<Gallery />} />
         <Route path="/mission"               element={<Mission />} />
-        <Route path="/initiatives/kits"     element={<Mission />} />
+        <Route path="/initiatives/kits"     element={<KitDevelopment />} />
         <Route path="/initiatives/teaching" element={<Mission />} />
         <Route path="/team"     element={<Team />} />
         <Route path="/chapters" element={<OurChapters />} />

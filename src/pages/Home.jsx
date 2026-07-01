@@ -304,7 +304,8 @@ export default function Home() {
   const [selectedStat,  setSelectedStat]  = useState(null)
   const [newsData,      setNewsData]      = useState(null)
 
-  const heroRef = useRef(null)
+  const heroRef        = useRef(null)
+  const missionVideoRef = useRef(null)
   const newsRef = useRef(null)
   const newsInView = useInView(newsRef, { once: true, amount: 0.25 })
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
@@ -346,6 +347,17 @@ export default function Home() {
         else setChaptersData(staticChapters)
       })
       .catch(() => setChaptersData(staticChapters))
+  }, [])
+
+  useEffect(() => {
+    const video = missionVideoRef.current
+    if (!video) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { entry.isIntersecting ? video.play() : video.pause() },
+      { threshold: 0.4 }
+    )
+    observer.observe(video)
+    return () => observer.disconnect()
   }, [])
 
   return (
@@ -994,9 +1006,11 @@ export default function Home() {
                 boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
               }}>
                 <video
-                  controls
+                  ref={missionVideoRef}
+                  muted
                   playsInline
-                  style={{ width: '100%', display: 'block', background: '#000' }}
+                  loop
+                  style={{ width: '100%', display: 'block', background: '#000', pointerEvents: 'none' }}
                 >
                   <source src="https://pub-e7374d03fa9c42bfb531206a5e81830b.r2.dev/finalccmission.mp4" type="video/mp4" />
                 </video>
