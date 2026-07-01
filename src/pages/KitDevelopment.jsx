@@ -1,16 +1,14 @@
 import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
 import PageTransition from '../components/PageTransition'
 
 const DETAILS = [
-  { label: 'WHO', value: 'High school students' },
-  { label: 'DISTRIBUTION', value: '30 to 100 kits' },
-  { label: 'DELIVERABLE', value: 'Kit design and lesson guide' },
-  { label: 'IMPACT', value: 'Underserved students' },
+  { label: 'WHO', value: '2 to 3 high school students' },
+  { label: 'DATE', value: 'July 31 (first batch)' },
+  { label: 'DELIVERABLE', value: 'Pitch deck and presentation' },
+  { label: 'TARGET IMPACT', value: 'Underserved students and classrooms' },
 ]
 
 export default function KitDevelopment() {
-  const navigate = useNavigate()
   return (
     <PageTransition>
       <div style={{
@@ -29,61 +27,71 @@ export default function KitDevelopment() {
             style={{
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 9, letterSpacing: '4px', textTransform: 'uppercase',
-              color: 'var(--muted)', opacity: 0.45, marginBottom: 18,
+              color: 'var(--muted)', opacity: 0.45, marginBottom: 20,
             }}
           >
             Initiatives / Kit Development
           </motion.div>
 
-          {/* Highlighted headline block */}
+          {/* Big dollar amount */}
           <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.04 }}
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: 'clamp(72px, 12vw, 140px)',
+              fontWeight: 300,
+              color: 'var(--pastel1)',
+              lineHeight: 0.9,
+              letterSpacing: '-0.04em',
+              textShadow: '0 0 80px rgba(168,212,240,0.45)',
+              marginBottom: 12,
+            }}
+          >
+            $1,000
+          </motion.div>
+
+          {/* Headline */}
+          <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.05 }}
-            style={{ marginBottom: 24 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: 'clamp(22px, 3vw, 38px)',
+              fontWeight: 300, color: 'var(--cream)',
+              lineHeight: 1.2, letterSpacing: '-0.01em',
+              margin: '0 0 18px',
+            }}
           >
-            <div style={{
-              display: 'inline-block',
-              background: 'rgba(168,212,240,0.13)',
-              border: '1px solid rgba(168,212,240,0.28)',
-              borderRadius: 8,
-              padding: '10px 20px 14px',
-            }}>
-              <h1 style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontSize: 'clamp(28px,4vw,54px)',
-                fontWeight: 400, color: 'var(--pastel1)',
-                lineHeight: 1.1, letterSpacing: '-0.02em',
-                margin: 0,
-              }}>
-                Get funded to build a science kit.
-              </h1>
-            </div>
-          </motion.div>
+            Get funded to impact your community<br/>
+            <em style={{ color: 'var(--pastel1)' }}>with kit distribution.</em>
+          </motion.h1>
 
           {/* Description */}
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.12 }}
+            transition={{ duration: 0.7, delay: 0.15 }}
             style={{
-              fontSize: 15, color: 'var(--muted)', lineHeight: 1.75,
-              maxWidth: 560, marginBottom: 40, opacity: 0.8, margin: '0 0 40px',
+              fontSize: 14, color: 'var(--muted)', lineHeight: 1.75,
+              maxWidth: 520, margin: '0 0 36px', opacity: 0.8,
             }}
           >
-            Apply to design a hands-on experiment kit. Selected applicants receive production funding and CurioCrate distributes 30 to 100 kits to underserved students.
+            Apply to design a hands-on science kit. Selected teams receive up to $1,000 in production funding and CurioCrate distributes 30 to 100 kits directly to underserved students.
           </motion.p>
 
           {/* 2x2 details grid */}
           <motion.div
-            initial={{ opacity: 0, y: 18 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.18 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
             style={{
               display: 'grid',
               gridTemplateColumns: '1fr 1fr',
-              gap: '24px 72px',
-              marginBottom: 44,
+              gap: '20px 72px',
+              marginBottom: 40,
             }}
           >
             {DETAILS.map(d => (
@@ -91,13 +99,13 @@ export default function KitDevelopment() {
                 <div style={{
                   fontFamily: "'JetBrains Mono', monospace",
                   fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase',
-                  color: 'var(--pastel1)', opacity: 0.6, marginBottom: 6,
+                  color: 'var(--pastel1)', opacity: 0.6, marginBottom: 5,
                 }}>
                   {d.label}
                 </div>
                 <div style={{
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontSize: 16, fontWeight: 600,
+                  fontSize: 15, fontWeight: 600,
                   color: 'var(--cream)',
                 }}>
                   {d.value}
@@ -110,19 +118,22 @@ export default function KitDevelopment() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.25 }}
+            transition={{ duration: 0.6, delay: 0.26 }}
           >
-            <button
-              onClick={() => navigate('/contact')}
+            <a
+              href="https://forms.gle/Mh64grXfaoAsBzfR9"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
                 background: 'var(--pastel1)', color: 'var(--dark)',
                 border: 'none', borderRadius: 6,
-                padding: '13px 34px', cursor: 'pointer',
+                padding: '13px 34px',
                 fontWeight: 700,
-                transition: 'opacity 0.2s, transform 0.2s',
+                textDecoration: 'none',
                 display: 'inline-flex', alignItems: 'center', gap: 8,
+                transition: 'opacity 0.2s, transform 0.2s',
               }}
               onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; e.currentTarget.style.transform = 'translateY(-2px)' }}
               onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)' }}
@@ -131,7 +142,7 @@ export default function KitDevelopment() {
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                 <path d="M7 17L17 7M17 7H7M17 7v10"/>
               </svg>
-            </button>
+            </a>
           </motion.div>
 
         </div>

@@ -221,8 +221,8 @@ function LeafletMap({ chaptersData }) {
   return (
     <div style={{ position: 'relative' }}>
       <MapContainer
-        center={[39.5, -98.35]}
-        zoom={4}
+        center={[34.05, -118.1]}
+        zoom={8}
         minZoom={2}
         maxZoom={18}
         style={{ height: '480px', width: '100%', background: '#060d1f' }}
@@ -299,7 +299,7 @@ function LeafletMap({ chaptersData }) {
 
 export default function Home() {
   const [ctaReady,      setCtaReady]      = useState(false)
-  const [videoMuted,    setVideoMuted]    = useState(true)
+  const [videoMuted,    setVideoMuted]    = useState(false)
   const [activePhoto,   setActivePhoto]   = useState(0)
   const [chaptersData,  setChaptersData]  = useState([])
   const [selectedStat,  setSelectedStat]  = useState(null)
@@ -354,7 +354,17 @@ export default function Home() {
     const video = missionVideoRef.current
     if (!video) return
     const observer = new IntersectionObserver(
-      ([entry]) => { entry.isIntersecting ? video.play() : video.pause() },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {
+            video.muted = true
+            setVideoMuted(true)
+            video.play()
+          })
+        } else {
+          video.pause()
+        }
+      },
       { threshold: 0.4 }
     )
     observer.observe(video)
