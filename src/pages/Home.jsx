@@ -1003,52 +1003,75 @@ export default function Home() {
             </h2>
           </motion.div>
 
-          {/* Leaflet map */}
+          {/* Map + Stats side by side */}
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 1 }}
             style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 260px',
               borderRadius: 20, overflow: 'hidden',
               border: '1px solid rgba(168,212,240,0.12)',
               boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
-              marginBottom: 64,
             }}
           >
+            {/* Map */}
             <LeafletMap chaptersData={chaptersData} />
-          </motion.div>
 
-          {/* Stats grid */}
-          <div className="home-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 3, borderRadius: 20, overflow: 'hidden', boxShadow: '0 40px 120px rgba(0,0,0,0.5)' }}>
-            {stats.map((s, i) => (
-              <motion.div
-                key={s.label}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.12, duration: 0.9, ease: [0.4, 0, 0.2, 1] }}
-                onClick={() => setSelectedStat(s)}
-                style={{ padding: '72px 56px', position: 'relative', overflow: 'hidden', border: '1px solid rgba(168,212,240,0.07)', cursor: 'pointer' }}
-                onMouseEnter={e => {
-                  const img = e.currentTarget.querySelector('img.stat-bg')
-                  if (img) { img.style.transform = 'scale(1.07)'; img.style.filter = 'brightness(0.32) saturate(0.55)' }
-                }}
-                onMouseLeave={e => {
-                  const img = e.currentTarget.querySelector('img.stat-bg')
-                  if (img) { img.style.transform = 'scale(1)'; img.style.filter = 'brightness(0.22) saturate(0.45)' }
-                }}
-              >
-                <img className="stat-bg" src={s.photo} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.22) saturate(0.45)', transition: 'transform 0.7s ease, filter 0.7s ease', pointerEvents: 'none' }} />
-                <div style={{ position: 'absolute', inset: 0, background: i % 2 === 0 ? 'linear-gradient(135deg, rgba(10,20,55,0.82) 0%, rgba(6,14,38,0.75) 100%)' : 'linear-gradient(135deg, rgba(6,14,38,0.78) 0%, rgba(10,20,55,0.70) 100%)', pointerEvents: 'none' }} />
-                <div style={{ position: 'absolute', bottom: -30, right: -10, fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(120px,14vw,200px)', fontWeight: 300, lineHeight: 1, color: 'rgba(168,212,240,0.045)', userSelect: 'none', pointerEvents: 'none', zIndex: 1 }}>{s.value}</div>
-                <div style={{ position: 'relative', zIndex: 2, fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(80px,11vw,140px)', fontWeight: 300, lineHeight: 0.9, color: 'var(--pastel1)', textShadow: '0 0 80px rgba(168,212,240,0.7)', marginBottom: 24, letterSpacing: '-0.04em' }}>{s.value}</div>
-                <div style={{ position: 'relative', zIndex: 2, fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: 13, color: 'var(--cream)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '2.5px' }}>{s.label}</div>
-                <div style={{ position: 'relative', zIndex: 2, fontSize: 14, color: 'var(--muted)', lineHeight: 1.75, maxWidth: 320, opacity: 0.8 }}>{s.description}</div>
-                <div style={{ position: 'absolute', bottom: 20, right: 24, zIndex: 2, fontFamily: "'JetBrains Mono', monospace", fontSize: 8, letterSpacing: '2px', color: 'rgba(168,212,240,0.3)', textTransform: 'uppercase' }}>tap for details</div>
-              </motion.div>
-            ))}
-          </div>
+            {/* Vertical stats */}
+            <div style={{ display: 'flex', flexDirection: 'column', borderLeft: '1px solid rgba(168,212,240,0.1)' }}>
+              {stats.map((s, i) => (
+                <motion.div
+                  key={s.label}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1, duration: 0.7 }}
+                  onClick={() => setSelectedStat(s)}
+                  style={{
+                    flex: 1, padding: '18px 20px',
+                    position: 'relative', overflow: 'hidden',
+                    cursor: 'pointer',
+                    borderBottom: i < stats.length - 1 ? '1px solid rgba(168,212,240,0.08)' : 'none',
+                    background: 'rgba(6,12,32,0.7)',
+                    transition: 'background 0.25s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.05)' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(6,12,32,0.7)' }}
+                >
+                  <div style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: 'clamp(32px,3.5vw,44px)',
+                    fontWeight: 300, lineHeight: 0.95,
+                    color: 'var(--pastel1)',
+                    textShadow: '0 0 40px rgba(168,212,240,0.5)',
+                    letterSpacing: '-0.03em',
+                    marginBottom: 6,
+                  }}>{s.value}</div>
+                  <div style={{
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontWeight: 700, fontSize: 10,
+                    color: 'var(--cream)', textTransform: 'uppercase',
+                    letterSpacing: '1.8px', marginBottom: 5,
+                  }}>{s.label}</div>
+                  <div style={{
+                    fontSize: 11, color: 'var(--muted)', lineHeight: 1.55,
+                    opacity: 0.65,
+                    display: '-webkit-box', WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                  }}>{s.description}</div>
+                  <div style={{
+                    marginTop: 6,
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 7, letterSpacing: '1.5px',
+                    color: 'rgba(168,212,240,0.25)', textTransform: 'uppercase',
+                  }}>tap for details</div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
 
           {/* Stat detail modal */}
           <AnimatePresence>
