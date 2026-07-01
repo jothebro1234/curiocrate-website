@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 
 const NAV_LEFT = [
-  { path: '/',         label: 'Discover'     },
-  { path: '/kits',     label: 'Kits'         },
-  { path: '/chapters', label: 'Our Chapters' },
+  { path: '/',            label: 'Discover'    },
+  { path: '/kits',        label: 'Kits'        },
+  { path: '/newsletter',  label: 'Newsletter'  },
 ]
 
 const INITIATIVES_ITEMS = [
@@ -13,9 +13,10 @@ const INITIATIVES_ITEMS = [
 ]
 
 const ABOUT_ITEMS = [
-  { path: '/gallery', label: 'Gallery'    },
-  { path: '/team',    label: 'Team'       },
-  { path: '/contact', label: 'Contact Us' },
+  { path: '/chapters', label: 'Our Chapters' },
+  { path: '/gallery',  label: 'Gallery'      },
+  { path: '/team',     label: 'Team'         },
+  { path: '/contact',  label: 'Contact Us'   },
 ]
 
 const ALL_NAV = [...NAV_LEFT, ...INITIATIVES_ITEMS, ...ABOUT_ITEMS]

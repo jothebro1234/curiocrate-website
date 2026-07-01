@@ -8,6 +8,7 @@ import Kits from './pages/Kits'
 import Gallery from './pages/Gallery'
 import KitDevelopment from './pages/KitDevelopment'
 import HandsOnTeaching from './pages/HandsOnTeaching'
+import Newsletter from './pages/Newsletter'
 import Team from './pages/Team'
 import OurChapters from './pages/OurChapters'
 import Contact from './pages/Contact'
@@ -24,6 +25,7 @@ function AnimatedRoutes() {
         <Route path="/gallery"  element={<Gallery />} />
         <Route path="/initiatives/kits"      element={<KitDevelopment />} />
         <Route path="/initiatives/teaching" element={<HandsOnTeaching />} />
+        <Route path="/newsletter"           element={<Newsletter />} />
         <Route path="/team"     element={<Team />} />
         <Route path="/chapters" element={<OurChapters />} />
         <Route path="/contact"  element={<Contact />} />

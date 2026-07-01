@@ -451,7 +451,6 @@ export default function Home() {
             >
               {[
                 { to: '/kits',    label: 'Explore Kits', primary: true  },
-                { to: '/mission', label: 'Our Mission',  primary: false },
                 { to: '/gallery', label: 'View Gallery', primary: false },
               ].map(btn => (
                 <Link key={btn.to} to={btn.to} style={{
@@ -477,6 +476,20 @@ export default function Home() {
                 }}
                 >{btn.label}</Link>
               ))}
+              <button
+                onClick={() => document.getElementById('what-is-curiocrate')?.scrollIntoView({ behavior: 'smooth' })}
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
+                  letterSpacing: '3px', textTransform: 'uppercase',
+                  padding: '13px 28px', borderRadius: 3,
+                  border: '1px solid rgba(168,212,240,0.22)',
+                  color: 'rgba(197,227,247,0.7)',
+                  background: 'transparent',
+                  backdropFilter: 'blur(12px)', transition: 'all 0.35s ease', cursor: 'pointer',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.2)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.65)'; e.currentTarget.style.color = 'var(--cream)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.22)'; e.currentTarget.style.color = 'rgba(197,227,247,0.7)' }}
+              >Our Mission</button>
             </motion.div>
           </div>
 
@@ -900,7 +913,7 @@ export default function Home() {
       </section>
 
       {/* ─── WHAT IS CURIOCRATE ─── */}
-      <section className="home-section" style={{ position: 'relative', zIndex: 1, padding: '120px 40px' }}>
+      <section id="what-is-curiocrate" className="home-section" style={{ position: 'relative', zIndex: 1, padding: '120px 40px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div className="home-what-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
             <motion.div

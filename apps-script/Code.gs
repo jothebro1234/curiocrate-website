@@ -24,6 +24,9 @@
  *   G=MaxVolunteers  H=RegisteredList  I=SignupCloseDate  J=Instructions  K=ChapterLabel
  *   L=CardColor  M=CardDeco  N=CardLabel  O=RequiresYMCA
  *
+ * UPDATES SHEET columns (A–F):
+ *   A=Date  B=Category  C=Title  D=Body  E=Image (public URL)  F=Link (optional URL)
+ *
  * CHAPTERS SHEET columns (A–O):
  *   A=Email  B=Name  C=School  D=Logo  E=State  F=City
  *   G=PresidentPhoto  H=VicePresident  I=Treasurer  J=Secretary  K=SocialMedia
@@ -173,6 +176,7 @@ function doGet(e) {
                 title:    String(r[2] || ''),
                 body:     String(r[3] || ''),
                 image:    String(r[4] || ''),
+                link:     String(r[5] || ''),
             });
         }
         return ContentService
