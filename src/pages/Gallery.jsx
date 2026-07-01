@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
-import { featured, chronicle } from '../data/gallery'
+import { chronicle } from '../data/gallery'
 
 // ─── LIGHTBOX ─────────────────────────────────────────────────────────────────
 function Lightbox({ photos, startIndex, onClose }) {
@@ -494,89 +494,15 @@ function ChronicleHero({ onOpenYear, onScrollDown }) {
 
 // ─── MAIN GALLERY ─────────────────────────────────────────────────────────────
 export default function Gallery() {
-  const [featuredLightbox, setFeaturedLightbox] = useState(null)
-  const [activeYear, setActiveYear]             = useState(null)
-  const [yearLightbox, setYearLightbox]         = useState(null)
-  const featuredRef = useRef(null)
-
-  useEffect(() => {
-    document.documentElement.style.scrollSnapType = 'y mandatory'
-    return () => { document.documentElement.style.scrollSnapType = '' }
-  }, [])
+  const [activeYear, setActiveYear]   = useState(null)
+  const [yearLightbox, setYearLightbox] = useState(null)
 
   return (
     <PageTransition>
       <div style={{ position:'relative', zIndex:1, minHeight:'100vh' }}>
 
-        {/* ── CHRONICLE HERO — full screen, snaps here ── */}
-        <div style={{ scrollSnapAlign:'start', scrollSnapStop:'always' }}>
-          <ChronicleHero
-            onOpenYear={setActiveYear}
-            onScrollDown={() => featuredRef.current?.scrollIntoView({ behavior:'smooth' })}
-          />
-        </div>
-
-        {/* ── FEATURED PHOTOS — snaps here ── */}
-        <div ref={featuredRef} style={{ scrollSnapAlign:'start' }}>
-        <section className="gallery-featured-section" style={{ padding:'100px 40px 120px', scrollSnapAlign:'start' }}>
-          <div style={{ maxWidth:1200, margin:'0 auto' }}>
-            <motion.div
-              initial={{ opacity:0, y:24 }} whileInView={{ opacity:1, y:0 }}
-              viewport={{ once:true }} transition={{ duration:0.8 }}
-              style={{ marginBottom:56, textAlign:'center' }}
-            >
-              <div className="label" style={{ marginBottom:14 }}>In Focus</div>
-              <h2 style={{
-                fontFamily:"'Cormorant Garamond',serif",
-                fontSize:'clamp(36px,4vw,56px)',
-                fontWeight:300, color:'var(--cream)', lineHeight:1.05,
-              }}>
-                Science, in the wild.<br/>
-                <em style={{ color:'var(--pastel1)', fontStyle:'italic' }}>Moments that matter.</em>
-              </h2>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }}
-              viewport={{ once:true }} transition={{ duration:.9, delay:.15 }}
-              className="gallery-featured-grid"
-              style={{
-                display:'grid', gridTemplateColumns:'2fr 1fr',
-                gridTemplateRows:'1fr 1fr', gap:10,
-                height:'62vh', minHeight:400,
-                borderRadius:20, overflow:'hidden',
-              }}
-            >
-              {featured.map((photo, i) => (
-                <motion.div key={photo.src} onClick={() => setFeaturedLightbox(i)}
-                  style={{
-                    position:'relative', cursor:'pointer', overflow:'hidden',
-                    gridRow: i === 0 ? '1 / 3' : 'auto',
-                    borderRadius: i === 0 ? '16px 0 0 16px' : i === 1 ? '0 16px 0 0' : '0 0 16px 0',
-                  }}
-                  whileHover={{ zIndex:2 }}
-                >
-                  <motion.img src={photo.src} alt={photo.caption}
-                    whileHover={{ scale:1.06 }} transition={{ duration:.6, ease:[.4,0,.2,1] }}
-                    style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }}
-                  />
-                  <motion.div initial={{ opacity:0 }} whileHover={{ opacity:1 }} transition={{ duration:.3 }}
-                    style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 55%)', display:'flex', alignItems:'flex-end', padding:24 }}>
-                    <p style={{ fontFamily:"'Cormorant Garamond',serif", fontStyle:'italic', fontSize:16, color:'var(--cream)' }}>{photo.caption}</p>
-                  </motion.div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-        </div>
-
-        {/* ── FEATURED LIGHTBOX ── */}
-        <AnimatePresence>
-          {featuredLightbox !== null && (
-            <Lightbox photos={featured} startIndex={featuredLightbox} onClose={() => setFeaturedLightbox(null)} />
-          )}
-        </AnimatePresence>
+        {/* ── CHRONICLE HERO ── */}
+        <ChronicleHero onOpenYear={setActiveYear} />
 
         {/* ── YEAR MODAL ── */}
         <AnimatePresence>

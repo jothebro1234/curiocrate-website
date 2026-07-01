@@ -37,8 +37,6 @@ for (const [path, mod] of Object.entries(imageModules)) {
 const SEED = {
   2026: [{ src: '/images/volunteeringimage.jpg', caption: 'Chapters expanding across the country' }],
   2025: [{ src: '/images/IMG_3920.jpg', caption: 'Kit distribution event' }, { src: '/images/volunteeringimage.jpg', caption: 'Volunteer workshop' }],
-  2024: [{ src: '/images/IMG_9240.jpg', caption: 'Community outreach' }, { src: '/images/P1080258.JPG', caption: 'Science fair' }, { src: '/images/P1080212.JPG', caption: 'Workshop day' }],
-  2023: [{ src: '/images/whatiscuriocrate.jpg', caption: 'The founding of CurioCrate' }],
 }
 
 // Merge auto + seed per year
