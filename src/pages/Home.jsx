@@ -143,7 +143,7 @@ function StatModal({ stat, onClose }) {
   )
 }
 
-// Custom glowing marker for Leaflet
+// Blue circle = chapter
 const chapterIcon = L.divIcon({
   html: `<div style="
     width:14px;height:14px;border-radius:50%;
@@ -158,48 +158,116 @@ const chapterIcon = L.divIcon({
   popupAnchor: [0, -10],
 })
 
-function LeafletMap({ chaptersData }) {
-  const markers = chaptersData
-    .filter(c => chapterLocations[c.school])
-    .map(c => ({ ...c, coordinates: chapterLocations[c.school] }))
+// Amber diamond = teaching location
+const teachingIcon = L.divIcon({
+  html: `<div style="
+    width:11px;height:11px;border-radius:2px;
+    background:rgba(251,191,36,0.9);
+    border:2px solid rgba(251,191,36,0.4);
+    box-shadow:0 0 14px rgba(251,191,36,0.7), 0 0 28px rgba(251,191,36,0.3);
+    cursor:pointer;
+    transform:rotate(45deg);
+  "></div>`,
+  className: '',
+  iconSize: [11, 11],
+  iconAnchor: [5, 5],
+  popupAnchor: [0, -10],
+})
 
+function LeafletMap({ chaptersData }) {
+  // Rows from the sheet whose type is "Chapter" (or blank)
+  const chapterRows = chaptersData.filter(c => c.type !== 'Impact')
+  // Rows explicitly marked as teaching locations
+  const teachingRows = chaptersData.filter(c => c.type === 'Impact')
+
+  // For chapters: prefer lat/lng from sheet; fall back to chapterLocations.js lookup
+  const chapterMarkers = chapterRows
+    .filter(c => (c.latitude && c.longitude) || chapterLocations[c.school])
+    .map(c => {
+      const coords = (c.latitude && c.longitude)
+        ? [c.latitude, c.longitude]
+        : [chapterLocations[c.school][1], chapterLocations[c.school][0]]
+      return { ...c, coords }
+    })
+
+  // Hardcoded fallback entries (schools in chapterLocations.js not in sheet)
   const hardcoded = Object.entries(chapterLocations)
     .filter(([school]) => !chaptersData.some(c => c.school === school))
-    .map(([school, coordinates]) => ({ school, coordinates }))
+    .map(([school, lngLat]) => ({ school, coords: [lngLat[1], lngLat[0]] }))
 
-  const allMarkers = [...markers, ...hardcoded]
+  // Teaching location markers (must have coordinates in the sheet)
+  const teachingMarkers = teachingRows.filter(c => c.latitude && c.longitude)
 
   return (
-    <MapContainer
-      center={[39.5, -98.35]}
-      zoom={4}
-      minZoom={2}
-      maxZoom={18}
-      style={{ height: '480px', width: '100%', background: '#060d1f' }}
-      zoomControl={true}
-    >
-      <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        subdomains="abcd"
-        maxZoom={20}
-      />
-      {allMarkers.map((m, i) => (
-        <Marker key={i} position={[m.coordinates[1], m.coordinates[0]]} icon={chapterIcon}>
-          <Popup>
-            <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", minWidth: 180 }}>
-              <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>{m.school}</div>
-              {m.president && <div style={{ fontSize: 12, color: '#aaa' }}>{m.president}</div>}
-              {(m.city || m.state) && (
-                <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>
-                  {[m.city, m.state].filter(Boolean).join(', ')}
-                </div>
-              )}
-            </div>
-          </Popup>
-        </Marker>
-      ))}
-    </MapContainer>
+    <div style={{ position: 'relative' }}>
+      <MapContainer
+        center={[39.5, -98.35]}
+        zoom={4}
+        minZoom={2}
+        maxZoom={18}
+        style={{ height: '480px', width: '100%', background: '#060d1f' }}
+        zoomControl={true}
+      >
+        <TileLayer
+          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          subdomains="abcd"
+          maxZoom={20}
+        />
+
+        {[...chapterMarkers, ...hardcoded].map((m, i) => (
+          <Marker key={`chapter-${i}`} position={m.coords} icon={chapterIcon}>
+            <Popup>
+              <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", minWidth: 180 }}>
+                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: '#a8d4f0', marginBottom: 6 }}>Chapter</div>
+                <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>{m.school}</div>
+                {m.president && <div style={{ fontSize: 12, color: '#aaa' }}>{m.president}</div>}
+                {(m.city || m.state) && (
+                  <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>
+                    {[m.city, m.state].filter(Boolean).join(', ')}
+                  </div>
+                )}
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+
+        {teachingMarkers.map((m, i) => (
+          <Marker key={`teaching-${i}`} position={[m.latitude, m.longitude]} icon={teachingIcon}>
+            <Popup>
+              <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", minWidth: 180 }}>
+                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: '#fbbf24', marginBottom: 6 }}>Impact</div>
+                <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>{m.school}</div>
+                {(m.city || m.state) && (
+                  <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>
+                    {[m.city, m.state].filter(Boolean).join(', ')}
+                  </div>
+                )}
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+
+      {/* Legend */}
+      <div style={{
+        position: 'absolute', bottom: 12, left: 12, zIndex: 1000,
+        background: 'rgba(6,12,32,0.88)', backdropFilter: 'blur(12px)',
+        border: '1px solid rgba(168,212,240,0.12)',
+        borderRadius: 10, padding: '10px 14px',
+        display: 'flex', flexDirection: 'column', gap: 7,
+        pointerEvents: 'none',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 10, height: 10, borderRadius: '50%', background: 'rgba(168,212,240,0.9)', boxShadow: '0 0 8px rgba(168,212,240,0.7)', flexShrink: 0 }} />
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: 'rgba(168,212,240,0.7)', letterSpacing: '1.5px', textTransform: 'uppercase' }}>Chapter</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 9, height: 9, background: 'rgba(251,191,36,0.9)', boxShadow: '0 0 8px rgba(251,191,36,0.7)', flexShrink: 0, transform: 'rotate(45deg)', borderRadius: 2 }} />
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: 'rgba(251,191,36,0.7)', letterSpacing: '1.5px', textTransform: 'uppercase' }}>Impact</span>
+        </div>
+      </div>
+    </div>
   )
 }
 

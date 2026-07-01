@@ -24,9 +24,11 @@
  *   G=MaxVolunteers  H=RegisteredList  I=SignupCloseDate  J=Instructions  K=ChapterLabel
  *   L=CardColor  M=CardDeco  N=CardLabel  O=RequiresYMCA
  *
- * CHAPTERS SHEET columns (A–K):
+ * CHAPTERS SHEET columns (A–O):
  *   A=Email  B=Name  C=School  D=Logo  E=State  F=City
  *   G=PresidentPhoto  H=VicePresident  I=Treasurer  J=Secretary  K=SocialMedia
+ *   L=AuthorizedDirectors  M=Type  N=Latitude  O=Longitude
+ *   (Type: "Chapter" or "Impact". Leave blank = "Chapter".)
  *
  * DIRECTORS SHEET columns (A–C):
  *   A=Email  B=Name  C=Role
@@ -55,7 +57,7 @@ function initSheetHeaders(sh, name) {
     const headers = {
         Curriculum: ['AssignmentName','DueDate','Hours','Contributors','SlidesLink','StartDate','MaxVolunteers','RegisteredVolunteers','Instructions','CardColor','CardDeco','CardLabel'],
         Events:     ['EventName','Date','Hours','Attendees','IsAssembly','IsLeadership','MaxVolunteers','RegisteredList','SignupCloseDate','Instructions','ChapterLabel','CardColor','CardDeco','CardLabel','RequiresYMCA'],
-        Chapters:   ['Email','Name','School','Logo','State','City','PresidentPhoto','VicePresident','Treasurer','Secretary','SocialMedia'],
+        Chapters:   ['Email','Name','School','Logo','State','City','PresidentPhoto','VicePresident','Treasurer','Secretary','SocialMedia','AuthorizedDirectors','Type','Latitude','Longitude'],
         Directors:  ['Email','Name','Role'],
     };
     if (headers[name]) sh.appendRow(headers[name]);
@@ -158,6 +160,8 @@ function getChapters() {
     const chapters = rows.slice(1)
       .filter(function(r) { return String(r[2]).trim(); })
       .map(function(r) {
+        var lat = parseFloat(r[13]);
+        var lng = parseFloat(r[14]);
         return {
           email:          String(r[0]  || '').trim(),
           president:      String(r[1]  || '').trim(),
@@ -170,6 +174,9 @@ function getChapters() {
           treasurer:      String(r[8]  || '').trim(),
           secretary:      String(r[9]  || '').trim(),
           socialMedia:    String(r[10] || '').trim(),
+          type:           String(r[12] || '').trim() || 'Chapter',
+          latitude:       isNaN(lat) ? null : lat,
+          longitude:      isNaN(lng) ? null : lng,
         };
       });
     return ContentService.createTextOutput(JSON.stringify({ ok: true, chapters: chapters }))
