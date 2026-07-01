@@ -1012,6 +1012,7 @@ export default function Home() {
             style={{
               display: 'grid',
               gridTemplateColumns: '1fr 260px',
+              height: 480,
               borderRadius: 20, overflow: 'hidden',
               border: '1px solid rgba(168,212,240,0.12)',
               boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
@@ -1020,8 +1021,12 @@ export default function Home() {
             {/* Map */}
             <LeafletMap chaptersData={chaptersData} />
 
-            {/* Vertical stats */}
-            <div style={{ display: 'flex', flexDirection: 'column', borderLeft: '1px solid rgba(168,212,240,0.1)' }}>
+            {/* Vertical stats — scrollable */}
+            <div style={{
+              display: 'flex', flexDirection: 'column',
+              borderLeft: '1px solid rgba(168,212,240,0.1)',
+              height: 480, overflowY: 'auto', overflowX: 'hidden',
+            }}>
               {stats.map((s, i) => (
                 <motion.div
                   key={s.label}
@@ -1031,7 +1036,7 @@ export default function Home() {
                   transition={{ delay: i * 0.1, duration: 0.7 }}
                   onClick={() => setSelectedStat(s)}
                   style={{
-                    flex: 1, padding: '18px 20px',
+                    flexShrink: 0, minHeight: 120, padding: '18px 20px',
                     position: 'relative', overflow: 'hidden',
                     cursor: 'pointer',
                     borderBottom: i < stats.length - 1 ? '1px solid rgba(168,212,240,0.08)' : 'none',
