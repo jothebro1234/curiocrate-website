@@ -5,7 +5,7 @@
 //   2. Drop your image files (jpg, jpeg, png, webp) into the right year folder
 //   3. Commit and push — they appear in the gallery automatically
 //
-// To update the "In Focus" hero photos (the 3 featured shots), edit `featured` below.
+// To pin a specific cover photo for a year, add its filename to YEAR_COVER below.
 // Year labels / era names are set in YEAR_META below.
 //
 // ─── YEAR METADATA ─────────────────────────────────────────────────────────────
@@ -14,6 +14,12 @@ const YEAR_META = {
   2025: { era: 'Present Day',       color: '#a8d4f0', glow: 'rgba(168,212,240,0.5)' },
   2024: { era: 'The Mission Grows', color: '#c5b4f8', glow: 'rgba(197,180,248,0.5)' },
   2023: { era: 'The Beginning',     color: '#a8e8c8', glow: 'rgba(168,232,200,0.5)' },
+}
+
+// ─── COVER OVERRIDES ───────────────────────────────────────────────────────────
+// Pin a specific filename as the hero/cover for a year.
+const YEAR_COVER = {
+  2026: 'DSC06930.JPG',
 }
 
 // ─── AUTO-DISCOVERED PHOTOS ────────────────────────────────────────────────────
@@ -29,17 +35,19 @@ for (const [path, mod] of Object.entries(imageModules)) {
   if (!match) continue
   const year = parseInt(match[1])
   if (!autoByYear[year]) autoByYear[year] = []
-  autoByYear[year].push({ src: mod.default, caption: '' })
+  const filename = path.split('/').pop()
+  autoByYear[year].push({ src: mod.default, caption: '', _filename: filename })
 }
 
 // ─── SEED PHOTOS (existing public/images references) ──────────────────────────
-// These are merged with auto-discovered images so the gallery is never empty.
+// Merged with auto-discovered so the gallery is never empty for these years.
 const SEED = {
   2026: [{ src: '/images/volunteeringimage.jpg', caption: 'Chapters expanding across the country' }],
   2025: [{ src: '/images/IMG_3920.jpg', caption: 'Kit distribution event' }, { src: '/images/volunteeringimage.jpg', caption: 'Volunteer workshop' }],
+  2023: [], // Keep year visible; add photos to src/assets/gallery/2023/ when ready
 }
 
-// Merge auto + seed per year
+// ─── BUILD CHRONICLE ──────────────────────────────────────────────────────────
 const allYears = new Set([...Object.keys(autoByYear).map(Number), ...Object.keys(SEED).map(Number)])
 
 export const chronicle = [...allYears]
@@ -48,12 +56,14 @@ export const chronicle = [...allYears]
     const auto = autoByYear[year] || []
     const seed = SEED[year] || []
     const photos = [...auto, ...seed]
+    const coverFile = YEAR_COVER[year]
+    const coverPhoto = coverFile ? photos.find(p => p._filename === coverFile) : null
     return {
       year,
       era:    YEAR_META[year]?.era   || String(year),
       color:  YEAR_META[year]?.color || '#a8d4f0',
       glow:   YEAR_META[year]?.glow  || 'rgba(168,212,240,0.5)',
-      cover:  photos[0]?.src         || '',
+      cover:  coverPhoto?.src || photos[0]?.src || '',
       photos,
     }
   })
