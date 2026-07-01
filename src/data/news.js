@@ -25,7 +25,7 @@ export const news = [
     date: '2026-04-30',
     category: 'Milestones',
     title: 'CurioCrate Surpasses 500 Students Served',
-    body: 'We\'ve officially reached over 500 students introduced to hands-on STEM education since our founding in 2023 — a milestone made possible by every volunteer and partner.',
+    body: 'We\'ve officially reached over 500 students introduced to hands-on STEM education since our founding in 2023, made possible by every volunteer and partner.',
     image: '',
     link: '',
   },

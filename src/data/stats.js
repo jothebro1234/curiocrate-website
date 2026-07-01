@@ -10,7 +10,7 @@ export const stats = [
     value: '20+',
     label: 'Workshops',
     description: 'community science workshops and STEM sessions hosted since founding',
-    detail: 'Each workshop is led by trained student volunteers and designed around our original curriculum — bringing real lab-style experiments directly into classrooms and community centers.',
+    detail: 'Each workshop is led by trained student volunteers and designed around our original curriculum, bringing real lab-style experiments directly into classrooms and community centers.',
     photo: '/images/volunteeringimage.jpg',
   },
   {
@@ -24,7 +24,7 @@ export const stats = [
     value: '40+',
     label: 'Curriculum Developed',
     description: 'curriculum modules developed for hands-on immersive learning experiences',
-    detail: 'Our curriculum is co-created by high school volunteers alongside college professors and industry professionals — ensuring every lesson is engaging, rigorous, and accessible to early learners.',
+    detail: 'Our curriculum is co-created by high school volunteers alongside college professors and industry professionals, ensuring every lesson is engaging, rigorous, and accessible to early learners.',
     photo: '/images/P1080212.JPG',
   },
 ]

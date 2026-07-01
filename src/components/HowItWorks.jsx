@@ -3,7 +3,7 @@ const steps = [
     step: '01',
     emoji: '🛒',
     title: 'Choose a Kit',
-    desc: 'Browse our curated STEM kits — from chemistry to robotics — and pick the one that sparks your curiosity.',
+    desc: 'Browse our curated STEM kits from chemistry to robotics and pick the one that sparks your curiosity.',
   },
   {
     step: '02',

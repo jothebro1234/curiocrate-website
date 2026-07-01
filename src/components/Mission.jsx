@@ -179,7 +179,7 @@ export default function Mission() {
               margin: 0,
             }}
           >
-            — The CurioCrate Team
+            The CurioCrate Team
           </p>
         </div>
       </div>
