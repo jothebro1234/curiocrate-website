@@ -20,7 +20,9 @@ function AnimatedRoutes() {
         <Route path="/"         element={<Home />} />
         <Route path="/kits"     element={<Kits />} />
         <Route path="/gallery"  element={<Gallery />} />
-        <Route path="/mission"  element={<Mission />} />
+        <Route path="/mission"               element={<Mission />} />
+        <Route path="/initiatives/kits"     element={<Mission />} />
+        <Route path="/initiatives/teaching" element={<Mission />} />
         <Route path="/team"     element={<Team />} />
         <Route path="/chapters" element={<OurChapters />} />
         <Route path="/contact"  element={<Contact />} />

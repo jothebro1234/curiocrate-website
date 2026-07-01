@@ -981,7 +981,7 @@ export default function Home() {
               </p>
             </motion.div>
 
-            {/* Photo instead of cards */}
+            {/* Mission video */}
             <motion.div
               initial={{ opacity: 0, x: 32 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -990,14 +990,16 @@ export default function Home() {
             >
               <div style={{
                 borderRadius: 20, overflow: 'hidden',
-                border: '1px solid rgba(168,212,240,0.1)',
-                boxShadow: '0 32px 80px rgba(0,0,0,0.4)',
+                border: '1px solid rgba(168,212,240,0.12)',
+                boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
               }}>
-                <img
-                  src="/images/whatiscuriocrate.jpg"
-                  alt="What is CurioCrate"
-                  style={{ width: '100%', display: 'block', objectFit: 'cover' }}
-                />
+                <video
+                  controls
+                  playsInline
+                  style={{ width: '100%', display: 'block', background: '#000' }}
+                >
+                  <source src="https://pub-e7374d03fa9c42bfb531206a5e81830b.r2.dev/finalccmission.mp4" type="video/mp4" />
+                </video>
               </div>
             </motion.div>
           </div>

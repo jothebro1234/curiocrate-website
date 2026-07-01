@@ -5,7 +5,11 @@ const NAV_LEFT = [
   { path: '/',         label: 'Discover'     },
   { path: '/kits',     label: 'Kits'         },
   { path: '/chapters', label: 'Our Chapters' },
-  { path: '/mission',  label: 'Mission'      },
+]
+
+const INITIATIVES_ITEMS = [
+  { path: '/initiatives/kits',     label: 'Kit Development'  },
+  { path: '/initiatives/teaching', label: 'Hands-On Teaching' },
 ]
 
 const ABOUT_ITEMS = [
@@ -14,7 +18,7 @@ const ABOUT_ITEMS = [
   { path: '/contact', label: 'Contact Us' },
 ]
 
-const ALL_NAV = [...NAV_LEFT, ...ABOUT_ITEMS]
+const ALL_NAV = [...NAV_LEFT, ...INITIATIVES_ITEMS, ...ABOUT_ITEMS]
 
 function NavItem({ path, label, end }) {
   return (
@@ -43,13 +47,15 @@ function NavItem({ path, label, end }) {
 }
 
 export default function CinematicNavbar() {
-  const [visible,   setVisible]   = useState(true)
-  const [lastY,     setLastY]     = useState(0)
-  const [atTop,     setAtTop]     = useState(true)
-  const [aboutOpen, setAboutOpen] = useState(false)
-  const [menuOpen,  setMenuOpen]  = useState(false)
-  const aboutTimer = useRef(null)
-  const location   = useLocation()
+  const [visible,          setVisible]          = useState(true)
+  const [lastY,            setLastY]            = useState(0)
+  const [atTop,            setAtTop]            = useState(true)
+  const [aboutOpen,        setAboutOpen]        = useState(false)
+  const [initiativesOpen,  setInitiativesOpen]  = useState(false)
+  const [menuOpen,         setMenuOpen]         = useState(false)
+  const aboutTimer       = useRef(null)
+  const initiativesTimer = useRef(null)
+  const location         = useLocation()
 
   useEffect(() => {
     const onScroll = () => {
@@ -72,6 +78,10 @@ export default function CinematicNavbar() {
   const openAbout  = () => { clearTimeout(aboutTimer.current); setAboutOpen(true) }
   const closeAbout = () => { aboutTimer.current = setTimeout(() => setAboutOpen(false), 120) }
   const isAboutActive = ABOUT_ITEMS.some(i => location.pathname === i.path)
+
+  const openInitiatives  = () => { clearTimeout(initiativesTimer.current); setInitiativesOpen(true) }
+  const closeInitiatives = () => { initiativesTimer.current = setTimeout(() => setInitiativesOpen(false), 120) }
+  const isInitiativesActive = INITIATIVES_ITEMS.some(i => location.pathname === i.path)
 
   return (
     <>
@@ -104,6 +114,59 @@ export default function CinematicNavbar() {
         <div className="nav-desktop" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
 
           {NAV_LEFT.map(r => <NavItem key={r.path} path={r.path} label={r.label} end={r.path === '/'} />)}
+
+          {/* Initiatives dropdown */}
+          <div style={{ position: 'relative' }} onMouseEnter={openInitiatives} onMouseLeave={closeInitiatives}>
+            <button style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
+              background: isInitiativesActive ? 'rgba(168,212,240,0.08)' : 'transparent',
+              border: isInitiativesActive ? '1px solid rgba(168,212,240,0.15)' : '1px solid transparent',
+              borderRadius: 4, padding: '8px 14px',
+              color: isInitiativesActive || initiativesOpen ? 'var(--cream)' : 'var(--muted)',
+              cursor: 'pointer', transition: 'all 0.3s ease',
+              display: 'flex', alignItems: 'center', gap: 6,
+            }}>
+              Initiatives
+              <span style={{
+                fontSize: 8, opacity: 0.6,
+                transform: initiativesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 0.25s ease', display: 'inline-block',
+              }}>▾</span>
+            </button>
+
+            <div style={{
+              position: 'absolute', top: 'calc(100% + 8px)', left: '50%',
+              background: 'rgba(6,13,31,0.95)', backdropFilter: 'blur(24px)',
+              border: '1px solid rgba(168,212,240,0.12)', borderRadius: 12,
+              padding: '8px', minWidth: 180,
+              opacity: initiativesOpen ? 1 : 0,
+              pointerEvents: initiativesOpen ? 'auto' : 'none',
+              transform: initiativesOpen
+                ? 'translateX(-50%) translateY(0)'
+                : 'translateX(-50%) translateY(-8px)',
+              transition: 'opacity 0.2s ease, transform 0.2s ease',
+              boxShadow: '0 16px 48px rgba(0,0,0,0.4)',
+            }}>
+              {INITIATIVES_ITEMS.map(item => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  style={({ isActive }) => ({
+                    display: 'block', padding: '10px 16px', borderRadius: 8,
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase',
+                    textDecoration: 'none',
+                    color: isActive ? 'var(--cream)' : 'var(--muted)',
+                    background: isActive ? 'rgba(168,212,240,0.08)' : 'transparent',
+                    transition: 'all 0.2s ease',
+                  })}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.06)'; e.currentTarget.style.color = 'var(--pastel2)' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--muted)' }}
+                >{item.label}</NavLink>
+              ))}
+            </div>
+          </div>
 
           {/* About dropdown */}
           <div style={{ position: 'relative' }} onMouseEnter={openAbout} onMouseLeave={closeAbout}>
@@ -158,7 +221,7 @@ export default function CinematicNavbar() {
             </div>
           </div>
 
-          {/* Volunteer Hours (external CTA) */}
+          {/* Get Involved (external CTA) */}
           <a
             href="https://portal.curiocrate.org"
             target="_blank" rel="noopener noreferrer"
@@ -171,7 +234,7 @@ export default function CinematicNavbar() {
             }}
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.1)'; e.currentTarget.style.boxShadow = '0 0 20px rgba(168,212,240,0.15)' }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none' }}
-          >Volunteer Hours</a>
+          >Get Involved</a>
         </div>
 
         {/* Hamburger (mobile only) */}
@@ -255,7 +318,7 @@ export default function CinematicNavbar() {
               textDecoration: 'none', padding: '16px 24px', borderRadius: 6,
               color: 'var(--pastel1)', border: '1px solid rgba(168,212,240,0.3)',
             }}
-          >Volunteer Hours →</a>
+          >Get Involved →</a>
         </div>
       </div>
 
