@@ -299,6 +299,7 @@ function LeafletMap({ chaptersData }) {
 
 export default function Home() {
   const [ctaReady,      setCtaReady]      = useState(false)
+  const [videoMuted,    setVideoMuted]    = useState(true)
   const [activePhoto,   setActivePhoto]   = useState(0)
   const [chaptersData,  setChaptersData]  = useState([])
   const [selectedStat,  setSelectedStat]  = useState(null)
@@ -1004,16 +1005,45 @@ export default function Home() {
                 borderRadius: 20, overflow: 'hidden',
                 border: '1px solid rgba(168,212,240,0.12)',
                 boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
+                position: 'relative',
               }}>
                 <video
                   ref={missionVideoRef}
-                  muted
+                  muted={videoMuted}
                   playsInline
                   loop
                   style={{ width: '100%', display: 'block', background: '#000', pointerEvents: 'none' }}
                 >
                   <source src="https://pub-e7374d03fa9c42bfb531206a5e81830b.r2.dev/finalccmission.mp4" type="video/mp4" />
                 </video>
+                {/* Unmute toggle */}
+                <button
+                  onClick={() => setVideoMuted(m => !m)}
+                  style={{
+                    position: 'absolute', bottom: 14, right: 14,
+                    background: 'rgba(6,12,32,0.72)', backdropFilter: 'blur(8px)',
+                    border: '1px solid rgba(168,212,240,0.2)',
+                    borderRadius: 8, padding: '7px 12px',
+                    color: 'var(--pastel1)', cursor: 'pointer',
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 10, letterSpacing: '1.5px',
+                    display: 'flex', alignItems: 'center', gap: 6,
+                    transition: 'background 0.2s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.15)' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(6,12,32,0.72)' }}
+                >
+                  {videoMuted ? (
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+                    </svg>
+                  ) : (
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                    </svg>
+                  )}
+                  {videoMuted ? 'Unmute' : 'Mute'}
+                </button>
               </div>
             </motion.div>
           </div>
