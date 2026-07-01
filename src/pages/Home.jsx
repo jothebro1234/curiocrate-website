@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion, useScroll, useTransform, useInView } from 'framer-motion'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import PageTransition from '../components/PageTransition'
@@ -216,36 +216,62 @@ function LeafletMap({ chaptersData }) {
         />
 
         {[...chapterMarkers, ...hardcoded].map((m, i) => (
-          <Marker key={`chapter-${i}`} position={m.coords} icon={chapterIcon}>
-            <Popup>
-              <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", minWidth: 180 }}>
-                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: '#a8d4f0', marginBottom: 6 }}>Chapter</div>
-                <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>{m.school}</div>
-                {m.president && <div style={{ fontSize: 12, color: '#aaa' }}>{m.president}</div>}
-                {(m.city || m.state) && (
-                  <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>
-                    {[m.city, m.state].filter(Boolean).join(', ')}
-                  </div>
-                )}
-              </div>
-            </Popup>
-          </Marker>
+          <>
+            <Circle
+              key={`chapter-circle-${i}`}
+              center={m.coords}
+              radius={12000}
+              pathOptions={{
+                color: 'rgba(168,212,240,0.45)',
+                fillColor: 'rgba(168,212,240,0.07)',
+                fillOpacity: 1,
+                weight: 1,
+              }}
+            />
+            <Marker key={`chapter-${i}`} position={m.coords} icon={chapterIcon}>
+              <Popup>
+                <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", minWidth: 180 }}>
+                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: '#a8d4f0', marginBottom: 6 }}>Chapter</div>
+                  <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>{m.school}</div>
+                  {m.president && <div style={{ fontSize: 12, color: '#aaa' }}>{m.president}</div>}
+                  {(m.city || m.state) && (
+                    <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>
+                      {[m.city, m.state].filter(Boolean).join(', ')}
+                    </div>
+                  )}
+                </div>
+              </Popup>
+            </Marker>
+          </>
         ))}
 
         {teachingMarkers.map((m, i) => (
-          <Marker key={`teaching-${i}`} position={[m.latitude, m.longitude]} icon={teachingIcon}>
-            <Popup>
-              <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", minWidth: 180 }}>
-                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: '#fbbf24', marginBottom: 6 }}>Impact</div>
-                <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>{m.school}</div>
-                {(m.city || m.state) && (
-                  <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>
-                    {[m.city, m.state].filter(Boolean).join(', ')}
-                  </div>
-                )}
-              </div>
-            </Popup>
-          </Marker>
+          <>
+            <Circle
+              key={`impact-circle-${i}`}
+              center={[m.latitude, m.longitude]}
+              radius={12000}
+              pathOptions={{
+                color: 'rgba(251,191,36,0.45)',
+                fillColor: 'rgba(251,191,36,0.07)',
+                fillOpacity: 1,
+                weight: 1,
+              }}
+            />
+            <Marker key={`teaching-${i}`} position={[m.latitude, m.longitude]} icon={teachingIcon}>
+              <Popup>
+                <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", minWidth: 180 }}>
+                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: '#fbbf24', marginBottom: 6 }}>Impact</div>
+                  <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>{m.school}</div>
+                  {(m.city || m.state) && (
+                    <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>
+                      {[m.city, m.state].filter(Boolean).join(', ')}
+                    </div>
+                  )}
+                </div>
+              </Popup>
+            </Marker>
+          </>
         ))}
       </MapContainer>
 
