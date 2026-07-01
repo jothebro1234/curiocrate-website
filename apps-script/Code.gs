@@ -14,10 +14,10 @@
  *   J=SelectYourMainSpecialty  K=OnTimeRate  L=LastContact  M=TotalHours  N=HoursGoal
  *   O=YMCAFormURL
  *
- * CURRICULUM SHEET columns (A–L):
+ * CURRICULUM SHEET columns (A–M):
  *   A=AssignmentName  B=DueDate  C=Hours  D=Contributors
  *   E=SlidesLink  F=StartDate(LockDate)  G=MaxVolunteers  H=RegisteredVolunteers
- *   I=Instructions  J=CardColor  K=CardDeco  L=CardLabel
+ *   I=Instructions  J=CardColor  K=CardDeco  L=CardLabel  M=ChapterLabel
  *
  * EVENTS SHEET columns (A–O):
  *   A=EventName  B=Date  C=Hours  D=Attendees  E=IsAssembly  F=IsLeadership
@@ -27,7 +27,8 @@
  * CHAPTERS SHEET columns (A–O):
  *   A=Email  B=Name  C=School  D=Logo  E=State  F=City
  *   G=PresidentPhoto  H=VicePresident  I=Treasurer  J=Secretary  K=SocialMedia
- *   L=AuthorizedDirectors  M=Type  N=Latitude  O=Longitude
+ *   L=AuthorizedDirectors (comma-separated emails)
+ *   M=Type  N=Latitude  O=Longitude
  *   (Type: "Chapter" or "Impact". Leave blank = "Chapter".)
  *
  * DIRECTORS SHEET columns (A–C):
@@ -55,7 +56,7 @@ function getSheet(name) {
 
 function initSheetHeaders(sh, name) {
     const headers = {
-        Curriculum: ['AssignmentName','DueDate','Hours','Contributors','SlidesLink','StartDate','MaxVolunteers','RegisteredVolunteers','Instructions','CardColor','CardDeco','CardLabel'],
+        Curriculum: ['AssignmentName','DueDate','Hours','Contributors','SlidesLink','StartDate','MaxVolunteers','RegisteredVolunteers','Instructions','CardColor','CardDeco','CardLabel','ChapterLabel'],
         Events:     ['EventName','Date','Hours','Attendees','IsAssembly','IsLeadership','MaxVolunteers','RegisteredList','SignupCloseDate','Instructions','ChapterLabel','CardColor','CardDeco','CardLabel','RequiresYMCA'],
         Chapters:   ['Email','Name','School','Logo','State','City','PresidentPhoto','VicePresident','Treasurer','Secretary','SocialMedia','AuthorizedDirectors','Type','Latitude','Longitude'],
         Directors:  ['Email','Name','Role'],
@@ -145,46 +146,79 @@ function doPost(e) {
 }
 
 function doGet(e) {
-  const action = (e && e.parameter && e.parameter.action) || '';
-  if (action === 'get_chapters') return getChapters();
-  return ContentService.createTextOutput(JSON.stringify({ ok: true, msg: 'Curio Crate Apps Script running.' }))
-    .setMimeType(ContentService.MimeType.JSON);
+    const action = (e && e.parameter && e.parameter.action) || '';
+
+    if (action === 'get_chapters') return getChapters();
+
+    if (action === 'get_updates') {
+        var updatesSheet = SS.getSheetByName('Updates');
+        if (!updatesSheet) {
+            return ContentService
+                .createTextOutput(JSON.stringify({ ok: false, error: 'No Updates sheet' }))
+                .setMimeType(ContentService.MimeType.JSON);
+        }
+        var rows = updatesSheet.getDataRange().getValues();
+        var updates = [];
+        for (var i = 1; i < rows.length; i++) {
+            var r = rows[i];
+            if (!r[2]) continue;
+            var dateVal = r[0];
+            var dateStr = (dateVal instanceof Date)
+                ? Utilities.formatDate(dateVal, Session.getScriptTimeZone(), 'yyyy-MM-dd')
+                : String(dateVal);
+            updates.push({
+                date:     dateStr,
+                category: String(r[1] || ''),
+                title:    String(r[2] || ''),
+                body:     String(r[3] || ''),
+                image:    String(r[4] || ''),
+            });
+        }
+        return ContentService
+            .createTextOutput(JSON.stringify({ ok: true, updates: updates }))
+            .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    return ContentService
+        .createTextOutput(JSON.stringify({ ok: true, msg: 'Curio Crate Apps Script running.' }))
+        .setMimeType(ContentService.MimeType.JSON);
 }
 
 function getChapters() {
-  try {
-    const sheet = SS.getSheetByName(SHEET_CHAPTERS);
-    if (!sheet) return ContentService.createTextOutput(JSON.stringify({ ok: false, error: 'Chapters sheet not found' }))
-      .setMimeType(ContentService.MimeType.JSON);
-    const rows = sheet.getDataRange().getValues();
-    const chapters = rows.slice(1)
-      .filter(function(r) { return String(r[2]).trim(); })
-      .map(function(r) {
-        var lat = parseFloat(r[13]);
-        var lng = parseFloat(r[14]);
-        return {
-          email:          String(r[0]  || '').trim(),
-          president:      String(r[1]  || '').trim(),
-          school:         String(r[2]  || '').trim(),
-          logo:           String(r[3]  || '').trim(),
-          state:          String(r[4]  || '').trim(),
-          city:           String(r[5]  || '').trim(),
-          presidentPhoto: String(r[6]  || '').trim(),
-          vicePresident:  String(r[7]  || '').trim(),
-          treasurer:      String(r[8]  || '').trim(),
-          secretary:      String(r[9]  || '').trim(),
-          socialMedia:    String(r[10] || '').trim(),
-          type:           String(r[12] || '').trim() || 'Chapter',
-          latitude:       isNaN(lat) ? null : lat,
-          longitude:      isNaN(lng) ? null : lng,
-        };
-      });
-    return ContentService.createTextOutput(JSON.stringify({ ok: true, chapters: chapters }))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch(err) {
-    return ContentService.createTextOutput(JSON.stringify({ ok: false, error: err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
+    try {
+        const sheet = SS.getSheetByName(SHEET_CHAPTERS);
+        if (!sheet) return ContentService.createTextOutput(JSON.stringify({ ok: false, error: 'Chapters sheet not found' }))
+            .setMimeType(ContentService.MimeType.JSON);
+        const rows = sheet.getDataRange().getValues();
+        const chapters = rows.slice(1)
+            .filter(function(r) { return String(r[2]).trim(); })
+            .map(function(r) {
+                var lat = parseFloat(r[13]);
+                var lng = parseFloat(r[14]);
+                return {
+                    email:               String(r[0]  || '').trim(),
+                    president:           String(r[1]  || '').trim(),
+                    school:              String(r[2]  || '').trim(),
+                    logo:                String(r[3]  || '').trim(),
+                    state:               String(r[4]  || '').trim(),
+                    city:                String(r[5]  || '').trim(),
+                    presidentPhoto:      String(r[6]  || '').trim(),
+                    vicePresident:       String(r[7]  || '').trim(),
+                    treasurer:           String(r[8]  || '').trim(),
+                    secretary:           String(r[9]  || '').trim(),
+                    socialMedia:         String(r[10] || '').trim(),
+                    authorizedDirectors: String(r[11] || '').trim(),
+                    type:                String(r[12] || '').trim() || 'Chapter',
+                    latitude:            isNaN(lat) ? null : lat,
+                    longitude:           isNaN(lng) ? null : lng,
+                };
+            });
+        return ContentService.createTextOutput(JSON.stringify({ ok: true, chapters: chapters }))
+            .setMimeType(ContentService.MimeType.JSON);
+    } catch(err) {
+        return ContentService.createTextOutput(JSON.stringify({ ok: false, error: err.toString() }))
+            .setMimeType(ContentService.MimeType.JSON);
+    }
 }
 
 /* ── Router ─────────────────────────────────────────────────── */
@@ -218,17 +252,18 @@ function createCurriculum(b) {
     const sh = getSheet(SHEET_CURRICULUM);
     sh.appendRow([
         b.assignmentName,
-        b.dueDate        || '',
-        b.hours          || '',
-        b.contributors   || '',
-        b.slidesLink     || '',
-        b.startDate      || '',
-        b.maxVolunteers  || '',
+        b.dueDate              || '',
+        b.hours                || '',
+        b.contributors         || '',
+        b.slidesLink           || '',
+        b.startDate            || '',
+        b.maxVolunteers        || '',
         b.registeredVolunteers || '',
-        b.instructions   || '',
-        b.cardColor      || '',
-        b.cardDeco       || '',
-        b.cardLabel      || '',
+        b.instructions         || '',
+        b.cardColor            || '',
+        b.cardDeco             || '',
+        b.cardLabel            || '',
+        b.chapterLabel         || '',
     ]);
     return 'Curriculum assignment created: ' + b.assignmentName;
 }
@@ -254,6 +289,7 @@ function editCurriculum(b) {
     if (f.cardColor     !== undefined) sh.getRange(rowIdx, 10).setValue(f.cardColor);
     if (f.cardDeco      !== undefined) sh.getRange(rowIdx, 11).setValue(f.cardDeco);
     if (f.cardLabel     !== undefined) sh.getRange(rowIdx, 12).setValue(f.cardLabel);
+    if (f.chapterLabel  !== undefined) sh.getRange(rowIdx, 13).setValue(f.chapterLabel);
     return 'Updated: ' + b.assignmentName;
 }
 
@@ -345,7 +381,7 @@ function recordEvent(b) {
         b.attendees,
         b.isAssembly    || 'FALSE',
         b.isLeadership  || 'FALSE',
-        '',   // G=MaxVolunteers
+        '',   // G=MaxVolunteers (empty = ad-hoc, not upcoming)
         '',   // H=RegisteredList
         '',   // I=SignupCloseDate
         '',   // J=Instructions
@@ -361,7 +397,7 @@ function createEvent(b) {
         b.eventName,
         b.eventDate       || '',
         b.hours           || '',
-        '',
+        '',   // D=Attendees (empty until give_event_hours)
         b.isAssembly      || 'FALSE',
         b.isLeadership    || 'FALSE',
         b.maxVolunteers   || '',
