@@ -6,7 +6,7 @@ const DETAILS = [
   { label: 'WHO', value: '2 to 3 high school students' },
   { label: 'DATE', value: 'July 31 (first batch)' },
   { label: 'DELIVERABLE', value: 'Pitch deck and presentation' },
-  { label: 'TARGET IMPACT', value: 'Underserved students and classrooms' },
+  { label: 'TARGET IMPACT', value: 'Underserved students and classrooms in Los Angeles and Orange Counties' },
 ]
 
 const TABS = [
