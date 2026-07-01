@@ -889,6 +889,89 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ─── WHAT IS CURIOCRATE ─── */}
+      <section className="home-section" style={{ position: 'relative', zIndex: 1, padding: '120px 40px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div className="home-what-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
+            <motion.div
+              initial={{ opacity: 0, x: -32 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.9 }}
+            >
+              <div className="label" style={{ marginBottom: 16 }}>Est. 2023</div>
+              <h2 style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: 'clamp(32px,4.5vw,60px)',
+                fontWeight: 300, color: 'var(--cream)',
+                lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 28,
+              }}>
+                What is<br/>
+                <em style={{ color: 'var(--pastel1)' }}>CurioCrate?</em>
+              </h2>
+              <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.9, marginBottom: 20 }}>
+                CurioCrate believes every child, regardless of zip code, income, or background, deserves to experience the wonder of real science.
+              </p>
+              <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.9 }}>
+                Our immersive, accessible, hands-on experiment kits, designed by passionate high school volunteers alongside college professors and industry professionals, bring "lab" education to underserved students, paired with live workshops that make learning engaging for early learners.
+              </p>
+            </motion.div>
+
+            {/* Mission video */}
+            <motion.div
+              initial={{ opacity: 0, x: 32 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.9, delay: 0.1 }}
+            >
+              <div style={{
+                borderRadius: 20, overflow: 'hidden',
+                border: '1px solid rgba(168,212,240,0.12)',
+                boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
+                position: 'relative',
+              }}>
+                <video
+                  ref={missionVideoRef}
+                  muted={videoMuted}
+                  playsInline
+                  style={{ width: '100%', display: 'block', background: '#000', pointerEvents: 'none' }}
+                >
+                  <source src="https://pub-e7374d03fa9c42bfb531206a5e81830b.r2.dev/finalccmission.mp4" type="video/mp4" />
+                </video>
+                {/* Unmute toggle */}
+                <button
+                  onClick={() => setVideoMuted(m => !m)}
+                  style={{
+                    position: 'absolute', bottom: 14, right: 14,
+                    background: 'rgba(6,12,32,0.72)', backdropFilter: 'blur(8px)',
+                    border: '1px solid rgba(168,212,240,0.2)',
+                    borderRadius: 8, padding: '7px 12px',
+                    color: 'var(--pastel1)', cursor: 'pointer',
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 10, letterSpacing: '1.5px',
+                    display: 'flex', alignItems: 'center', gap: 6,
+                    transition: 'background 0.2s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.15)' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(6,12,32,0.72)' }}
+                >
+                  {videoMuted ? (
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+                    </svg>
+                  ) : (
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                    </svg>
+                  )}
+                  {videoMuted ? 'Unmute' : 'Mute'}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* ─── IMPACT: MAP + STATS ─── */}
       <section className="home-section" style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
@@ -963,90 +1046,6 @@ export default function Home() {
               <StatModal stat={selectedStat} onClose={() => setSelectedStat(null)} />
             )}
           </AnimatePresence>
-        </div>
-      </section>
-
-      {/* ─── WHAT IS CURIOCRATE ─── */}
-      <section className="home-section" style={{ position: 'relative', zIndex: 1, padding: '120px 40px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div className="home-what-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
-            <motion.div
-              initial={{ opacity: 0, x: -32 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9 }}
-            >
-              <div className="label" style={{ marginBottom: 16 }}>Est. 2023</div>
-              <h2 style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontSize: 'clamp(32px,4.5vw,60px)',
-                fontWeight: 300, color: 'var(--cream)',
-                lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 28,
-              }}>
-                What is<br/>
-                <em style={{ color: 'var(--pastel1)' }}>CurioCrate?</em>
-              </h2>
-              <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.9, marginBottom: 20 }}>
-                CurioCrate believes every child, regardless of zip code, income, or background, deserves to experience the wonder of real science.
-              </p>
-              <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.9 }}>
-                Our immersive, accessible, hands-on experiment kits, designed by passionate high school volunteers alongside college professors and industry professionals, bring "lab" education to underserved students, paired with live workshops that make learning engaging for early learners.
-              </p>
-            </motion.div>
-
-            {/* Mission video */}
-            <motion.div
-              initial={{ opacity: 0, x: 32 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, delay: 0.1 }}
-            >
-              <div style={{
-                borderRadius: 20, overflow: 'hidden',
-                border: '1px solid rgba(168,212,240,0.12)',
-                boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
-                position: 'relative',
-              }}>
-                <video
-                  ref={missionVideoRef}
-                  muted={videoMuted}
-                  playsInline
-                  loop
-                  style={{ width: '100%', display: 'block', background: '#000', pointerEvents: 'none' }}
-                >
-                  <source src="https://pub-e7374d03fa9c42bfb531206a5e81830b.r2.dev/finalccmission.mp4" type="video/mp4" />
-                </video>
-                {/* Unmute toggle */}
-                <button
-                  onClick={() => setVideoMuted(m => !m)}
-                  style={{
-                    position: 'absolute', bottom: 14, right: 14,
-                    background: 'rgba(6,12,32,0.72)', backdropFilter: 'blur(8px)',
-                    border: '1px solid rgba(168,212,240,0.2)',
-                    borderRadius: 8, padding: '7px 12px',
-                    color: 'var(--pastel1)', cursor: 'pointer',
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 10, letterSpacing: '1.5px',
-                    display: 'flex', alignItems: 'center', gap: 6,
-                    transition: 'background 0.2s',
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.15)' }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(6,12,32,0.72)' }}
-                >
-                  {videoMuted ? (
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
-                    </svg>
-                  ) : (
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-                    </svg>
-                  )}
-                  {videoMuted ? 'Unmute' : 'Mute'}
-                </button>
-              </div>
-            </motion.div>
-          </div>
         </div>
       </section>
 
