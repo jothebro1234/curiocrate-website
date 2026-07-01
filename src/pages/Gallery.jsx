@@ -165,7 +165,7 @@ function YearModal({ data, onClose, onOpenPhoto }) {
 }
 
 // ─── CHRONICLE HERO ───────────────────────────────────────────────────────────
-function ChronicleHero({ onOpenYear, onScrollDown }) {
+function ChronicleHero({ onOpenYear }) {
   const [idx, setIdx] = useState(0)
   const [dir, setDir] = useState(1)
   const current = chronicle[idx]
@@ -288,32 +288,49 @@ function ChronicleHero({ onOpenYear, onScrollDown }) {
               }}
             />
 
-            <motion.div
-              initial={{ opacity:0 }} animate={{ opacity:0.55 }}
-              transition={{ delay:0.38, duration:0.6 }}
-              style={{
-                fontFamily:"'JetBrains Mono', monospace",
-                fontSize:10, letterSpacing:4,
-                color:'var(--muted)', textTransform:'uppercase',
-              }}
-            >
-              {current.photos.length > 0
-                ? `${current.photos.length} photo${current.photos.length !== 1 ? 's' : ''} · click to explore`
-                : 'Archive forthcoming'
-              }
-            </motion.div>
-
-            {current.photos.length > 0 && (
-              <motion.div
-                initial={{ opacity:0, y:-8 }} animate={{ opacity:1, y:0 }}
-                transition={{ delay:0.52, duration:0.6 }}
-                style={{ marginTop:28 }}
+            {current.photos.length > 0 ? (
+              <motion.button
+                initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }}
+                transition={{ delay:0.38, duration:0.6 }}
+                onClick={() => onOpenYear(current)}
+                style={{
+                  marginTop:8,
+                  display:'flex', alignItems:'center', gap:10,
+                  background:'rgba(255,255,255,0.07)',
+                  border:`1px solid ${current.color}55`,
+                  borderRadius:40, padding:'12px 28px',
+                  color:current.color, cursor:'pointer',
+                  fontFamily:"'JetBrains Mono', monospace",
+                  fontSize:10, letterSpacing:'3px', textTransform:'uppercase',
+                  backdropFilter:'blur(12px)',
+                  transition:'all 0.25s',
+                  boxShadow:`0 0 24px ${current.color}20`,
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = `${current.color}18`
+                  e.currentTarget.style.borderColor = `${current.color}bb`
+                  e.currentTarget.style.boxShadow = `0 0 40px ${current.color}40`
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.07)'
+                  e.currentTarget.style.borderColor = `${current.color}55`
+                  e.currentTarget.style.boxShadow = `0 0 24px ${current.color}20`
+                }}
               >
-                <div style={{
-                  width:1, height:40,
-                  background:`linear-gradient(to bottom, ${current.color}90, transparent)`,
-                  margin:'0 auto', animation:'breathe 2.5s ease-in-out infinite',
-                }} />
+                View {current.photos.length} Photo{current.photos.length !== 1 ? 's' : ''}
+                <span style={{ fontSize:14, lineHeight:1 }}>→</span>
+              </motion.button>
+            ) : (
+              <motion.div
+                initial={{ opacity:0 }} animate={{ opacity:0.4 }}
+                transition={{ delay:0.38, duration:0.6 }}
+                style={{
+                  fontFamily:"'JetBrains Mono', monospace",
+                  fontSize:10, letterSpacing:4,
+                  color:'var(--muted)', textTransform:'uppercase', marginTop:8,
+                }}
+              >
+                Archive forthcoming
               </motion.div>
             )}
           </div>
@@ -452,31 +469,6 @@ function ChronicleHero({ onOpenYear, onScrollDown }) {
           </div>
         </div>
       </div>
-
-      {/* Explore photos button */}
-      <motion.button
-        initial={{ opacity:0, y:8 }}
-        animate={{ opacity:1, y:0 }}
-        transition={{ delay:1.1, duration:0.7 }}
-        onClick={onScrollDown}
-        style={{
-          position:'absolute', bottom:112, left:'50%', transform:'translateX(-50%)',
-          zIndex:10,
-          background:'rgba(168,212,240,0.07)',
-          border:'1px solid rgba(168,212,240,0.28)',
-          borderRadius:32, padding:'12px 30px',
-          color:'var(--pastel1)', cursor:'pointer',
-          display:'flex', alignItems:'center', gap:10,
-          fontFamily:"'JetBrains Mono', monospace",
-          fontSize:9, letterSpacing:'3px', textTransform:'uppercase',
-          backdropFilter:'blur(10px)', transition:'all 0.3s',
-          whiteSpace:'nowrap',
-        }}
-        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.16)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.55)'; e.currentTarget.style.boxShadow = '0 0 28px rgba(168,212,240,0.18)' }}
-        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.07)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.28)'; e.currentTarget.style.boxShadow = 'none' }}
-      >
-        Explore Photos ↓
-      </motion.button>
 
       {/* Top-right counter */}
       <div style={{
