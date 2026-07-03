@@ -27,7 +27,7 @@ export default function CinematicFooter() {
           </div>
           {/* Nav */}
           {[
-            { label:'Explore', links:[{l:'Kits',p:'/kits'},{l:'Our Chapters',p:'/chapters'},{l:'Mission',p:'/mission'},{l:'Gallery',p:'/gallery'},{l:'Team',p:'/team'}] },
+            { label:'Explore', links:[{l:'Kits',p:'/kits'},{l:'Our Chapters',p:'/chapters'},{l:'Mission',p:'/#what-is-curiocrate'},{l:'Gallery',p:'/gallery'},{l:'Team',p:'/team'}] },
             { label:'Connect', links:[{l:'Contact Us',p:'/contact'},{l:'ckf.curiocrate@curiocrate.org',p:'mailto:ckf.curiocrate@curiocrate.org'}] },
             { label:'Program', links:[{l:'Volunteering Opportunities',p:'https://portal.curiocrate.org'},{l:'Start a Chapter',p:'https://forms.gle/nEBfc84qHXxcmT4k8'},{l:'Partner With Us',p:'mailto:ckf.curiocrate@curiocrate.org'}] },
           ].map(col => (

@@ -35,12 +35,16 @@ const GET_INVOLVED_STEPS = [
     body: 'Join our volunteer network and connect with a team passionate about science education.',
     href: 'https://portal.curiocrate.org',
     ctaLabel: 'Apply Now →',
+    ctaNote: 'Same portal as step 02',
     img: '/images/curiecomputer.png',
   },
   {
     n: '02',
     title: 'Teach or Create a Lesson',
     body: 'Design hands-on science lessons or lead your first kit session with real students.',
+    href: 'https://portal.curiocrate.org',
+    ctaLabel: 'Apply Now →',
+    ctaNote: 'Same portal as step 01',
     img: '/images/curieteacher.png',
   },
   {
@@ -490,7 +494,7 @@ export default function Home() {
                     e.currentTarget.style.background = kitsMenuOpen ? 'rgba(168,212,240,0.2)' : 'rgba(168,212,240,0.12)'
                     e.currentTarget.style.boxShadow = kitsMenuOpen ? '0 0 24px rgba(168,212,240,0.2)' : 'none'
                   }}
-                >Explore Kits</button>
+                >Our Initiatives</button>
 
                 <AnimatePresence>
                   {kitsMenuOpen && (
@@ -501,7 +505,7 @@ export default function Home() {
                       transition={{ duration: 0.18 }}
                       style={{
                         position: 'absolute', top: 'calc(100% + 8px)', left: 0,
-                        minWidth: 280,
+                        minWidth: 300,
                         background: 'rgba(8,14,32,0.96)',
                         border: '1px solid rgba(168,212,240,0.3)',
                         borderRadius: 6, overflow: 'hidden',
@@ -510,9 +514,33 @@ export default function Home() {
                         zIndex: 20,
                       }}
                     >
+                      <Link
+                        to="/kits"
+                        onClick={() => setKitsMenuOpen(false)}
+                        style={{
+                          display: 'block', padding: '13px 18px',
+                          fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
+                          letterSpacing: '1.5px', textTransform: 'uppercase',
+                          textDecoration: 'none', color: 'rgba(197,227,247,0.85)',
+                          background: 'transparent', transition: 'background 0.2s, color 0.2s',
+                          whiteSpace: 'nowrap',
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.15)'; e.currentTarget.style.color = 'var(--cream)' }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(197,227,247,0.85)' }}
+                      >View Kits</Link>
+
+                      <div style={{ height: 1, background: 'rgba(168,212,240,0.15)', margin: '4px 0' }} />
+
+                      <div style={{
+                        padding: '8px 18px 2px',
+                        fontFamily: "'JetBrains Mono', monospace", fontSize: 8,
+                        letterSpacing: '2px', textTransform: 'uppercase',
+                        color: 'var(--muted)', opacity: 0.45,
+                      }}>Initiatives</div>
+
                       {[
-                        { to: '/kits', label: 'View Kits' },
-                        { to: '/initiatives/kits', label: 'Become a High School Kit Builder' },
+                        { to: '/initiatives/kits', label: 'Become a High School Kit Developer' },
+                        { to: '/initiatives/teaching', label: 'Hands-On Teaching / Curriculum Developer' },
                       ].map(item => (
                         <Link
                           key={item.to}
@@ -1269,6 +1297,15 @@ export default function Home() {
                       onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
                       >{step.ctaLabel || 'Learn More →'}</a>
                     )
+                  )}
+
+                  {step.ctaNote && (
+                    <div style={{
+                      marginTop: 8, fontSize: 10, fontStyle: 'italic',
+                      color: 'var(--muted)', opacity: 0.55,
+                    }}>
+                      {step.ctaNote}
+                    </div>
                   )}
                 </motion.div>
 

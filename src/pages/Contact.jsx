@@ -14,6 +14,12 @@ const contacts = [
     email: 'ckf.curiocrate@curiocrate.org',
     img: '/images/curiequestion.png',
   },
+  {
+    audience: 'Sponsors & Partners',
+    description: 'Interested in sponsoring CurioCrate or partnering with us to expand our reach?',
+    email: 'ckf.curiocrate@gmail.com',
+    img: '/images/curielove.png',
+  },
 ]
 
 export default function Contact() {
