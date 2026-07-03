@@ -304,6 +304,7 @@ export default function Home() {
   const [chaptersData,  setChaptersData]  = useState([])
   const [selectedStat,  setSelectedStat]  = useState(null)
   const [newsData,      setNewsData]      = useState(null)
+  const [kitsMenuOpen,  setKitsMenuOpen]  = useState(false)
 
   const heroRef        = useRef(null)
   const missionVideoRef = useRef(null)
@@ -449,33 +450,98 @@ export default function Home() {
               transition={{ duration: 0.8, delay: 0.15, ease: [0.4, 0, 0.2, 1] }}
               style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}
             >
-              {[
-                { to: '/kits',    label: 'Explore Kits', primary: true  },
-                { to: '/gallery', label: 'View Gallery', primary: false },
-              ].map(btn => (
-                <Link key={btn.to} to={btn.to} style={{
-                  fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
-                  letterSpacing: '3px', textTransform: 'uppercase', textDecoration: 'none',
-                  padding: '13px 28px', borderRadius: 3,
-                  border: btn.primary ? '1px solid rgba(168,212,240,0.5)' : '1px solid rgba(168,212,240,0.22)',
-                  color: btn.primary ? 'var(--cream)' : 'rgba(197,227,247,0.7)',
-                  background: btn.primary ? 'rgba(168,212,240,0.12)' : 'transparent',
-                  backdropFilter: 'blur(12px)', transition: 'all 0.35s ease',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = 'rgba(168,212,240,0.2)'
-                  e.currentTarget.style.borderColor = 'rgba(168,212,240,0.65)'
-                  e.currentTarget.style.color = 'var(--cream)'
-                  e.currentTarget.style.boxShadow = '0 0 24px rgba(168,212,240,0.2)'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = btn.primary ? 'rgba(168,212,240,0.12)' : 'transparent'
-                  e.currentTarget.style.borderColor = btn.primary ? 'rgba(168,212,240,0.5)' : 'rgba(168,212,240,0.22)'
-                  e.currentTarget.style.color = btn.primary ? 'var(--cream)' : 'rgba(197,227,247,0.7)'
-                  e.currentTarget.style.boxShadow = 'none'
-                }}
-                >{btn.label}</Link>
-              ))}
+              <div
+                style={{ position: 'relative' }}
+                onMouseEnter={() => setKitsMenuOpen(true)}
+                onMouseLeave={() => setKitsMenuOpen(false)}
+              >
+                <button
+                  onClick={() => setKitsMenuOpen(true)}
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
+                    letterSpacing: '3px', textTransform: 'uppercase',
+                    padding: '13px 28px', borderRadius: 3,
+                    border: '1px solid rgba(168,212,240,0.5)',
+                    color: 'var(--cream)',
+                    background: kitsMenuOpen ? 'rgba(168,212,240,0.2)' : 'rgba(168,212,240,0.12)',
+                    backdropFilter: 'blur(12px)', transition: 'all 0.35s ease', cursor: 'pointer',
+                    boxShadow: kitsMenuOpen ? '0 0 24px rgba(168,212,240,0.2)' : 'none',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = 'rgba(168,212,240,0.2)'
+                    e.currentTarget.style.boxShadow = '0 0 24px rgba(168,212,240,0.2)'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = kitsMenuOpen ? 'rgba(168,212,240,0.2)' : 'rgba(168,212,240,0.12)'
+                    e.currentTarget.style.boxShadow = kitsMenuOpen ? '0 0 24px rgba(168,212,240,0.2)' : 'none'
+                  }}
+                >Explore Kits</button>
+
+                <AnimatePresence>
+                  {kitsMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.18 }}
+                      style={{
+                        position: 'absolute', top: 'calc(100% + 8px)', left: 0,
+                        minWidth: 280,
+                        background: 'rgba(8,14,32,0.96)',
+                        border: '1px solid rgba(168,212,240,0.3)',
+                        borderRadius: 6, overflow: 'hidden',
+                        backdropFilter: 'blur(12px)',
+                        boxShadow: '0 12px 32px rgba(0,0,0,0.45)',
+                        zIndex: 20,
+                      }}
+                    >
+                      {[
+                        { to: '/kits', label: 'View Kits' },
+                        { to: '/initiatives/kits', label: 'Become a High School Kit Builder!' },
+                      ].map(item => (
+                        <Link
+                          key={item.to}
+                          to={item.to}
+                          onClick={() => setKitsMenuOpen(false)}
+                          style={{
+                            display: 'block', padding: '13px 18px',
+                            fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
+                            letterSpacing: '1.5px', textTransform: 'uppercase',
+                            textDecoration: 'none', color: 'rgba(197,227,247,0.85)',
+                            background: 'transparent', transition: 'background 0.2s, color 0.2s',
+                            whiteSpace: 'nowrap',
+                          }}
+                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.15)'; e.currentTarget.style.color = 'var(--cream)' }}
+                          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(197,227,247,0.85)' }}
+                        >{item.label}</Link>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <Link to="/gallery" style={{
+                fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
+                letterSpacing: '3px', textTransform: 'uppercase', textDecoration: 'none',
+                padding: '13px 28px', borderRadius: 3,
+                border: '1px solid rgba(168,212,240,0.22)',
+                color: 'rgba(197,227,247,0.7)',
+                background: 'transparent',
+                backdropFilter: 'blur(12px)', transition: 'all 0.35s ease',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = 'rgba(168,212,240,0.2)'
+                e.currentTarget.style.borderColor = 'rgba(168,212,240,0.65)'
+                e.currentTarget.style.color = 'var(--cream)'
+                e.currentTarget.style.boxShadow = '0 0 24px rgba(168,212,240,0.2)'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'transparent'
+                e.currentTarget.style.borderColor = 'rgba(168,212,240,0.22)'
+                e.currentTarget.style.color = 'rgba(197,227,247,0.7)'
+                e.currentTarget.style.boxShadow = 'none'
+              }}
+              >View Gallery</Link>
               <button
                 onClick={() => document.getElementById('what-is-curiocrate')?.scrollIntoView({ behavior: 'smooth' })}
                 style={{

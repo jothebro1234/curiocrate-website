@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
 
-function AnimatedAmount({ target = 1000, duration = 1600, onComplete }) {
+function AnimatedAmount({ target = 1000, duration = 1800, onComplete }) {
   const [value, setValue] = useState(0)
+  const [pulse, setPulse] = useState(false)
 
   useEffect(() => {
     let start = null
@@ -11,11 +12,12 @@ function AnimatedAmount({ target = 1000, duration = 1600, onComplete }) {
     const step = (ts) => {
       if (start === null) start = ts
       const progress = Math.min((ts - start) / duration, 1)
-      const eased = 1 - Math.pow(1 - progress, 3)
+      const eased = progress >= 1 ? 1 : 1 - Math.pow(2, -10 * progress)
       setValue(Math.round(eased * target))
       if (progress < 1) {
         raf = requestAnimationFrame(step)
       } else {
+        setPulse(true)
         onComplete?.()
       }
     }
@@ -23,7 +25,15 @@ function AnimatedAmount({ target = 1000, duration = 1600, onComplete }) {
     return () => cancelAnimationFrame(raf)
   }, [target, duration])
 
-  return <>${value.toLocaleString()}</>
+  return (
+    <motion.span
+      animate={pulse ? { scale: [1, 1.08, 1] } : {}}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+      style={{ display: 'inline-block' }}
+    >
+      ${value.toLocaleString()}
+    </motion.span>
+  )
 }
 
 const DETAILS = [
@@ -153,7 +163,7 @@ export default function KitDevelopment() {
                         fontWeight: 300, color: 'var(--cream)',
                         lineHeight: 1.3, margin: '0 0 14px',
                       }}>
-                        Get up to $1,000 to develop and distribute your science kit.
+                        Pitch your kit idea and get up to $1,000 to develop and distribute your science kit.
                       </p>
 
                       {/* Description */}
