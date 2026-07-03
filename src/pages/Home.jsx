@@ -393,7 +393,7 @@ export default function Home() {
     <PageTransition>
 
       {/* ─── HERO ─── */}
-      <motion.section ref={heroRef} style={{ y: heroY, opacity: heroO, position: 'relative', zIndex: 1 }}>
+      <motion.section ref={heroRef} style={{ y: heroY, opacity: heroO, position: 'relative', zIndex: kitsMenuOpen ? 5 : 1 }}>
         <div style={{ height: '100vh', position: 'relative', overflow: 'hidden' }}>
 
           {/* Photo slideshow */}
@@ -426,7 +426,7 @@ export default function Home() {
 
           {/* Mission + buttons */}
           <div style={{
-            position: 'absolute', inset: 0, zIndex: 3,
+            position: 'absolute', inset: 0, zIndex: kitsMenuOpen ? 6 : 3,
             display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'center',
             padding: '0 24px',
@@ -468,7 +468,7 @@ export default function Home() {
               style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}
             >
               <div
-                style={{ position: 'relative' }}
+                style={{ position: 'relative', zIndex: kitsMenuOpen ? 9999 : 'auto' }}
                 onMouseEnter={() => setKitsMenuOpen(true)}
                 onMouseLeave={() => setKitsMenuOpen(false)}
               >
@@ -509,7 +509,7 @@ export default function Home() {
                         borderRadius: 6, overflow: 'hidden',
                         backdropFilter: 'blur(12px)',
                         boxShadow: '0 12px 32px rgba(0,0,0,0.45)',
-                        zIndex: 20,
+                        zIndex: 9999,
                       }}
                     >
                       <Link
