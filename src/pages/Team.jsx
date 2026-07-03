@@ -11,7 +11,7 @@ const cabinet = [
     name: 'Daniel Son',
     role: 'President',
     bio: 'Leads CurioCrate with a clear vision: every child, regardless of zip code, deserves access to the wonder of science.',
-    photo: null,
+    photo: '/boardmembers/danielsonpresident.png',
     emoji: '🔬',
     color: '#fbbf24',
     glow: 'rgba(251,191,36,0.5)',
