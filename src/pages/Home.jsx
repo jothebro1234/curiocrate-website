@@ -34,6 +34,7 @@ const GET_INVOLVED_STEPS = [
     title: 'Apply as a Volunteer',
     body: 'Join our volunteer network and connect with a team passionate about science education.',
     href: 'https://portal.curiocrate.org',
+    ctaLabel: 'Apply Now →',
     img: '/images/curiecomputer.png',
   },
   {
@@ -46,7 +47,18 @@ const GET_INVOLVED_STEPS = [
     n: '03',
     title: 'Become a Kit Developer',
     body: 'Work directly on developing official CurioCrate research kit products distributed to communities.',
+    href: '/initiatives/kits',
+    internal: true,
+    ctaLabel: 'Explore Kit Development →',
     img: '/images/curiekits.png',
+  },
+  {
+    n: '04',
+    title: 'Start a Chapter',
+    body: 'Lead the program to bring immersive, hands-on science education directly to students at your school and community.',
+    href: 'https://forms.gle/nEBfc84qHXxcmT4k8',
+    ctaLabel: 'Get Started →',
+    img: '/images/curielead.png',
   },
 ]
 
@@ -1189,7 +1201,7 @@ export default function Home() {
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(30px,4vw,56px)',
               fontWeight: 300, color: 'var(--cream)', lineHeight: 1.05,
-            }}>Get Involved</h2>
+            }}>What Can You Do to Get Involved?</h2>
           </motion.div>
 
           <div className="home-involved-row" style={{ display: 'flex', alignItems: 'flex-start', gap: 0 }}>
@@ -1232,17 +1244,31 @@ export default function Home() {
                   </p>
 
                   {step.href && (
-                    <a href={step.href} target="_blank" rel="noopener noreferrer" style={{
-                      display: 'inline-block', marginTop: 20,
-                      fontFamily: "'JetBrains Mono', monospace", fontSize: 10,
-                      letterSpacing: '2.5px', textTransform: 'uppercase', textDecoration: 'none',
-                      padding: '10px 22px', borderRadius: 3,
-                      border: '1px solid rgba(168,212,240,0.3)', color: 'var(--pastel1)',
-                      transition: 'all 0.3s ease',
-                    }}
-                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.08)' }}
-                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
-                    >Apply Now →</a>
+                    step.internal ? (
+                      <Link to={step.href} style={{
+                        display: 'inline-block', marginTop: 20,
+                        fontFamily: "'JetBrains Mono', monospace", fontSize: 10,
+                        letterSpacing: '2.5px', textTransform: 'uppercase', textDecoration: 'none',
+                        padding: '10px 22px', borderRadius: 3,
+                        border: '1px solid rgba(168,212,240,0.3)', color: 'var(--pastel1)',
+                        transition: 'all 0.3s ease',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.08)' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+                      >{step.ctaLabel || 'Learn More →'}</Link>
+                    ) : (
+                      <a href={step.href} target="_blank" rel="noopener noreferrer" style={{
+                        display: 'inline-block', marginTop: 20,
+                        fontFamily: "'JetBrains Mono', monospace", fontSize: 10,
+                        letterSpacing: '2.5px', textTransform: 'uppercase', textDecoration: 'none',
+                        padding: '10px 22px', borderRadius: 3,
+                        border: '1px solid rgba(168,212,240,0.3)', color: 'var(--pastel1)',
+                        transition: 'all 0.3s ease',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.08)' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+                      >{step.ctaLabel || 'Learn More →'}</a>
+                    )
                   )}
                 </motion.div>
 
@@ -1285,69 +1311,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── START A CHAPTER ─── */}
-      <section className="home-section" style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto' }}>
-          <div className="home-chapter-grid" style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 64, alignItems: 'center' }}>
-            <motion.div
-              initial={{ opacity: 0, x: -24 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <h2 style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontSize: 'clamp(32px,5vw,68px)',
-                fontWeight: 300, color: 'var(--cream)',
-                lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 20,
-              }}>
-                Start a Chapter<br/>
-                <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>at your school.</em>
-              </h2>
-              <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.8, maxWidth: 480, marginBottom: 36 }}>
-                Lead the program to bring immersive, hands-on science education directly to students at your school and community.
-              </p>
-              <a
-                href="https://forms.gle/nEBfc84qHXxcmT4k8"
-                target="_blank" rel="noopener noreferrer"
-                style={{
-                  display: 'inline-block',
-                  fontFamily: "'JetBrains Mono', monospace", fontSize: 12,
-                  letterSpacing: '3px', textTransform: 'uppercase', textDecoration: 'none',
-                  padding: '16px 40px', borderRadius: 3,
-                  border: '1px solid rgba(168,212,240,0.45)',
-                  color: 'var(--cream)', background: 'rgba(168,212,240,0.1)',
-                  backdropFilter: 'blur(12px)', transition: 'all 0.35s ease',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.2)'; e.currentTarget.style.boxShadow = '0 0 40px rgba(168,212,240,0.2)' }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.1)'; e.currentTarget.style.boxShadow = 'none' }}
-              >
-                Get Started →
-              </a>
-            </motion.div>
-
-            {/* curielead image */}
-            <motion.div
-              initial={{ opacity: 0, x: 24 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-            >
-              <img
-                src="/images/curielead.png"
-                alt="Start a chapter"
-                className="home-chapter-img"
-                style={{
-                  height: 340,
-                  objectFit: 'contain',
-                  filter: 'drop-shadow(0 16px 48px rgba(0,0,0,0.45))',
-                }}
-              />
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
       <style>{`
         @media(max-width:768px){
           .home-section { padding-left: 20px !important; padding-right: 20px !important; padding-top: 72px !important; padding-bottom: 72px !important; }
@@ -1357,8 +1320,6 @@ export default function Home() {
           .home-involved-row { flex-direction: column !important; align-items: center !important; gap: 24px !important; }
           .home-involved-row > div { width: 100% !important; max-width: 360px !important; }
           .home-arrow { display: none !important; }
-          .home-chapter-grid { grid-template-columns: 1fr !important; gap: 20px !important; text-align: center !important; }
-          .home-chapter-img { height: 200px !important; }
           .home-stats-grid > div { padding: 44px 24px !important; }
           .home-partners-row { gap: 24px !important; flex-wrap: wrap !important; }
           .home-partner-logo { width: 100px !important; height: 36px !important; }

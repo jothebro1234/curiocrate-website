@@ -140,8 +140,33 @@ const directors = [
   },
 ]
 
+const productOfficers = [
+  {
+    id: 'po1',
+    name: 'Position Open',
+    role: 'Product Officer',
+    bio: 'Shape the roadmap for CurioCrate\'s kits and tools, working closely with the team to turn ideas into products students love.',
+    emoji: '🧩',
+    color: '#fda4af',
+    glow: 'rgba(253,164,175,0.5)',
+    dark: '#160006',
+    number: '01',
+  },
+  {
+    id: 'po2',
+    name: 'Position Open',
+    role: 'Product Officer',
+    bio: 'Partner with directors and the executive cabinet to prioritize features and keep every kit release on track.',
+    emoji: '🧩',
+    color: '#fda4af',
+    glow: 'rgba(253,164,175,0.5)',
+    dark: '#160006',
+    number: '02',
+  },
+]
+
 // ─── PANEL STAGE (reusable for Cabinet + Directors) ───────────────────────────
-function PanelStage({ members, height = 580, expandFlex = 3.5 }) {
+function PanelStage({ members, height = 580, expandFlex = 3.5, outerMargin = '0 40px' }) {
   const [active, setActive] = useState(null)
   const [hovered, setHovered] = useState(null)
   const focus = hovered ?? active
@@ -199,7 +224,7 @@ function PanelStage({ members, height = 580, expandFlex = 3.5 }) {
       style={{
         display:'flex',
         height,
-        margin:'0 40px',
+        margin: outerMargin,
         borderRadius:20,
         overflow:'hidden',
         border:'1px solid rgba(168,212,240,0.07)',
@@ -429,7 +454,20 @@ export default function Team() {
             title="Specialists who build"
             italic="the mission daily."
           />
-          <PanelStage members={directors} height={540} expandFlex={2.8} />
+          <div className="team-directors-row" style={{ display:'flex', gap:32, margin:'0 40px 12px' }}>
+            <div style={{ flex:7 }} />
+            <div style={{ flex:2, textAlign:'center' }}>
+              <span className="label" style={{ fontSize:9, opacity:0.5 }}>Product Leadership</span>
+            </div>
+          </div>
+          <div className="team-directors-row" style={{ display:'flex', gap:32, margin:'0 40px', alignItems:'stretch' }}>
+            <div style={{ flex:7 }}>
+              <PanelStage members={directors} height={540} expandFlex={2.8} outerMargin={0} />
+            </div>
+            <div style={{ flex:2 }}>
+              <PanelStage members={productOfficers} height={540} expandFlex={1.6} outerMargin={0} />
+            </div>
+          </div>
           <div style={{ textAlign:'center', marginTop:18, marginBottom:0 }}>
             <span className="label" style={{ fontSize:9, opacity:0.3 }}>
               Hover to reveal · Click to lock
@@ -698,6 +736,7 @@ export default function Team() {
           .team-header  { padding: 96px 20px 48px !important; }
           .team-founder { margin: 40px 20px 20px !important; min-height: 70vh !important; }
           .team-join-cta { margin: 40px 20px 72px !important; padding: 40px 24px !important; }
+          .team-directors-row { flex-direction: column !important; margin-left: 0 !important; margin-right: 0 !important; }
         }
       `}</style>
 
