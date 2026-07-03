@@ -35,7 +35,6 @@ const GET_INVOLVED_STEPS = [
     body: 'Join our volunteer network and connect with a team passionate about science education.',
     href: 'https://portal.curiocrate.org',
     ctaLabel: 'Apply Now →',
-    ctaNote: 'Same portal as step 02',
     img: '/images/curiecomputer.png',
   },
   {
@@ -44,7 +43,6 @@ const GET_INVOLVED_STEPS = [
     body: 'Design hands-on science lessons or lead your first kit session with real students.',
     href: 'https://portal.curiocrate.org',
     ctaLabel: 'Apply Now →',
-    ctaNote: 'Same portal as step 01',
     img: '/images/curieteacher.png',
   },
   {
@@ -514,6 +512,23 @@ export default function Home() {
                         zIndex: 20,
                       }}
                     >
+                      <Link
+                        to="/#get-involved"
+                        onClick={() => setKitsMenuOpen(false)}
+                        style={{
+                          display: 'block', padding: '13px 18px',
+                          fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
+                          letterSpacing: '1.5px', textTransform: 'uppercase',
+                          textDecoration: 'none', color: 'rgba(197,227,247,0.85)',
+                          background: 'transparent', transition: 'background 0.2s, color 0.2s',
+                          whiteSpace: 'nowrap',
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.15)'; e.currentTarget.style.color = 'var(--cream)' }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(197,227,247,0.85)' }}
+                      >How Can I Join?</Link>
+
+                      <div style={{ height: 1, background: 'rgba(168,212,240,0.15)', margin: '4px 0' }} />
+
                       <Link
                         to="/kits"
                         onClick={() => setKitsMenuOpen(false)}
@@ -1210,7 +1225,7 @@ export default function Home() {
       </section>
 
       {/* ─── GET INVOLVED ─── */}
-      <section className="home-section" style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
+      <section id="get-involved" className="home-section" style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
         <div style={{
           position: 'absolute', inset: 0,
           backgroundImage: 'radial-gradient(circle, rgba(168,212,240,0.04) 1px, transparent 1px)',
@@ -1297,15 +1312,6 @@ export default function Home() {
                       onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
                       >{step.ctaLabel || 'Learn More →'}</a>
                     )
-                  )}
-
-                  {step.ctaNote && (
-                    <div style={{
-                      marginTop: 8, fontSize: 10, fontStyle: 'italic',
-                      color: 'var(--muted)', opacity: 0.55,
-                    }}>
-                      {step.ctaNote}
-                    </div>
                   )}
                 </motion.div>
 
