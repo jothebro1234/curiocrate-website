@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
 
-function AnimatedAmount({ target = 1000, duration = 1800, onComplete }) {
+function AnimatedAmount({ target = 1000, duration = 2200, holdDelay = 600, onComplete }) {
   const [value, setValue] = useState(0)
   const [pulse, setPulse] = useState(false)
 
@@ -11,19 +11,25 @@ function AnimatedAmount({ target = 1000, duration = 1800, onComplete }) {
     let raf
     const step = (ts) => {
       if (start === null) start = ts
-      const progress = Math.min((ts - start) / duration, 1)
-      const eased = progress >= 1 ? 1 : 1 - Math.pow(2, -10 * progress)
+      const elapsed = ts - start - holdDelay
+      if (elapsed < 0) {
+        raf = requestAnimationFrame(step)
+        return
+      }
+      const progress = Math.min(elapsed / duration, 1)
+      const eased = progress <= 0 ? 0 : Math.pow(2, 10 * (progress - 1))
       setValue(Math.round(eased * target))
       if (progress < 1) {
         raf = requestAnimationFrame(step)
       } else {
+        setValue(target)
         setPulse(true)
         onComplete?.()
       }
     }
     raf = requestAnimationFrame(step)
     return () => cancelAnimationFrame(raf)
-  }, [target, duration])
+  }, [target, duration, holdDelay])
 
   return (
     <motion.span
@@ -148,7 +154,7 @@ export default function KitDevelopment() {
                       textShadow: '0 0 100px rgba(168,212,240,0.6), 0 0 40px rgba(168,212,240,0.3)',
                       marginBottom: 16,
                     }}>
-                      <AnimatedAmount target={1000} duration={1600} onComplete={() => setCountDone(true)} />
+                      <AnimatedAmount target={1000} duration={2200} holdDelay={600} onComplete={() => setCountDone(true)} />
                     </div>
 
                     <motion.div
