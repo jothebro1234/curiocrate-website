@@ -143,9 +143,9 @@ const directors = [
 const productOfficers = [
   {
     id: 'po1',
-    name: 'Product Officer',
-    role: 'Open Position',
-    bio: 'Shape the roadmap for CurioCrate\'s kits and tools, working closely with the team to turn ideas into products students love.',
+    name: 'Cristobal Sanchez',
+    role: 'Product Officer',
+    bio: 'Shapes the roadmap for CurioCrate\'s kits and tools, working closely with the team to turn ideas into products students love.',
     emoji: '🧩',
     color: '#fda4af',
     glow: 'rgba(253,164,175,0.5)',
@@ -154,9 +154,9 @@ const productOfficers = [
   },
   {
     id: 'po2',
-    name: 'Product Officer',
-    role: 'Open Position',
-    bio: 'Partner with directors and the executive cabinet to prioritize features and keep every kit release on track.',
+    name: 'Timothy Cho',
+    role: 'Product Officer',
+    bio: 'Partners with directors and the executive cabinet to prioritize features and keep every kit release on track.',
     emoji: '🧩',
     color: '#fda4af',
     glow: 'rgba(253,164,175,0.5)',
@@ -166,7 +166,7 @@ const productOfficers = [
 ]
 
 // ─── PANEL STAGE (reusable for Cabinet + Directors) ───────────────────────────
-function PanelStage({ members, height = 580, expandFlex = 3.5 }) {
+function PanelStage({ members, height = 580, expandFlex = 3.5, groupBreakAfter = null }) {
   const [active, setActive] = useState(null)
   const [hovered, setHovered] = useState(null)
   const focus = hovered ?? active
@@ -246,6 +246,7 @@ function PanelStage({ members, height = 580, expandFlex = 3.5 }) {
               background: m.dark,
               flexShrink:0,
               borderRight: i < members.length-1 ? '1px solid rgba(168,212,240,0.06)' : 'none',
+              marginRight: i === groupBreakAfter ? 20 : 0,
             }}
           >
             {/* Grid texture */}
@@ -460,7 +461,7 @@ export default function Team() {
               <span className="label" style={{ fontSize:9, opacity:0.5 }}>Product Leadership</span>
             </div>
           </div>
-          <PanelStage members={[...directors, ...productOfficers]} height={540} expandFlex={2.8} />
+          <PanelStage members={[...directors, ...productOfficers]} height={540} expandFlex={2.8} groupBreakAfter={directors.length - 1} />
           <div style={{ textAlign:'center', marginTop:18, marginBottom:0 }}>
             <span className="label" style={{ fontSize:9, opacity:0.3 }}>
               Hover to reveal · Click to lock
