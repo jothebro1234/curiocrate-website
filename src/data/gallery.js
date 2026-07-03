@@ -10,8 +10,8 @@
 //
 // ─── YEAR METADATA ─────────────────────────────────────────────────────────────
 const YEAR_META = {
-  2026: { era: 'Chapter Expansion', color: '#e8c96e', glow: 'rgba(232,201,110,0.5)' },
-  2025: { era: 'Present Day',       color: '#a8d4f0', glow: 'rgba(168,212,240,0.5)' },
+  2026: { era: 'Present Day',       color: '#e8c96e', glow: 'rgba(232,201,110,0.5)' },
+  2025: { era: 'Chapter Expansion', color: '#a8d4f0', glow: 'rgba(168,212,240,0.5)' },
   2024: { era: 'The Mission Grows', color: '#c5b4f8', glow: 'rgba(197,180,248,0.5)' },
   2023: { era: 'The Beginning',     color: '#a8e8c8', glow: 'rgba(168,232,200,0.5)' },
 }

@@ -6,10 +6,13 @@ import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import PageTransition from '../components/PageTransition'
+import AutoplayVideo from '../components/AutoplayVideo'
 import { stats } from '../data/stats'
 import { news } from '../data/news'
 import { chapters as staticChapters } from '../data/chapters'
 import { chapterLocations } from '../data/chapterLocations'
+
+const MESSAGE_FROM_PRES_URL = 'https://pub-e7374d03fa9c42bfb531206a5e81830b.r2.dev/messagefrompres.mp4'
 
 const HERO_PHOTOS = [
   '/images/IMG_3920.jpg',
@@ -497,7 +500,7 @@ export default function Home() {
                     >
                       {[
                         { to: '/kits', label: 'View Kits' },
-                        { to: '/initiatives/kits', label: 'Become a High School Kit Builder!' },
+                        { to: '/initiatives/kits', label: 'Become a High School Kit Builder' },
                       ].map(item => (
                         <Link
                           key={item.to}
@@ -1261,6 +1264,24 @@ export default function Home() {
               </div>
             ))}
           </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            style={{ maxWidth: 640, margin: '80px auto 0', textAlign: 'center' }}
+          >
+            <div className="label" style={{ marginBottom: 14 }}>A Message From Our President</div>
+            <h3 style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: 'clamp(24px,3vw,34px)',
+              fontWeight: 300, color: 'var(--cream)', lineHeight: 1.2, marginBottom: 28,
+            }}>
+              Why we do this <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>work.</em>
+            </h3>
+            <AutoplayVideo src={MESSAGE_FROM_PRES_URL} />
+          </motion.div>
         </div>
       </section>
 

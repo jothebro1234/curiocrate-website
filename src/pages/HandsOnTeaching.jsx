@@ -1,6 +1,9 @@
 import { motion } from 'framer-motion'
 import { featured } from '../data/gallery'
 import PageTransition from '../components/PageTransition'
+import AutoplayVideo from '../components/AutoplayVideo'
+
+const MESSAGE_FROM_PRES_URL = 'https://pub-e7374d03fa9c42bfb531206a5e81830b.r2.dev/messagefrompres.mp4'
 
 const PARTS = [
   {
@@ -23,44 +26,56 @@ export default function HandsOnTeaching() {
 
       {/* Header */}
       <section style={{ padding: '140px 48px 80px', position: 'relative', zIndex: 1 }}>
-        <div style={{ maxWidth: 900, margin: '0 auto' }}>
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 9, letterSpacing: '4px', textTransform: 'uppercase',
-              color: 'var(--muted)', opacity: 0.45, marginBottom: 18,
-            }}
-          >
-            Initiatives
-          </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.05 }}
-            style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: 'clamp(40px, 6vw, 80px)',
-              fontWeight: 300, color: 'var(--cream)',
-              lineHeight: 1.05, letterSpacing: '-0.03em', margin: '0 0 20px',
-            }}
-          >
-            Hands-On<br/>
-            <em style={{ color: 'var(--pastel1)' }}>Teaching.</em>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.12 }}
-            style={{
-              fontSize: 16, color: 'var(--muted)', lineHeight: 1.8,
-              maxWidth: 560, margin: 0, opacity: 0.85,
-            }}
-          >
-            We bring science directly to communities. From school classrooms to community centers, CurioCrate volunteers run immersive, experiment-based sessions that make learning real and memorable.
-          </motion.p>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div className="hands-on-header-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
+            <div>
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 9, letterSpacing: '4px', textTransform: 'uppercase',
+                  color: 'var(--muted)', opacity: 0.45, marginBottom: 18,
+                }}
+              >
+                Initiatives
+              </motion.div>
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.05 }}
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: 'clamp(40px, 6vw, 80px)',
+                  fontWeight: 300, color: 'var(--cream)',
+                  lineHeight: 1.05, letterSpacing: '-0.03em', margin: '0 0 20px',
+                }}
+              >
+                Hands-On<br/>
+                <em style={{ color: 'var(--pastel1)' }}>Teaching.</em>
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.12 }}
+                style={{
+                  fontSize: 16, color: 'var(--muted)', lineHeight: 1.8,
+                  maxWidth: 560, margin: 0, opacity: 0.85,
+                }}
+              >
+                We bring science directly to communities. From school classrooms to community centers, CurioCrate volunteers run immersive, experiment-based sessions that make learning real and memorable.
+              </motion.p>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 32 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.9, delay: 0.1 }}
+            >
+              <AutoplayVideo src={MESSAGE_FROM_PRES_URL} />
+            </motion.div>
+          </div>
         </div>
       </section>
 
