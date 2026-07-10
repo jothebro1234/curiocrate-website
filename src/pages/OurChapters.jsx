@@ -135,12 +135,14 @@ function ChapterModal({ chapter, onClose }) {
                 fontFamily: "'JetBrains Mono', monospace", fontSize: 10,
                 letterSpacing: '1.5px', textTransform: 'uppercase', textDecoration: 'none',
                 padding: '7px 14px', borderRadius: 20,
-                border: '1px solid rgba(168,212,240,0.3)',
-                color: 'var(--pastel1)', opacity: 0.85,
+                border: '1px solid transparent',
+                background: 'linear-gradient(45deg, #f9ce34 0%, #ee2a7b 40%, #6228d7 100%)',
+                color: '#fff', opacity: 0.92,
+                boxShadow: '0 4px 16px rgba(238,42,123,0.35)',
                 transition: 'all 0.25s ease',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.08)'; e.currentTarget.style.opacity = 1 }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.opacity = 0.85 }}
+              onMouseEnter={e => { e.currentTarget.style.opacity = 1; e.currentTarget.style.boxShadow = '0 6px 22px rgba(238,42,123,0.5)' }}
+              onMouseLeave={e => { e.currentTarget.style.opacity = 0.92; e.currentTarget.style.boxShadow = '0 4px 16px rgba(238,42,123,0.35)' }}
             ><InstagramIcon /> Instagram</a>
           )}
         </div>

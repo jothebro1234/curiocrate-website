@@ -1140,80 +1140,80 @@ export default function Home() {
             </h2>
           </motion.div>
 
-          {/* Map + Stats side by side */}
+          {/* Map — full width */}
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 1 }}
             style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 260px',
               height: 480,
               borderRadius: 20, overflow: 'hidden',
               border: '1px solid rgba(168,212,240,0.12)',
               boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
             }}
           >
-            {/* Map */}
             <LeafletMap chaptersData={chaptersData} />
-
-            {/* Vertical stats — scrollable */}
-            <div style={{
-              display: 'flex', flexDirection: 'column',
-              borderLeft: '1px solid rgba(168,212,240,0.1)',
-              height: 480, overflowY: 'auto', overflowX: 'hidden',
-            }}>
-              {stats.map((s, i) => (
-                <motion.div
-                  key={s.label}
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1, duration: 0.7 }}
-                  onClick={() => setSelectedStat(s)}
-                  style={{
-                    flexShrink: 0, minHeight: 120, padding: '18px 20px',
-                    position: 'relative', overflow: 'hidden',
-                    cursor: 'pointer',
-                    borderBottom: i < stats.length - 1 ? '1px solid rgba(168,212,240,0.08)' : 'none',
-                    background: 'rgba(6,12,32,0.7)',
-                    transition: 'background 0.25s',
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.05)' }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(6,12,32,0.7)' }}
-                >
-                  <div style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: 'clamp(32px,3.5vw,44px)',
-                    fontWeight: 300, lineHeight: 0.95,
-                    color: 'var(--pastel1)',
-                    textShadow: '0 0 40px rgba(168,212,240,0.5)',
-                    letterSpacing: '-0.03em',
-                    marginBottom: 6,
-                  }}>{s.value}</div>
-                  <div style={{
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 700, fontSize: 10,
-                    color: 'var(--cream)', textTransform: 'uppercase',
-                    letterSpacing: '1.8px', marginBottom: 5,
-                  }}>{s.label}</div>
-                  <div style={{
-                    fontSize: 11, color: 'var(--muted)', lineHeight: 1.55,
-                    opacity: 0.65,
-                    display: '-webkit-box', WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                  }}>{s.description}</div>
-                  <div style={{
-                    marginTop: 6,
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 7, letterSpacing: '1.5px',
-                    color: 'rgba(168,212,240,0.25)', textTransform: 'uppercase',
-                  }}>tap for details</div>
-                </motion.div>
-              ))}
-            </div>
           </motion.div>
+
+          {/* Stats — horizontal scroll below the map */}
+          <div style={{
+            display: 'flex',
+            marginTop: 20,
+            overflowX: 'auto', overflowY: 'hidden',
+            borderRadius: 16,
+            border: '1px solid rgba(168,212,240,0.12)',
+            boxShadow: '0 16px 48px rgba(0,0,0,0.35)',
+          }}>
+            {stats.map((s, i) => (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.7 }}
+                onClick={() => setSelectedStat(s)}
+                style={{
+                  flex: '0 0 240px', minWidth: 240, padding: '22px 22px',
+                  position: 'relative', overflow: 'hidden',
+                  cursor: 'pointer',
+                  borderRight: i < stats.length - 1 ? '1px solid rgba(168,212,240,0.08)' : 'none',
+                  background: 'rgba(6,12,32,0.7)',
+                  transition: 'background 0.25s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.05)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(6,12,32,0.7)' }}
+              >
+                <div style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: 'clamp(32px,3.5vw,44px)',
+                  fontWeight: 300, lineHeight: 0.95,
+                  color: 'var(--pastel1)',
+                  textShadow: '0 0 40px rgba(168,212,240,0.5)',
+                  letterSpacing: '-0.03em',
+                  marginBottom: 6,
+                }}>{s.value}</div>
+                <div style={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontWeight: 700, fontSize: 10,
+                  color: 'var(--cream)', textTransform: 'uppercase',
+                  letterSpacing: '1.8px', marginBottom: 5,
+                }}>{s.label}</div>
+                <div style={{
+                  fontSize: 11, color: 'var(--muted)', lineHeight: 1.55,
+                  opacity: 0.65,
+                  display: '-webkit-box', WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                }}>{s.description}</div>
+                <div style={{
+                  marginTop: 6,
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 7, letterSpacing: '1.5px',
+                  color: 'rgba(168,212,240,0.25)', textTransform: 'uppercase',
+                }}>tap for details</div>
+              </motion.div>
+            ))}
+          </div>
 
           {/* Stat detail modal */}
           <AnimatePresence>
