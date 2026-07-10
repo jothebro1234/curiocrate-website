@@ -10,6 +10,12 @@ function resolveLogoUrl(url) {
   return url
 }
 
+function resolvePhotoUrl(url) {
+  if (!url) return ''
+  if (!url.startsWith('http')) return `/photos/chapters/${url}`
+  return url
+}
+
 function ChapterModal({ chapter, onClose }) {
   const [imgError, setImgError] = useState(false)
   const [presidentImgError, setPresidentImgError] = useState(false)
@@ -17,6 +23,7 @@ function ChapterModal({ chapter, onClose }) {
     .split(' ').filter(w => w.length > 2).slice(0, 2)
     .map(w => w[0].toUpperCase()).join('')
   const logoSrc = resolveLogoUrl(chapter.logo)
+  const presidentPhotoSrc = resolvePhotoUrl(chapter.presidentPhoto)
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -25,8 +32,7 @@ function ChapterModal({ chapter, onClose }) {
     return () => { window.removeEventListener('keydown', fn); document.body.style.overflow = '' }
   }, [onClose])
 
-  const ROLES = [
-    { title: 'President', name: chapter.president, photo: chapter.presidentPhoto },
+  const CABINET_ROLES = [
     { title: 'Vice President', name: chapter.vicePresident },
     { title: 'Treasurer', name: chapter.treasurer },
     { title: 'Secretary', name: chapter.secretary },
@@ -63,8 +69,8 @@ function ChapterModal({ chapter, onClose }) {
           boxShadow: '0 40px 120px rgba(0,0,0,0.8)',
         }}
       >
-        {/* Header */}
-        <div style={{ padding: '36px 36px 28px', borderBottom: '1px solid rgba(168,212,240,0.08)', position: 'relative' }}>
+        {/* Header — school context */}
+        <div style={{ padding: '28px 36px 20px', position: 'relative' }}>
           <button onClick={onClose} style={{
             position: 'absolute', top: 20, right: 20,
             background: 'none', border: '1px solid rgba(168,212,240,0.2)',
@@ -72,67 +78,108 @@ function ChapterModal({ chapter, onClose }) {
             padding: '7px 14px', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '2px',
           }}>ESC · CLOSE</button>
 
-          <div style={{
-            width: 68, height: 68, borderRadius: '50%',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: (logoSrc && !imgError) ? 'rgba(255,255,255,0.96)' : 'rgba(168,212,240,0.08)',
-            border: '2px solid rgba(168,212,240,0.2)',
-            overflow: 'hidden', marginBottom: 18,
-          }}>
-            {logoSrc && !imgError ? (
-              <img src={logoSrc} alt={chapter.school}
-                style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 8 }}
-                onError={() => setImgError(true)} />
-            ) : (
-              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, fontWeight: 300, color: 'var(--pastel1)' }}>{initials || '?'}</span>
-            )}
-          </div>
-
-          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 400, color: 'var(--cream)', lineHeight: 1.2, marginBottom: 8 }}>
-            {chapter.school}
-          </div>
-          {[chapter.city, chapter.state].filter(Boolean).length > 0 && (
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'var(--muted)', letterSpacing: '1.5px', textTransform: 'uppercase', opacity: 0.5 }}>
-              {[chapter.city, chapter.state].filter(Boolean).join(', ')}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{
+              width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: (logoSrc && !imgError) ? 'rgba(255,255,255,0.96)' : 'rgba(168,212,240,0.08)',
+              border: '1.5px solid rgba(168,212,240,0.2)',
+              overflow: 'hidden',
+            }}>
+              {logoSrc && !imgError ? (
+                <img src={logoSrc} alt={chapter.school}
+                  style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 5 }}
+                  onError={() => setImgError(true)} />
+              ) : (
+                <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 15, fontWeight: 300, color: 'var(--pastel1)' }}>{initials || '?'}</span>
+              )}
             </div>
-          )}
+
+            <div>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, color: 'var(--cream)', lineHeight: 1.2 }}>
+                {chapter.school}
+              </div>
+              {[chapter.city, chapter.state].filter(Boolean).length > 0 && (
+                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: 'var(--muted)', letterSpacing: '1.5px', textTransform: 'uppercase', opacity: 0.5, marginTop: 2 }}>
+                  {[chapter.city, chapter.state].filter(Boolean).join(', ')}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
+        {/* President Spotlight */}
+        {chapter.president && (
+          <div style={{
+            padding: '20px 36px 40px', textAlign: 'center', position: 'relative', overflow: 'hidden',
+          }}>
+            {/* Aura glow behind photo */}
+            <div style={{
+              position: 'absolute', top: 4, left: '50%', transform: 'translateX(-50%)',
+              width: 280, height: 280, borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(168,212,240,0.22) 0%, rgba(168,212,240,0.06) 45%, transparent 72%)',
+              pointerEvents: 'none',
+            }} />
+
+            <div style={{
+              width: 132, height: 132, borderRadius: '50%', margin: '0 auto',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: (presidentPhotoSrc && !presidentImgError) ? 'rgba(255,255,255,0.96)' : 'rgba(168,212,240,0.08)',
+              border: '2px solid rgba(168,212,240,0.35)',
+              boxShadow: '0 0 40px rgba(168,212,240,0.35), 0 0 80px rgba(168,212,240,0.15)',
+              overflow: 'hidden', position: 'relative',
+            }}>
+              {presidentPhotoSrc && !presidentImgError ? (
+                <img src={presidentPhotoSrc} alt={chapter.president}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  onError={() => setPresidentImgError(true)} />
+              ) : (
+                <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 44, fontWeight: 300, color: 'var(--pastel1)' }}>
+                  {chapter.president?.[0]?.toUpperCase() || '?'}
+                </span>
+              )}
+            </div>
+
+            <div style={{
+              fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
+              color: 'var(--pastel1)', opacity: 0.7, marginTop: 20, position: 'relative',
+            }}>President</div>
+            <div style={{
+              fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400,
+              color: 'var(--cream)', lineHeight: 1.2, marginTop: 6, position: 'relative',
+            }}>{chapter.president}</div>
+          </div>
+        )}
+
         {/* Leadership Cabinet */}
-        <div style={{ padding: '28px 36px 40px' }}>
-          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--muted)', opacity: 0.45, marginBottom: 24 }}>
+        <div style={{ padding: '0 36px 40px', borderTop: '1px solid rgba(168,212,240,0.08)' }}>
+          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--muted)', opacity: 0.45, margin: '28px 0 24px' }}>
             Leadership Cabinet
           </div>
 
-          {ROLES.length === 0 ? (
-            <p style={{ fontSize: 14, color: 'var(--muted)', opacity: 0.5, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif" }}>Cabinet details coming soon.</p>
+          {CABINET_ROLES.length === 0 ? (
+            <p style={{ fontSize: 14, color: 'var(--muted)', opacity: 0.5, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif" }}>More cabinet details coming soon.</p>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {ROLES.map((role, i) => (
+              {CABINET_ROLES.map(role => (
                 <div key={role.title} style={{
                   display: 'flex', alignItems: 'center', gap: 16,
                   padding: '14px 18px',
-                  background: i === 0 ? 'rgba(168,212,240,0.06)' : 'rgba(168,212,240,0.02)',
-                  border: i === 0 ? '1px solid rgba(168,212,240,0.14)' : '1px solid rgba(168,212,240,0.05)',
+                  background: 'rgba(168,212,240,0.02)',
+                  border: '1px solid rgba(168,212,240,0.05)',
                   borderRadius: 12,
                 }}>
-                  {i === 0 && role.photo && !presidentImgError ? (
-                    <img src={role.photo} alt={role.name}
-                      style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover', border: '1px solid rgba(168,212,240,0.2)', flexShrink: 0 }}
-                      onError={() => setPresidentImgError(true)} />
-                  ) : (
-                    <div style={{
-                      width: i === 0 ? 44 : 36, height: i === 0 ? 44 : 36,
-                      borderRadius: '50%', flexShrink: 0,
-                      background: 'rgba(168,212,240,0.08)',
-                      border: '1px solid rgba(168,212,240,0.15)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}>
-                      <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: i === 0 ? 18 : 14, color: 'var(--pastel1)', opacity: 0.7 }}>
-                        {role.name?.[0]?.toUpperCase() || '?'}
-                      </span>
-                    </div>
-                  )}
+                  <div style={{
+                    width: 36, height: 36,
+                    borderRadius: '50%', flexShrink: 0,
+                    background: 'rgba(168,212,240,0.08)',
+                    border: '1px solid rgba(168,212,240,0.15)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 14, color: 'var(--pastel1)', opacity: 0.7 }}>
+                      {role.name?.[0]?.toUpperCase() || '?'}
+                    </span>
+                  </div>
                   <div>
                     <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: 14, color: 'var(--cream)', marginBottom: 3 }}>
                       {role.name}
