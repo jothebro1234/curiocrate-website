@@ -16,6 +16,22 @@ function resolvePhotoUrl(url) {
   return url
 }
 
+function resolveInstagramUrl(value) {
+  if (!value) return ''
+  if (value.startsWith('http')) return value
+  return `https://instagram.com/${value.replace(/^@/, '').trim()}`
+}
+
+function InstagramIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}
+
 function ChapterModal({ chapter, onClose }) {
   const [imgError, setImgError] = useState(false)
   const [presidentImgError, setPresidentImgError] = useState(false)
@@ -24,6 +40,9 @@ function ChapterModal({ chapter, onClose }) {
     .map(w => w[0].toUpperCase()).join('')
   const logoSrc = resolveLogoUrl(chapter.logo)
   const presidentPhotoSrc = resolvePhotoUrl(chapter.presidentPhoto)
+  const instagramUrl = resolveInstagramUrl(chapter.instagram)
+  const directorsList = (chapter.authorizedDirectors || '')
+    .split(',').map(d => d.trim()).filter(Boolean)
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -106,6 +125,24 @@ function ChapterModal({ chapter, onClose }) {
               )}
             </div>
           </div>
+
+          {instagramUrl && (
+            <a
+              href={instagramUrl} target="_blank" rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                marginTop: 16,
+                fontFamily: "'JetBrains Mono', monospace", fontSize: 10,
+                letterSpacing: '1.5px', textTransform: 'uppercase', textDecoration: 'none',
+                padding: '7px 14px', borderRadius: 20,
+                border: '1px solid rgba(168,212,240,0.3)',
+                color: 'var(--pastel1)', opacity: 0.85,
+                transition: 'all 0.25s ease',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.08)'; e.currentTarget.style.opacity = 1 }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.opacity = 0.85 }}
+            ><InstagramIcon /> Instagram</a>
+          )}
         </div>
 
         {/* President Spotlight */}
@@ -148,6 +185,14 @@ function ChapterModal({ chapter, onClose }) {
               fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400,
               color: 'var(--cream)', lineHeight: 1.2, marginTop: 6, position: 'relative',
             }}>{chapter.president}</div>
+
+            {chapter.presidentMessage && (
+              <div style={{
+                fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: 16,
+                color: 'var(--muted)', opacity: 0.8, lineHeight: 1.65, maxWidth: 420,
+                margin: '16px auto 0', position: 'relative',
+              }}>“{chapter.presidentMessage}”</div>
+            )}
           </div>
         )}
 
@@ -190,6 +235,17 @@ function ChapterModal({ chapter, onClose }) {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {directorsList.length > 0 && (
+            <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid rgba(168,212,240,0.07)' }}>
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--muted)', opacity: 0.4, marginBottom: 8 }}>
+                Directors
+              </div>
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'var(--muted)', opacity: 0.6, lineHeight: 1.7 }}>
+                {directorsList.join(', ')}
+              </div>
             </div>
           )}
 

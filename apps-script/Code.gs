@@ -37,11 +37,12 @@
  * UPDATES SHEET columns (A–F):
  *   A=Date  B=Category  C=Title  D=Body  E=Image (public URL)  F=Link (optional URL)
  *
- * CHAPTERS SHEET columns (A–P):
+ * CHAPTERS SHEET columns (A–R):
  *   A=Email  B=Name  C=School  D=Logo  E=State  F=City
  *   G=PresidentPhoto  H=VicePresident  I=Treasurer  J=Secretary  K=SocialMedia
  *   L=AuthorizedDirectors (comma-separated emails)
  *   M=Type  N=Latitude  O=Longitude  P=Radius (km, default 12)
+ *   Q=Instagram (handle like "@curiocrate" or a full URL)  R=PresidentMessage (short quote)
  *   (Type: "Chapter" or "Impact". Leave blank = "Chapter". Only rows with
  *    Type="Chapter" (or blank) show in the "Our Chapters" list/cards — set
  *    Type="Impact" for one-off teaching locations that should only appear
@@ -76,7 +77,7 @@ function initSheetHeaders(sh, name) {
     const headers = {
         Curriculum: ['AssignmentName','DueDate','Hours','Contributors','SlidesLink','StartDate','MaxVolunteers','RegisteredVolunteers','Instructions','CardColor','CardDeco','CardLabel','ChapterLabel','DurationDays','TriggeredAt','PostedAt'],
         Events:     ['EventName','Date','Hours','Attendees','IsAssembly','IsLeadership','MaxVolunteers','RegisteredList','SignupCloseDate','Instructions','ChapterLabel','CardColor','CardDeco','CardLabel','RequiresYMCA','PostedAt'],
-        Chapters:   ['Email','Name','School','Logo','State','City','PresidentPhoto','VicePresident','Treasurer','Secretary','SocialMedia','AuthorizedDirectors','Type','Latitude','Longitude','Radius'],
+        Chapters:   ['Email','Name','School','Logo','State','City','PresidentPhoto','VicePresident','Treasurer','Secretary','SocialMedia','AuthorizedDirectors','Type','Latitude','Longitude','Radius','Instagram','PresidentMessage'],
         Directors:  ['Email','Name','Role'],
     };
     if (headers[name]) sh.appendRow(headers[name]);
@@ -117,7 +118,7 @@ function ensureMissingHeaders(sh, name) {
             }
         });
     } else if (name === 'Chapters') {
-        const expected = ['Email','Name','School','Logo','State','City','PresidentPhoto','VicePresident','Treasurer','Secretary','SocialMedia','AuthorizedDirectors','Type','Latitude','Longitude','Radius'];
+        const expected = ['Email','Name','School','Logo','State','City','PresidentPhoto','VicePresident','Treasurer','Secretary','SocialMedia','AuthorizedDirectors','Type','Latitude','Longitude','Radius','Instagram','PresidentMessage'];
         const lastCol = Math.max(sh.getLastColumn(), expected.length);
         const current = sh.getRange(1, 1, 1, lastCol).getValues()[0];
         expected.forEach(function(col, i) {
@@ -252,6 +253,8 @@ function getChapters() {
                     latitude:            isNaN(lat) ? null : lat,
                     longitude:           isNaN(lng) ? null : lng,
                     radius:              parseFloat(r[15]) || 12,
+                    instagram:           String(r[16] || '').trim(),
+                    presidentMessage:    String(r[17] || '').trim(),
                 };
             });
         return ContentService.createTextOutput(JSON.stringify({ ok: true, chapters: chapters }))
