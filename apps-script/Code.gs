@@ -1,12 +1,19 @@
 /**
  * Curio Crate Volunteer Portal — Google Apps Script Backend
  *
+ * This ONE script is deployed to a single /exec URL that BOTH the Volunteer
+ * Portal and the curiocrate.org marketing site call. Do not fork this file —
+ * any feature either site needs must live here, in this single source.
+ *
  * SETUP:
  * 1. Open your Google Sheet → Extensions → Apps Script
  * 2. Paste this entire file into Code.gs (replace existing content)
  * 3. Deploy as Web App (Execute as: Me, Anyone can access) → copy /exec URL → paste into config.js APPS_SCRIPT_URL
  * 4. Add form-submit trigger: Triggers (clock icon) → + Add Trigger
  *    Function: onFormSubmit | From spreadsheet | On form submit
+ * 5. After ANY edit to this file, you must create a NEW deployment version
+ *    (Deploy → Manage deployments → pencil icon → Version: New version → Deploy)
+ *    for the existing /exec URL to pick up the change. Saving alone is not enough.
  *
  * VOLUNTEERS SHEET columns (A–O):
  *   A=Name  B=Discord  C=School  D=Avatar  E=Email
@@ -14,29 +21,36 @@
  *   J=SelectYourMainSpecialty  K=OnTimeRate  L=LastContact  M=TotalHours  N=HoursGoal
  *   O=YMCAFormURL
  *
- * CURRICULUM SHEET columns (A–M):
+ * CURRICULUM SHEET columns (A–P):
  *   A=AssignmentName  B=DueDate  C=Hours  D=Contributors
  *   E=SlidesLink  F=StartDate(LockDate)  G=MaxVolunteers  H=RegisteredVolunteers
  *   I=Instructions  J=CardColor  K=CardDeco  L=CardLabel  M=ChapterLabel
+ *   N=DurationDays(working-period mode)  O=TriggeredAt(when the duration countdown started)
+ *   P=PostedAt(creation timestamp — used to sort lists by posted recency)
  *
- * EVENTS SHEET columns (A–O):
+ * EVENTS SHEET columns (A–P):
  *   A=EventName  B=Date  C=Hours  D=Attendees  E=IsAssembly  F=IsLeadership
  *   G=MaxVolunteers  H=RegisteredList  I=SignupCloseDate  J=Instructions  K=ChapterLabel
  *   L=CardColor  M=CardDeco  N=CardLabel  O=RequiresYMCA
+ *   P=PostedAt(creation timestamp — used to sort lists by posted recency)
  *
  * UPDATES SHEET columns (A–F):
  *   A=Date  B=Category  C=Title  D=Body  E=Image (public URL)  F=Link (optional URL)
  *
- * CHAPTERS SHEET columns (A–O):
+ * CHAPTERS SHEET columns (A–P):
  *   A=Email  B=Name  C=School  D=Logo  E=State  F=City
  *   G=PresidentPhoto  H=VicePresident  I=Treasurer  J=Secretary  K=SocialMedia
  *   L=AuthorizedDirectors (comma-separated emails)
  *   M=Type  N=Latitude  O=Longitude  P=Radius (km, default 12)
- *   (Type: "Chapter" or "Impact". Leave blank = "Chapter".)
+ *   (Type: "Chapter" or "Impact". Leave blank = "Chapter". Only rows with
+ *    Type="Chapter" (or blank) show in the "Our Chapters" list/cards — set
+ *    Type="Impact" for one-off teaching locations that should only appear
+ *    as map markers, not chapter cards.)
  *   (Radius: area of impact in kilometres. Leave blank = 12 km.)
  *
  * DIRECTORS SHEET columns (A–C):
- *   A=Email  B=Name  C=Role
+ *   A=Email  B=Name  C=Role (e.g. doc, doo, dop, president, cef, vp, sec, tres, cpo, hr, mr, trial;
+ *            comma-separated to grant multiple roles, e.g. "doc, doo" for combined DOC+DOO access)
  */
 
 const SS = SpreadsheetApp.getActiveSpreadsheet();
@@ -60,8 +74,8 @@ function getSheet(name) {
 
 function initSheetHeaders(sh, name) {
     const headers = {
-        Curriculum: ['AssignmentName','DueDate','Hours','Contributors','SlidesLink','StartDate','MaxVolunteers','RegisteredVolunteers','Instructions','CardColor','CardDeco','CardLabel','ChapterLabel'],
-        Events:     ['EventName','Date','Hours','Attendees','IsAssembly','IsLeadership','MaxVolunteers','RegisteredList','SignupCloseDate','Instructions','ChapterLabel','CardColor','CardDeco','CardLabel','RequiresYMCA'],
+        Curriculum: ['AssignmentName','DueDate','Hours','Contributors','SlidesLink','StartDate','MaxVolunteers','RegisteredVolunteers','Instructions','CardColor','CardDeco','CardLabel','ChapterLabel','DurationDays','TriggeredAt','PostedAt'],
+        Events:     ['EventName','Date','Hours','Attendees','IsAssembly','IsLeadership','MaxVolunteers','RegisteredList','SignupCloseDate','Instructions','ChapterLabel','CardColor','CardDeco','CardLabel','RequiresYMCA','PostedAt'],
         Chapters:   ['Email','Name','School','Logo','State','City','PresidentPhoto','VicePresident','Treasurer','Secretary','SocialMedia','AuthorizedDirectors','Type','Latitude','Longitude','Radius'],
         Directors:  ['Email','Name','Role'],
     };
@@ -85,7 +99,25 @@ function findOrAddColumn(sh, headerName) {
 /* Fills in any missing header cells for sheets that existed before new columns were added */
 function ensureMissingHeaders(sh, name) {
     if (name === 'Events') {
-        const expected = ['EventName','Date','Hours','Attendees','IsAssembly','IsLeadership','MaxVolunteers','RegisteredList','SignupCloseDate','Instructions','ChapterLabel','CardColor','CardDeco','CardLabel','RequiresYMCA'];
+        const expected = ['EventName','Date','Hours','Attendees','IsAssembly','IsLeadership','MaxVolunteers','RegisteredList','SignupCloseDate','Instructions','ChapterLabel','CardColor','CardDeco','CardLabel','RequiresYMCA','PostedAt'];
+        const lastCol = Math.max(sh.getLastColumn(), expected.length);
+        const current = sh.getRange(1, 1, 1, lastCol).getValues()[0];
+        expected.forEach(function(col, i) {
+            if (!current[i] || current[i].toString().trim() === '') {
+                sh.getRange(1, i + 1).setValue(col);
+            }
+        });
+    } else if (name === 'Curriculum') {
+        const expected = ['AssignmentName','DueDate','Hours','Contributors','SlidesLink','StartDate','MaxVolunteers','RegisteredVolunteers','Instructions','CardColor','CardDeco','CardLabel','ChapterLabel','DurationDays','TriggeredAt','PostedAt'];
+        const lastCol = Math.max(sh.getLastColumn(), expected.length);
+        const current = sh.getRange(1, 1, 1, lastCol).getValues()[0];
+        expected.forEach(function(col, i) {
+            if (!current[i] || current[i].toString().trim() === '') {
+                sh.getRange(1, i + 1).setValue(col);
+            }
+        });
+    } else if (name === 'Chapters') {
+        const expected = ['Email','Name','School','Logo','State','City','PresidentPhoto','VicePresident','Treasurer','Secretary','SocialMedia','AuthorizedDirectors','Type','Latitude','Longitude','Radius'];
         const lastCol = Math.max(sh.getLastColumn(), expected.length);
         const current = sh.getRange(1, 1, 1, lastCol).getValues()[0];
         expected.forEach(function(col, i) {
@@ -139,6 +171,8 @@ function doPost(e) {
     try {
         ensureMissingHeaders(getSheet(SHEET_EVENTS),     'Events');
         ensureMissingHeaders(getSheet(SHEET_VOLUNTEERS), 'Volunteers');
+        ensureMissingHeaders(getSheet(SHEET_CURRICULUM), 'Curriculum');
+        ensureMissingHeaders(getSheet(SHEET_CHAPTERS),   'Chapters');
         const body   = JSON.parse(e.postData.contents);
         const result = route(body);
         return ContentService.createTextOutput(JSON.stringify({ ok: true, result }))
@@ -194,6 +228,7 @@ function getChapters() {
         const sheet = SS.getSheetByName(SHEET_CHAPTERS);
         if (!sheet) return ContentService.createTextOutput(JSON.stringify({ ok: false, error: 'Chapters sheet not found' }))
             .setMimeType(ContentService.MimeType.JSON);
+        ensureMissingHeaders(sheet, 'Chapters');
         const rows = sheet.getDataRange().getValues();
         const chapters = rows.slice(1)
             .filter(function(r) { return String(r[2]).trim(); })
@@ -235,6 +270,7 @@ function route(body) {
         case 'edit_curriculum':        return editCurriculum(body);
         case 'register_curriculum':    return registerCurriculum(body);
         case 'unregister_curriculum':  return unregisterCurriculum(body);
+        case 'start_curriculum':       return startCurriculum(body);
         case 'give_hours':             return giveHours(body);
         /* Events */
         case 'record_event':           return recordEvent(body);
@@ -270,6 +306,9 @@ function createCurriculum(b) {
         b.cardDeco             || '',
         b.cardLabel            || '',
         b.chapterLabel         || '',
+        b.durationDays         || '',
+        '',   // TriggeredAt — set by registerCurriculum (auto-fill) or startCurriculum (manual)
+        new Date(),   // PostedAt — used to sort lists by posted recency
     ]);
     return 'Curriculum assignment created: ' + b.assignmentName;
 }
@@ -296,6 +335,7 @@ function editCurriculum(b) {
     if (f.cardDeco      !== undefined) sh.getRange(rowIdx, 11).setValue(f.cardDeco);
     if (f.cardLabel     !== undefined) sh.getRange(rowIdx, 12).setValue(f.cardLabel);
     if (f.chapterLabel  !== undefined) sh.getRange(rowIdx, 13).setValue(f.chapterLabel);
+    if (f.durationDays  !== undefined) sh.getRange(rowIdx, 14).setValue(f.durationDays);
     return 'Updated: ' + b.assignmentName;
 }
 
@@ -311,6 +351,8 @@ function registerCurriculum(b) {
         }
     }
     if (rowIdx < 0) throw new Error('Assignment not found: ' + b.assignmentName);
+
+    if (rowData[14]) throw new Error('Registration is locked — this assignment has already started.');
 
     const startDatePart = datePartStr(rowData[5]);
     const today = todayStr();
@@ -329,6 +371,16 @@ function registerCurriculum(b) {
         regList.push(b.volunteerName);
         sh.getRange(rowIdx, 8).setValue(regList.join(', '));
     }
+
+    // Auto-trigger the duration-based deadline once every spot is filled
+    const durationDays = parseFloat(rowData[13]) || 0;
+    if (durationDays > 0 && maxVols > 0 && regList.length >= maxVols) {
+        const now = new Date();
+        const due = new Date(now.getTime() + durationDays * 86400000);
+        sh.getRange(rowIdx, 15).setValue(now);
+        sh.getRange(rowIdx, 2).setValue(due);
+    }
+
     return 'Registered: ' + b.volunteerName;
 }
 
@@ -345,6 +397,8 @@ function unregisterCurriculum(b) {
     }
     if (rowIdx < 0) throw new Error('Assignment not found: ' + b.assignmentName);
 
+    if (rowData[14]) throw new Error('This assignment has already started — contact your DOC to be removed.');
+
     const startDatePart = datePartStr(rowData[5]);
     const today = todayStr();
     if (startDatePart && startDatePart < today) {
@@ -356,6 +410,31 @@ function unregisterCurriculum(b) {
     const filtered = regList.filter(function(n) { return n.toLowerCase() !== lower; });
     sh.getRange(rowIdx, 8).setValue(filtered.join(', '));
     return 'Unregistered: ' + b.volunteerName;
+}
+
+function startCurriculum(b) {
+    const sh   = SS.getSheetByName(SHEET_CURRICULUM);
+    if (!sh) throw new Error('Curriculum sheet not found.');
+    const data = sh.getDataRange().getValues();
+
+    let rowIdx = -1, rowData = null;
+    for (let i = 1; i < data.length; i++) {
+        if ((data[i][0] || '').trim() === (b.assignmentName || '').trim()) {
+            rowIdx = i + 1; rowData = data[i]; break;
+        }
+    }
+    if (rowIdx < 0) throw new Error('Assignment not found: ' + b.assignmentName);
+
+    if (rowData[14]) throw new Error('This assignment has already started.');
+
+    const durationDays = parseFloat(rowData[13]) || 0;
+    if (!durationDays) throw new Error('This assignment does not have a working-period duration set.');
+
+    const now = new Date();
+    const due = new Date(now.getTime() + durationDays * 86400000);
+    sh.getRange(rowIdx, 15).setValue(now);
+    sh.getRange(rowIdx, 2).setValue(due);
+    return 'Started: ' + b.assignmentName;
 }
 
 function giveHours(b) {
@@ -415,6 +494,7 @@ function createEvent(b) {
         b.cardDeco        || '',
         b.cardLabel       || '',
         b.requiresYMCA    || 'FALSE',
+        new Date(),   // PostedAt — used to sort lists by posted recency
     ]);
     return 'Event created: ' + b.eventName;
 }
