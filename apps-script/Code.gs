@@ -35,7 +35,13 @@
  *   P=PostedAt(creation timestamp — used to sort lists by posted recency)
  *
  * UPDATES SHEET columns (A–F):
- *   A=Date  B=Category  C=Title  D=Body  E=Image (public URL)  F=Link (optional URL)
+ *   A=Date  B=Category  C=Title  D=Body  E=Image (public URL or Google Drive share link)  F=Link (optional URL)
+ *   (Category accepts comma-separated tags, e.g. "Chapters, Newsletter".
+ *    A "Newsletter" tag (case-insensitive) makes the row show on the
+ *    Newsletter page. Any other tag makes it show on the Home page's
+ *    Discover dispatch feed, using that tag as the category badge/color.
+ *    A row tagged ONLY "Newsletter" is excluded from the dispatch feed —
+ *    use that to publish something to the newsletter alone.)
  *
  * CHAPTERS SHEET columns (A–R):
  *   A=Email  B=Name  C=School  D=Logo  E=State  F=City

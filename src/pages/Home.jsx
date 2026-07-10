@@ -11,6 +11,7 @@ import { stats } from '../data/stats'
 import { news } from '../data/news'
 import { chapters as staticChapters } from '../data/chapters'
 import { chapterLocations } from '../data/chapterLocations'
+import { driveUrl, filterForDispatch, primaryCategory } from '../utils/updates'
 
 const MESSAGE_FROM_PRES_URL = 'https://pub-e7374d03fa9c42bfb531206a5e81830b.r2.dev/messagefrompres.mp4'
 
@@ -63,13 +64,6 @@ const GET_INVOLVED_STEPS = [
     img: '/images/curielead.png',
   },
 ]
-
-function driveUrl(url) {
-  if (!url) return ''
-  const m = url.match(/\/file\/d\/([^/?]+)/)
-  if (m) return `https://lh3.googleusercontent.com/d/${m[1]}`
-  return url
-}
 
 const NEWS_COLORS = {
   Chapters:     '#a8d4f0',
@@ -347,10 +341,13 @@ export default function Home() {
     fetch(`${url}?action=get_updates`)
       .then(r => r.json())
       .then(data => {
-        if (data.ok && Array.isArray(data.updates) && data.updates.length > 0)
-          setNewsData(data.updates)
-        else
+        if (data.ok && Array.isArray(data.updates) && data.updates.length > 0) {
+          const dispatchItems = filterForDispatch(data.updates)
+            .map(u => ({ ...u, category: primaryCategory(u.category) }))
+          setNewsData(dispatchItems.length > 0 ? dispatchItems : news)
+        } else {
           setNewsData(news)
+        }
       })
       .catch(() => setNewsData(news))
   }, [])
@@ -1174,7 +1171,7 @@ export default function Home() {
                 transition={{ delay: i * 0.1, duration: 0.7 }}
                 onClick={() => setSelectedStat(s)}
                 style={{
-                  flex: '0 0 240px', minWidth: 240, padding: '22px 22px',
+                  flex: '0 0 340px', minWidth: 340, padding: '32px 30px',
                   position: 'relative', overflow: 'hidden',
                   cursor: 'pointer',
                   borderRight: i < stats.length - 1 ? '1px solid rgba(168,212,240,0.08)' : 'none',
@@ -1186,29 +1183,29 @@ export default function Home() {
               >
                 <div style={{
                   fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: 'clamp(32px,3.5vw,44px)',
+                  fontSize: 'clamp(40px,4.2vw,56px)',
                   fontWeight: 300, lineHeight: 0.95,
                   color: 'var(--pastel1)',
                   textShadow: '0 0 40px rgba(168,212,240,0.5)',
                   letterSpacing: '-0.03em',
-                  marginBottom: 6,
+                  marginBottom: 10,
                 }}>{s.value}</div>
                 <div style={{
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontWeight: 700, fontSize: 10,
+                  fontWeight: 700, fontSize: 12,
                   color: 'var(--cream)', textTransform: 'uppercase',
-                  letterSpacing: '1.8px', marginBottom: 5,
+                  letterSpacing: '1.8px', marginBottom: 8,
                 }}>{s.label}</div>
                 <div style={{
-                  fontSize: 11, color: 'var(--muted)', lineHeight: 1.55,
+                  fontSize: 13, color: 'var(--muted)', lineHeight: 1.6,
                   opacity: 0.65,
-                  display: '-webkit-box', WebkitLineClamp: 2,
+                  display: '-webkit-box', WebkitLineClamp: 3,
                   WebkitBoxOrient: 'vertical', overflow: 'hidden',
                 }}>{s.description}</div>
                 <div style={{
-                  marginTop: 6,
+                  marginTop: 10,
                   fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 7, letterSpacing: '1.5px',
+                  fontSize: 8, letterSpacing: '1.5px',
                   color: 'rgba(168,212,240,0.25)', textTransform: 'uppercase',
                 }}>tap for details</div>
               </motion.div>

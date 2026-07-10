@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
 import { news as fallback } from '../data/news'
+import { driveUrl, filterForNewsletter, primaryCategory } from '../utils/updates'
 
 function formatDate(str) {
   if (!str) return ''
@@ -18,10 +19,13 @@ export default function Newsletter() {
     fetch(`${url}?action=get_updates`)
       .then(r => r.json())
       .then(data => {
-        if (data.ok && Array.isArray(data.updates) && data.updates.length > 0)
-          setItems(data.updates)
-        else
+        if (data.ok && Array.isArray(data.updates)) {
+          const newsletterItems = filterForNewsletter(data.updates)
+            .map(u => ({ ...u, category: primaryCategory(u.category) }))
+          setItems(newsletterItems)
+        } else {
           setItems(fallback)
+        }
       })
       .catch(() => setItems(fallback))
   }, [])
@@ -156,7 +160,7 @@ export default function Newsletter() {
                   {item.image && (
                     <div style={{ overflow: 'hidden', borderLeft: '1px solid rgba(168,212,240,0.08)' }}>
                       <img
-                        src={item.image}
+                        src={driveUrl(item.image)}
                         alt={item.title}
                         style={{
                           width: '100%', height: '100%',
