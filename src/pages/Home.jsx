@@ -11,6 +11,7 @@ import { stats } from '../data/stats'
 import { news } from '../data/news'
 import { chapters as staticChapters } from '../data/chapters'
 import { chapterLocations } from '../data/chapterLocations'
+import { alumni } from '../data/alumni'
 import { driveUrl, filterForDispatch, primaryCategory } from '../utils/updates'
 
 const MESSAGE_FROM_PRES_URL = 'https://pub-e7374d03fa9c42bfb531206a5e81830b.r2.dev/messagefrompres.mp4'
@@ -1218,6 +1219,84 @@ export default function Home() {
               <StatModal stat={selectedStat} onClose={() => setSelectedStat(null)} />
             )}
           </AnimatePresence>
+        </div>
+      </section>
+
+      {/* ─── OUR ALUMNI ─── */}
+      <section className="home-section" style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            style={{ textAlign: 'center', marginBottom: 56 }}
+          >
+            <div className="label" style={{ marginBottom: 14 }}>Our Alumni</div>
+            <h2 style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: 'clamp(30px,4vw,52px)',
+              fontWeight: 300, color: 'var(--cream)', lineHeight: 1.1,
+            }}>
+              Where our leaders<br/>
+              <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>go next.</em>
+            </h2>
+          </motion.div>
+
+          <div className="home-alumni-grid" style={{
+            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 20,
+          }}>
+            {alumni.map((a, i) => {
+              const initials = a.name.split(' ').filter(Boolean).map(w => w[0].toUpperCase()).slice(0, 2).join('')
+              return (
+                <motion.div
+                  key={a.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08, duration: 0.7 }}
+                  style={{
+                    padding: '32px 20px', textAlign: 'center',
+                    borderRadius: 16,
+                    background: 'rgba(6,12,32,0.7)',
+                    border: '1px solid rgba(168,212,240,0.12)',
+                    boxShadow: '0 16px 48px rgba(0,0,0,0.35)',
+                  }}
+                >
+                  <div style={{
+                    width: 96, height: 96, borderRadius: '50%', margin: '0 auto 20px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    overflow: 'hidden',
+                    background: a.photo ? 'rgba(255,255,255,0.96)' : 'radial-gradient(circle, rgba(168,212,240,0.18) 0%, rgba(6,12,32,0.9) 70%)',
+                    border: '1.5px solid rgba(168,212,240,0.25)',
+                    boxShadow: '0 0 24px rgba(168,212,240,0.12)',
+                  }}>
+                    {a.photo ? (
+                      <img src={a.photo} alt={a.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontWeight: 300, color: 'var(--pastel1)' }}>{initials || '?'}</span>
+                    )}
+                  </div>
+
+                  <div style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: 21, fontWeight: 400, color: 'var(--cream)',
+                    lineHeight: 1.2, marginBottom: 6,
+                  }}>{a.name}</div>
+
+                  {a.role && (
+                    <div style={{
+                      fontFamily: "'JetBrains Mono', monospace", fontSize: 8,
+                      letterSpacing: '2px', textTransform: 'uppercase',
+                      color: 'var(--pastel1)', opacity: 0.6, marginBottom: 8,
+                    }}>{a.role}</div>
+                  )}
+
+                  <div style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6 }}>{a.college}</div>
+                </motion.div>
+              )
+            })}
+          </div>
         </div>
       </section>
 
