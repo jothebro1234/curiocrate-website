@@ -1270,14 +1270,14 @@ export default function Home() {
                     e.currentTarget.style.borderColor = 'rgba(168,212,240,0.25)'
                     e.currentTarget.style.transform = 'translateY(-4px)'
                     const logo = e.currentTarget.querySelector('.alumni-logo-watermark')
-                    if (logo) { logo.style.opacity = '0.32'; logo.style.transform = `translateY(-50%) scale(1.06) rotate(${side === 'left' ? 5 : -5}deg)` }
+                    if (logo) { logo.style.opacity = '0.85'; logo.style.transform = `translateY(-50%) scale(1.06) rotate(${side === 'left' ? 5 : -5}deg)` }
                   }}
                   onMouseLeave={e => {
                     e.currentTarget.style.background = 'rgba(6,12,32,0.7)'
                     e.currentTarget.style.borderColor = 'rgba(168,212,240,0.12)'
                     e.currentTarget.style.transform = 'translateY(0)'
                     const logo = e.currentTarget.querySelector('.alumni-logo-watermark')
-                    if (logo) { logo.style.opacity = '0.2'; logo.style.transform = `translateY(-50%) scale(1) rotate(${side === 'left' ? 5 : -5}deg)` }
+                    if (logo) { logo.style.opacity = '0.55'; logo.style.transform = `translateY(-50%) scale(1) rotate(${side === 'left' ? 5 : -5}deg)` }
                   }}
                 >
                   {/* Cinematic school seal, looming in from the side — the outer half stays
@@ -1293,8 +1293,7 @@ export default function Home() {
                         width: 230, height: 230,
                         objectFit: 'contain',
                         transform: `translateY(-50%) scale(1) rotate(${side === 'left' ? 5 : -5}deg)`,
-                        filter: 'brightness(0) invert(1)',
-                        opacity: 0.2,
+                        opacity: 0.55,
                         pointerEvents: 'none',
                         transition: 'opacity 0.45s ease, transform 0.6s ease',
                         WebkitMaskImage: side === 'left'
