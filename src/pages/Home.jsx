@@ -1244,7 +1244,7 @@ export default function Home() {
           </motion.div>
 
           <div className="home-alumni-grid" style={{
-            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: 28,
+            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 32,
           }}>
             {alumni.map((a, i) => {
               const initials = a.name.split(' ').filter(Boolean).map(w => w[0].toUpperCase()).slice(0, 2).join('')
@@ -1256,41 +1256,77 @@ export default function Home() {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.08, duration: 0.7 }}
                   style={{
-                    padding: '48px 28px 40px', textAlign: 'center',
-                    borderRadius: 20,
+                    position: 'relative', overflow: 'hidden',
+                    padding: '56px 30px 46px', textAlign: 'center',
+                    borderRadius: 22,
                     background: 'rgba(6,12,32,0.7)',
                     border: '1px solid rgba(168,212,240,0.12)',
                     boxShadow: '0 20px 56px rgba(0,0,0,0.4)',
                     transition: 'background 0.25s, border-color 0.25s, transform 0.25s',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.06)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.25)'; e.currentTarget.style.transform = 'translateY(-4px)' }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(6,12,32,0.7)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.12)'; e.currentTarget.style.transform = 'translateY(0)' }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = 'rgba(168,212,240,0.06)'
+                    e.currentTarget.style.borderColor = 'rgba(168,212,240,0.25)'
+                    e.currentTarget.style.transform = 'translateY(-4px)'
+                    const logo = e.currentTarget.querySelector('.alumni-logo-watermark')
+                    if (logo) { logo.style.opacity = '0.16'; logo.style.transform = 'translate(-50%, -50%) scale(1.06)' }
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'rgba(6,12,32,0.7)'
+                    e.currentTarget.style.borderColor = 'rgba(168,212,240,0.12)'
+                    e.currentTarget.style.transform = 'translateY(0)'
+                    const logo = e.currentTarget.querySelector('.alumni-logo-watermark')
+                    if (logo) { logo.style.opacity = '0.08'; logo.style.transform = 'translate(-50%, -50%) scale(1)' }
+                  }}
                 >
-                  <div style={{
-                    width: 148, height: 148, borderRadius: '50%', margin: '0 auto 26px',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    overflow: 'hidden',
-                    background: a.photo ? 'rgba(255,255,255,0.96)' : 'radial-gradient(circle, rgba(168,212,240,0.18) 0%, rgba(6,12,32,0.9) 70%)',
-                    border: '2px solid rgba(168,212,240,0.3)',
-                    boxShadow: '0 0 36px rgba(168,212,240,0.16)',
-                  }}>
-                    {a.photo ? (
-                      <img src={a.photo} alt={a.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    ) : (
-                      <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 46, fontWeight: 300, color: 'var(--pastel1)' }}>{initials || '?'}</span>
-                    )}
+                  {/* Cinematic school seal watermark */}
+                  {a.logo && (
+                    <img
+                      src={a.logo}
+                      alt=""
+                      className="alumni-logo-watermark"
+                      style={{
+                        position: 'absolute', top: '48%', left: '50%',
+                        width: 300, height: 300,
+                        objectFit: 'contain',
+                        transform: 'translate(-50%, -50%) scale(1)',
+                        filter: 'brightness(0) invert(1)',
+                        opacity: 0.08,
+                        pointerEvents: 'none',
+                        transition: 'opacity 0.45s ease, transform 0.6s ease',
+                        WebkitMaskImage: 'radial-gradient(circle, black 38%, transparent 74%)',
+                        maskImage: 'radial-gradient(circle, black 38%, transparent 74%)',
+                      }}
+                    />
+                  )}
+
+                  <div style={{ position: 'relative', zIndex: 2 }}>
+                    <div style={{
+                      width: 168, height: 168, borderRadius: '50%', margin: '0 auto 28px',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      overflow: 'hidden',
+                      background: a.photo ? 'rgba(255,255,255,0.96)' : 'radial-gradient(circle, rgba(168,212,240,0.18) 0%, rgba(6,12,32,0.9) 70%)',
+                      border: '2px solid rgba(168,212,240,0.3)',
+                      boxShadow: '0 0 36px rgba(168,212,240,0.16)',
+                    }}>
+                      {a.photo ? (
+                        <img src={a.photo} alt={a.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 50, fontWeight: 300, color: 'var(--pastel1)' }}>{initials || '?'}</span>
+                      )}
+                    </div>
+
+                    <div style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: 31, fontWeight: 400, color: 'var(--cream)',
+                      lineHeight: 1.2, marginBottom: 10,
+                    }}>{a.name}</div>
+
+                    <div style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: 18, fontWeight: 400, color: 'var(--muted)', lineHeight: 1.5,
+                    }}>{a.college}</div>
                   </div>
-
-                  <div style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: 28, fontWeight: 400, color: 'var(--cream)',
-                    lineHeight: 1.2, marginBottom: 10,
-                  }}>{a.name}</div>
-
-                  <div style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: 17, fontWeight: 400, color: 'var(--muted)', lineHeight: 1.5,
-                  }}>{a.college}</div>
                 </motion.div>
               )
             })}
