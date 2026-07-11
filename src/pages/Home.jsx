@@ -1223,20 +1223,20 @@ export default function Home() {
       </section>
 
       {/* ─── OUR ALUMNI ─── */}
-      <section className="home-section" style={{ position: 'relative', zIndex: 1, padding: '100px 40px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+      <section className="home-section" style={{ position: 'relative', zIndex: 1, padding: '140px 40px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            style={{ textAlign: 'center', marginBottom: 56 }}
+            style={{ textAlign: 'center', marginBottom: 76 }}
           >
-            <div className="label" style={{ marginBottom: 14 }}>Our Alumni</div>
+            <div className="label" style={{ marginBottom: 18, fontSize: 12, letterSpacing: '4px' }}>Our Alumni</div>
             <h2 style={{
               fontFamily: "'Cormorant Garamond', serif",
-              fontSize: 'clamp(30px,4vw,52px)',
-              fontWeight: 300, color: 'var(--cream)', lineHeight: 1.1,
+              fontSize: 'clamp(38px,5.5vw,68px)',
+              fontWeight: 300, color: 'var(--cream)', lineHeight: 1.08,
             }}>
               Where our leaders<br/>
               <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>go next.</em>
@@ -1244,55 +1244,61 @@ export default function Home() {
           </motion.div>
 
           <div className="home-alumni-grid" style={{
-            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 20,
+            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: 28,
           }}>
             {alumni.map((a, i) => {
               const initials = a.name.split(' ').filter(Boolean).map(w => w[0].toUpperCase()).slice(0, 2).join('')
               return (
                 <motion.div
                   key={a.name}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.08, duration: 0.7 }}
                   style={{
-                    padding: '32px 20px', textAlign: 'center',
-                    borderRadius: 16,
+                    padding: '48px 28px 40px', textAlign: 'center',
+                    borderRadius: 20,
                     background: 'rgba(6,12,32,0.7)',
                     border: '1px solid rgba(168,212,240,0.12)',
-                    boxShadow: '0 16px 48px rgba(0,0,0,0.35)',
+                    boxShadow: '0 20px 56px rgba(0,0,0,0.4)',
+                    transition: 'background 0.25s, border-color 0.25s, transform 0.25s',
                   }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.06)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.25)'; e.currentTarget.style.transform = 'translateY(-4px)' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(6,12,32,0.7)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.12)'; e.currentTarget.style.transform = 'translateY(0)' }}
                 >
                   <div style={{
-                    width: 96, height: 96, borderRadius: '50%', margin: '0 auto 20px',
+                    width: 148, height: 148, borderRadius: '50%', margin: '0 auto 26px',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     overflow: 'hidden',
                     background: a.photo ? 'rgba(255,255,255,0.96)' : 'radial-gradient(circle, rgba(168,212,240,0.18) 0%, rgba(6,12,32,0.9) 70%)',
-                    border: '1.5px solid rgba(168,212,240,0.25)',
-                    boxShadow: '0 0 24px rgba(168,212,240,0.12)',
+                    border: '2px solid rgba(168,212,240,0.3)',
+                    boxShadow: '0 0 36px rgba(168,212,240,0.16)',
                   }}>
                     {a.photo ? (
                       <img src={a.photo} alt={a.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     ) : (
-                      <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontWeight: 300, color: 'var(--pastel1)' }}>{initials || '?'}</span>
+                      <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 46, fontWeight: 300, color: 'var(--pastel1)' }}>{initials || '?'}</span>
                     )}
                   </div>
 
                   <div style={{
                     fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: 21, fontWeight: 400, color: 'var(--cream)',
-                    lineHeight: 1.2, marginBottom: 6,
+                    fontSize: 28, fontWeight: 400, color: 'var(--cream)',
+                    lineHeight: 1.2, marginBottom: 10,
                   }}>{a.name}</div>
 
                   {a.role && (
                     <div style={{
-                      fontFamily: "'JetBrains Mono', monospace", fontSize: 8,
-                      letterSpacing: '2px', textTransform: 'uppercase',
-                      color: 'var(--pastel1)', opacity: 0.6, marginBottom: 8,
+                      fontFamily: "'JetBrains Mono', monospace", fontSize: 10,
+                      letterSpacing: '2.2px', textTransform: 'uppercase', fontWeight: 700,
+                      color: 'var(--pastel1)', opacity: 0.8, marginBottom: 12,
                     }}>{a.role}</div>
                   )}
 
-                  <div style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6 }}>{a.college}</div>
+                  <div style={{
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontSize: 15.5, fontWeight: 600, color: 'var(--muted)', lineHeight: 1.5,
+                  }}>{a.college}</div>
                 </motion.div>
               )
             })}
