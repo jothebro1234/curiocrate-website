@@ -1224,7 +1224,7 @@ export default function Home() {
 
       {/* ─── OUR ALUMNI ─── */}
       <section className="home-section" style={{ position: 'relative', zIndex: 1, padding: '140px 40px' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1560, margin: '0 auto' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1244,10 +1244,11 @@ export default function Home() {
           </motion.div>
 
           <div className="home-alumni-grid" style={{
-            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 32,
+            display: 'grid', gridTemplateColumns: `repeat(${alumni.length}, minmax(0, 1fr))`, gap: 22,
           }}>
             {alumni.map((a, i) => {
               const initials = a.name.split(' ').filter(Boolean).map(w => w[0].toUpperCase()).slice(0, 2).join('')
+              const side = i % 2 === 0 ? 'left' : 'right'
               return (
                 <motion.div
                   key={a.name}
@@ -1257,7 +1258,7 @@ export default function Home() {
                   transition={{ delay: i * 0.08, duration: 0.7 }}
                   style={{
                     position: 'relative', overflow: 'hidden',
-                    padding: '56px 30px 46px', textAlign: 'center',
+                    padding: '60px 22px 48px', textAlign: 'center',
                     borderRadius: 22,
                     background: 'rgba(6,12,32,0.7)',
                     border: '1px solid rgba(168,212,240,0.12)',
@@ -1269,40 +1270,46 @@ export default function Home() {
                     e.currentTarget.style.borderColor = 'rgba(168,212,240,0.25)'
                     e.currentTarget.style.transform = 'translateY(-4px)'
                     const logo = e.currentTarget.querySelector('.alumni-logo-watermark')
-                    if (logo) { logo.style.opacity = '0.16'; logo.style.transform = 'translate(-50%, -50%) scale(1.06)' }
+                    if (logo) { logo.style.opacity = '0.32'; logo.style.transform = `translateY(-50%) scale(1.06) rotate(${side === 'left' ? 5 : -5}deg)` }
                   }}
                   onMouseLeave={e => {
                     e.currentTarget.style.background = 'rgba(6,12,32,0.7)'
                     e.currentTarget.style.borderColor = 'rgba(168,212,240,0.12)'
                     e.currentTarget.style.transform = 'translateY(0)'
                     const logo = e.currentTarget.querySelector('.alumni-logo-watermark')
-                    if (logo) { logo.style.opacity = '0.08'; logo.style.transform = 'translate(-50%, -50%) scale(1)' }
+                    if (logo) { logo.style.opacity = '0.2'; logo.style.transform = `translateY(-50%) scale(1) rotate(${side === 'left' ? 5 : -5}deg)` }
                   }}
                 >
-                  {/* Cinematic school seal watermark */}
+                  {/* Cinematic school seal, looming in from the side — the outer half stays
+                      clearly visible near the card edge, fading only as it nears the center. */}
                   {a.logo && (
                     <img
                       src={a.logo}
                       alt=""
                       className="alumni-logo-watermark"
                       style={{
-                        position: 'absolute', top: '48%', left: '50%',
-                        width: 300, height: 300,
+                        position: 'absolute', top: '50%',
+                        [side]: -30,
+                        width: 230, height: 230,
                         objectFit: 'contain',
-                        transform: 'translate(-50%, -50%) scale(1)',
+                        transform: `translateY(-50%) scale(1) rotate(${side === 'left' ? 5 : -5}deg)`,
                         filter: 'brightness(0) invert(1)',
-                        opacity: 0.08,
+                        opacity: 0.2,
                         pointerEvents: 'none',
                         transition: 'opacity 0.45s ease, transform 0.6s ease',
-                        WebkitMaskImage: 'radial-gradient(circle, black 38%, transparent 74%)',
-                        maskImage: 'radial-gradient(circle, black 38%, transparent 74%)',
+                        WebkitMaskImage: side === 'left'
+                          ? 'linear-gradient(to right, black 45%, transparent 85%)'
+                          : 'linear-gradient(to left, black 45%, transparent 85%)',
+                        maskImage: side === 'left'
+                          ? 'linear-gradient(to right, black 45%, transparent 85%)'
+                          : 'linear-gradient(to left, black 45%, transparent 85%)',
                       }}
                     />
                   )}
 
                   <div style={{ position: 'relative', zIndex: 2 }}>
                     <div style={{
-                      width: 168, height: 168, borderRadius: '50%', margin: '0 auto 28px',
+                      width: 150, height: 150, borderRadius: '50%', margin: '0 auto 26px',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       overflow: 'hidden',
                       background: a.photo ? 'rgba(255,255,255,0.96)' : 'radial-gradient(circle, rgba(168,212,240,0.18) 0%, rgba(6,12,32,0.9) 70%)',
@@ -1312,13 +1319,13 @@ export default function Home() {
                       {a.photo ? (
                         <img src={a.photo} alt={a.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       ) : (
-                        <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 50, fontWeight: 300, color: 'var(--pastel1)' }}>{initials || '?'}</span>
+                        <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 44, fontWeight: 300, color: 'var(--pastel1)' }}>{initials || '?'}</span>
                       )}
                     </div>
 
                     <div style={{
                       fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: 31, fontWeight: 400, color: 'var(--cream)',
+                      fontSize: 27, fontWeight: 400, color: 'var(--cream)',
                       lineHeight: 1.2, marginBottom: 10,
                     }}>{a.name}</div>
 
@@ -1476,6 +1483,10 @@ export default function Home() {
           .home-stats-grid > div { padding: 44px 24px !important; }
           .home-partners-row { gap: 24px !important; flex-wrap: wrap !important; }
           .home-partner-logo { width: 100px !important; height: 36px !important; }
+          .home-alumni-grid { grid-template-columns: 1fr !important; }
+        }
+        @media(max-width:1100px) and (min-width:769px){
+          .home-alumni-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
         }
         @media(max-width:480px){
           .home-stats-grid { grid-template-columns: 1fr !important; }
