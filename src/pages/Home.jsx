@@ -1287,17 +1287,8 @@ export default function Home() {
                     lineHeight: 1.2, marginBottom: 10,
                   }}>{a.name}</div>
 
-                  {a.role && (
-                    <div style={{
-                      fontFamily: "'JetBrains Mono', monospace", fontSize: 10,
-                      letterSpacing: '2.2px', textTransform: 'uppercase', fontWeight: 700,
-                      color: 'var(--pastel1)', opacity: 0.8, marginBottom: 12,
-                    }}>{a.role}</div>
-                  )}
-
                   <div style={{
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontSize: 15.5, fontWeight: 600, color: 'var(--muted)', lineHeight: 1.5,
+                    fontSize: 15, color: 'var(--muted)', lineHeight: 1.5,
                   }}>{a.college}</div>
                 </motion.div>
               )
