@@ -438,7 +438,7 @@ export default function Home() {
               <h1 style={{
                 fontFamily: "'Cormorant Garamond', serif",
                 fontSize: 'clamp(32px, 5.5vw, 72px)',
-                fontWeight: 300, color: 'var(--cream)',
+                fontWeight: 400, color: 'var(--cream)',
                 lineHeight: 1.1, letterSpacing: '-0.02em',
                 textShadow: '0 2px 24px rgba(3,5,15,0.8)',
                 marginBottom: 16,
@@ -768,7 +768,7 @@ export default function Home() {
             <h2 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(32px,4.5vw,60px)',
-              fontWeight: 300, color: 'var(--cream)',
+              fontWeight: 400, color: 'var(--cream)',
               lineHeight: 1.0, letterSpacing: '-0.03em',
             }}>Recent <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>News</em></h2>
           </motion.div>
@@ -1048,7 +1048,7 @@ export default function Home() {
               <h2 style={{
                 fontFamily: "'Cormorant Garamond', serif",
                 fontSize: 'clamp(32px,4.5vw,60px)',
-                fontWeight: 300, color: 'var(--cream)',
+                fontWeight: 400, color: 'var(--cream)',
                 lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 28,
               }}>
                 What is<br/>
@@ -1131,7 +1131,7 @@ export default function Home() {
             <h2 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(30px,4vw,52px)',
-              fontWeight: 300, color: 'var(--cream)', lineHeight: 1.1,
+              fontWeight: 400, color: 'var(--cream)', lineHeight: 1.1,
             }}>
               Every dot is a community<br/>
               <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>we've reached.</em>
@@ -1364,7 +1364,7 @@ export default function Home() {
             <h2 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(30px,4vw,56px)',
-              fontWeight: 300, color: 'var(--cream)', lineHeight: 1.05,
+              fontWeight: 400, color: 'var(--cream)', lineHeight: 1.05,
             }}>What Can You Do to Get Involved?</h2>
           </motion.div>
 
@@ -1466,7 +1466,7 @@ export default function Home() {
             <h3 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(24px,3vw,34px)',
-              fontWeight: 300, color: 'var(--cream)', lineHeight: 1.2, marginBottom: 28,
+              fontWeight: 400, color: 'var(--cream)', lineHeight: 1.2, marginBottom: 28,
             }}>
               Why we do this <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>work.</em>
             </h3>
