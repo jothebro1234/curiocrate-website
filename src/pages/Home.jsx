@@ -1288,7 +1288,8 @@ export default function Home() {
                   }}>{a.name}</div>
 
                   <div style={{
-                    fontSize: 15, color: 'var(--muted)', lineHeight: 1.5,
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: 17, fontWeight: 400, color: 'var(--muted)', lineHeight: 1.5,
                   }}>{a.college}</div>
                 </motion.div>
               )
