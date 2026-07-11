@@ -1236,7 +1236,7 @@ export default function Home() {
             <h2 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(38px,5.5vw,68px)',
-              fontWeight: 300, color: 'var(--cream)', lineHeight: 1.08,
+              fontWeight: 400, color: 'var(--cream)', lineHeight: 1.08,
             }}>
               Where our leaders<br/>
               <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>go next.</em>
