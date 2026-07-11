@@ -1282,29 +1282,34 @@ export default function Home() {
                 >
                   {/* Cinematic school seal, looming in from the side — the outer half stays
                       clearly visible near the card edge, fading only as it nears the center. */}
-                  {a.logo && (
-                    <img
-                      src={a.logo}
-                      alt=""
-                      className="alumni-logo-watermark"
-                      style={{
-                        position: 'absolute', top: '50%',
-                        [side]: -30,
-                        width: 230, height: 230,
-                        objectFit: 'contain',
-                        transform: `translateY(-50%) scale(1) rotate(${side === 'left' ? 5 : -5}deg)`,
-                        opacity: 0.55,
-                        pointerEvents: 'none',
-                        transition: 'opacity 0.45s ease, transform 0.6s ease',
-                        WebkitMaskImage: side === 'left'
-                          ? 'linear-gradient(to right, black 45%, transparent 85%)'
-                          : 'linear-gradient(to left, black 45%, transparent 85%)',
-                        maskImage: side === 'left'
-                          ? 'linear-gradient(to right, black 45%, transparent 85%)'
-                          : 'linear-gradient(to left, black 45%, transparent 85%)',
-                      }}
-                    />
-                  )}
+                  {a.logo && (() => {
+                    const scale = a.logoScale || 1
+                    const logoSize = 230 * scale
+                    const edgeOffset = -30 * scale
+                    return (
+                      <img
+                        src={a.logo}
+                        alt=""
+                        className="alumni-logo-watermark"
+                        style={{
+                          position: 'absolute', top: '50%',
+                          [side]: edgeOffset,
+                          width: logoSize, height: logoSize,
+                          objectFit: 'contain',
+                          transform: `translateY(-50%) scale(1) rotate(${side === 'left' ? 5 : -5}deg)`,
+                          opacity: 0.55,
+                          pointerEvents: 'none',
+                          transition: 'opacity 0.45s ease, transform 0.6s ease',
+                          WebkitMaskImage: side === 'left'
+                            ? 'linear-gradient(to right, black 45%, transparent 85%)'
+                            : 'linear-gradient(to left, black 45%, transparent 85%)',
+                          maskImage: side === 'left'
+                            ? 'linear-gradient(to right, black 45%, transparent 85%)'
+                            : 'linear-gradient(to left, black 45%, transparent 85%)',
+                        }}
+                      />
+                    )
+                  })()}
 
                   <div style={{ position: 'relative', zIndex: 2 }}>
                     <div style={{
