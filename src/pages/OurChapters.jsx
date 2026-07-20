@@ -101,7 +101,7 @@ function ChapterModal({ chapter, onClose }) {
             <div style={{
               width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: (logoSrc && !imgError) ? 'rgba(255,255,255,0.96)' : 'rgba(168,212,240,0.08)',
+              background: 'rgba(255,255,255,0.96)',
               border: '1.5px solid rgba(168,212,240,0.2)',
               overflow: 'hidden',
             }}>
@@ -110,7 +110,7 @@ function ChapterModal({ chapter, onClose }) {
                   style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 5 }}
                   onError={() => setImgError(true)} />
               ) : (
-                <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 15, fontWeight: 300, color: 'var(--pastel1)' }}>{initials || '?'}</span>
+                <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 15, fontWeight: 300, color: 'var(--navy)' }}>{initials || '?'}</span>
               )}
             </div>
 
@@ -320,7 +320,7 @@ function ChapterCard({ chapter, index, onClick }) {
       <div style={{
         width: 80, height: 80, borderRadius: '50%',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: (logoSrc && !imgError) ? 'rgba(255,255,255,0.96)' : 'rgba(168,212,240,0.08)',
+        background: 'rgba(255,255,255,0.96)',
         border: '2px solid rgba(168,212,240,0.15)',
         overflow: 'hidden', marginBottom: 20,
         boxShadow: hovered ? '0 0 24px rgba(168,212,240,0.2)' : 'none',
@@ -333,7 +333,7 @@ function ChapterCard({ chapter, index, onClick }) {
         ) : (
           <span style={{
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: 28, fontWeight: 300, color: 'var(--pastel1)',
+            fontSize: 28, fontWeight: 300, color: 'var(--navy)',
           }}>{initials || '?'}</span>
         )}
       </div>
