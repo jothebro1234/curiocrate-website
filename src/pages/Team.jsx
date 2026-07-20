@@ -170,7 +170,7 @@ const productOfficers = [
     color: '#fda4af',
     glow: 'rgba(253,164,175,0.5)',
     dark: '#160006',
-    number: '08',
+    number: '01',
   },
   {
     id: 'po2',
@@ -183,7 +183,7 @@ const productOfficers = [
     color: '#fda4af',
     glow: 'rgba(253,164,175,0.5)',
     dark: '#160006',
-    number: '09',
+    number: '02',
   },
 ]
 
@@ -477,13 +477,24 @@ export default function Team() {
             title="Specialists who build"
             italic="the mission daily."
           />
-          <div className="team-directors-row" style={{ display:'flex', margin:'0 40px 12px' }}>
-            <div style={{ flex: directors.length }} />
-            <div style={{ flex: productOfficers.length, textAlign:'center' }}>
-              <span className="label" style={{ fontSize:9, opacity:0.5 }}>Product Leadership</span>
-            </div>
+          <PanelStage members={directors} height={620} expandFlex={2.8} />
+          <div style={{ textAlign:'center', marginTop:18, marginBottom:0 }}>
+            <span className="label" style={{ fontSize:9, opacity:0.3 }}>
+              Hover to reveal · Click to lock
+            </span>
           </div>
-          <PanelStage members={[...directors, ...productOfficers]} height={620} expandFlex={2.8} groupBreakAfter={directors.length - 1} />
+        </div>
+
+        {/* ══════════════════════════════════════════════════════════════════════
+            PRODUCT LEADERSHIP
+        ══════════════════════════════════════════════════════════════════════ */}
+        <div style={{ padding:'72px 0 20px' }}>
+          <SectionHeading
+            label="Product Leadership"
+            title="Turning ideas into"
+            italic="kits kids love."
+          />
+          <PanelStage members={productOfficers} height={560} expandFlex={2.2} />
           <div style={{ textAlign:'center', marginTop:18, marginBottom:0 }}>
             <span className="label" style={{ fontSize:9, opacity:0.3 }}>
               Hover to reveal · Click to lock
@@ -752,7 +763,6 @@ export default function Team() {
           .team-header  { padding: 96px 20px 48px !important; }
           .team-founder { margin: 40px 20px 20px !important; min-height: 70vh !important; }
           .team-join-cta { margin: 40px 20px 72px !important; padding: 40px 24px !important; }
-          .team-directors-row { flex-direction: column !important; margin-left: 0 !important; margin-right: 0 !important; }
         }
       `}</style>
 
