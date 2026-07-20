@@ -99,16 +99,15 @@ export default function CinematicNavbar() {
       }}>
 
         {/* Brand */}
-        <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+        <NavLink to="/" style={{ display: 'flex', alignItems: 'flex-start', gap: 2, textDecoration: 'none' }}>
           <img
             src="/images/cclogofull.png" alt="CurioCrate"
-            style={{ height: 34, objectFit: 'contain', filter: 'drop-shadow(0 0 10px rgba(168,212,240,0.5))' }}
+            style={{ height: 140, objectFit: 'contain', filter: 'drop-shadow(0 0 10px rgba(168,212,240,0.5))' }}
           />
-          <span style={{
-            fontFamily: "'Cormorant Garamond', serif", fontWeight: 300,
-            fontSize: 19, letterSpacing: '0.12em',
-            color: 'var(--pastel2)', textShadow: '0 0 20px rgba(168,212,240,0.35)',
-          }}>CurioCrate<sup style={{ fontSize: '0.5em', letterSpacing: 0, verticalAlign: 'super', opacity: 0.7 }}>™</sup></span>
+          <sup style={{
+            fontSize: 14, letterSpacing: 0, opacity: 0.7,
+            color: 'var(--pastel2)', marginTop: 4,
+          }}>™</sup>
         </NavLink>
 
         {/* Desktop nav */}
