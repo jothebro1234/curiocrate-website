@@ -101,7 +101,7 @@ export default function CinematicNavbar() {
         {/* Brand */}
         <NavLink to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
           <img
-            src="/images/cclogofull4.png" alt="CurioCrate"
+            src="/images/cclogofull5.png" alt="CurioCrate"
             style={{ height: 58, objectFit: 'contain', filter: 'drop-shadow(0 0 10px rgba(168,212,240,0.5))' }}
           />
         </NavLink>
