@@ -12,6 +12,7 @@ const cabinet = [
     role: 'President',
     bio: 'Leads CurioCrate with a clear vision: every child, regardless of zip code, deserves access to the wonder of science.',
     photo: '/boardmembers/danielsonpresident.png',
+    photoHeight: 230, photoExpandedHeight: 430,
     emoji: '🔬',
     color: '#fbbf24',
     glow: 'rgba(251,191,36,0.5)',
@@ -24,6 +25,7 @@ const cabinet = [
     role: 'Vice President',
     bio: 'Partners with leadership to drive strategy, expand community reach, and keep every initiative aligned with the mission.',
     photo: '/boardmembers/hayvenyangvicepresident.png',
+    photoHeight: 230, photoExpandedHeight: 430,
     color: '#a8d4f0',
     glow: 'rgba(168,212,240,0.5)',
     dark: '#020d1a',
@@ -35,6 +37,7 @@ const cabinet = [
     role: 'Treasurer',
     bio: 'Stewards the organization\'s finances with precision, ensuring every dollar goes toward putting science in students\' hands.',
     photo: '/boardmembers/rebeccahotres.png',
+    photoHeight: 230, photoExpandedHeight: 430,
     color: '#6ee7b7',
     glow: 'rgba(110,231,183,0.5)',
     dark: '#00100a',
@@ -46,6 +49,7 @@ const cabinet = [
     role: 'Secretary',
     bio: 'Keeps the organization running with clarity and care, documenting decisions, coordinating communications, and holding everything together.',
     photo: '/boardmembers/siennaleesecretary.png',
+    photoHeight: 230, photoExpandedHeight: 430,
     color: '#c084fc',
     glow: 'rgba(192,132,252,0.5)',
     dark: '#0a0018',
@@ -60,11 +64,11 @@ const directors = [
     role: 'Director of Publicity',
     bio: 'Amplifies CurioCrate\'s reach through creative campaigns that connect the mission to communities far and wide.',
     photo: '/boardmembers/chloekoodirectorofcurriculum.png',
-    photoHeight: 260, photoExpandedHeight: 440,
+    photoHeight: 330, photoExpandedHeight: 520,
     photoOffsetY: -44,
-    color: '#93c5fd',
-    glow: 'rgba(147,197,253,0.5)',
-    dark: '#020c18',
+    color: '#a855f7',
+    glow: 'rgba(168,85,247,0.5)',
+    dark: '#0d0018',
     number: '01',
   },
   {
@@ -73,10 +77,10 @@ const directors = [
     role: 'Director of Publicity',
     bio: 'Amplifies CurioCrate\'s story, connecting the mission to the public through compelling campaigns and outreach.',
     photo: '/boardmembers/danielkimDirectorofpublicity.png',
-    photoHeight: 210, photoExpandedHeight: 380,
-    color: '#93c5fd',
-    glow: 'rgba(147,197,253,0.5)',
-    dark: '#020c18',
+    photoHeight: 270, photoExpandedHeight: 450,
+    color: '#a855f7',
+    glow: 'rgba(168,85,247,0.5)',
+    dark: '#0d0018',
     number: '02',
   },
   {
@@ -85,10 +89,10 @@ const directors = [
     role: 'Director of Operations',
     bio: 'The engine behind every event, orchestrating logistics, partnerships, and kit delivery with precision and care.',
     photo: '/boardmembers/jamiesongdirectorofoperations.png',
-    photoHeight: 180, photoExpandedHeight: 340,
-    color: '#a5b4fc',
-    glow: 'rgba(165,180,252,0.5)',
-    dark: '#050618',
+    photoHeight: 230, photoExpandedHeight: 410,
+    color: '#fb923c',
+    glow: 'rgba(251,146,60,0.5)',
+    dark: '#170900',
     number: '03',
   },
   {
@@ -97,10 +101,10 @@ const directors = [
     role: 'Director of Operations',
     bio: 'Keeps programs moving smoothly from planning through execution, turning vision into tangible impact.',
     photo: '/boardmembers/pragyajaindirectorofoperations.png',
-    photoHeight: 195, photoExpandedHeight: 360,
-    color: '#a5b4fc',
-    glow: 'rgba(165,180,252,0.5)',
-    dark: '#050618',
+    photoHeight: 250, photoExpandedHeight: 430,
+    color: '#fb923c',
+    glow: 'rgba(251,146,60,0.5)',
+    dark: '#170900',
     number: '04',
   },
   {
@@ -109,10 +113,10 @@ const directors = [
     role: 'Director of Curriculum',
     bio: 'Brings a rigorous yet joyful approach to curriculum design, making complex science concepts feel natural and exciting.',
     photo: '/boardmembers/sourishmehtadirectorofcurriculum.png',
-    photoHeight: 195, photoExpandedHeight: 360,
-    color: '#7dd3fc',
-    glow: 'rgba(125,211,252,0.5)',
-    dark: '#000d18',
+    photoHeight: 250, photoExpandedHeight: 430,
+    color: '#2dd4bf',
+    glow: 'rgba(45,212,191,0.5)',
+    dark: '#00120f',
     number: '05',
   },
   {
@@ -121,10 +125,10 @@ const directors = [
     role: 'Director of Publicity',
     bio: 'Spreads the CurioCrate story through engaging outreach and media, growing awareness one community at a time.',
     photo: '/boardmembers/abigailsondirectorofpublicity.png',
-    photoHeight: 210, photoExpandedHeight: 380,
-    color: '#93c5fd',
-    glow: 'rgba(147,197,253,0.5)',
-    dark: '#020c18',
+    photoHeight: 270, photoExpandedHeight: 450,
+    color: '#a855f7',
+    glow: 'rgba(168,85,247,0.5)',
+    dark: '#0d0018',
     number: '06',
   },
   {
@@ -133,11 +137,11 @@ const directors = [
     role: 'Director of Curriculum',
     bio: 'Crafts engaging, standards-aligned curriculum that turns everyday materials into extraordinary learning experiences.',
     photo: '/boardmembers/yashithateekaramandirectorofcurriculum.png',
-    photoHeight: 310, photoExpandedHeight: 480,
+    photoHeight: 395, photoExpandedHeight: 560,
     photoOffsetY: -37,
-    color: '#7dd3fc',
-    glow: 'rgba(125,211,252,0.5)',
-    dark: '#000d18',
+    color: '#2dd4bf',
+    glow: 'rgba(45,212,191,0.5)',
+    dark: '#00120f',
     number: '07',
   },
   {
@@ -146,10 +150,10 @@ const directors = [
     role: 'Director of Curriculum',
     bio: 'Designs hands-on curriculum that turns big scientific ideas into lessons kids can touch, test, and explore.',
     photo: '/boardmembers/kaylaohdoc.png',
-    photoHeight: 210, photoExpandedHeight: 380,
-    color: '#7dd3fc',
-    glow: 'rgba(125,211,252,0.5)',
-    dark: '#000d18',
+    photoHeight: 270, photoExpandedHeight: 450,
+    color: '#2dd4bf',
+    glow: 'rgba(45,212,191,0.5)',
+    dark: '#00120f',
     number: '08',
   },
 ]
@@ -161,7 +165,7 @@ const productOfficers = [
     role: 'Product Officer',
     bio: 'Shapes the roadmap for CurioCrate\'s kits and tools, working closely with the team to turn ideas into products students love.',
     photo: '/boardmembers/cristobalsanchezPO.png',
-    photoHeight: 210, photoExpandedHeight: 380,
+    photoHeight: 270, photoExpandedHeight: 450,
     emoji: '🧩',
     color: '#fda4af',
     glow: 'rgba(253,164,175,0.5)',
@@ -174,7 +178,7 @@ const productOfficers = [
     role: 'Product Officer',
     bio: 'Partners with directors and the executive cabinet to prioritize features and keep every kit release on track.',
     photo: '/boardmembers/timothychoPO.png',
-    photoHeight: 210, photoExpandedHeight: 380,
+    photoHeight: 270, photoExpandedHeight: 450,
     emoji: '🧩',
     color: '#fda4af',
     glow: 'rgba(253,164,175,0.5)',
@@ -204,7 +208,7 @@ function PanelStage({ members, height = 580, expandFlex = 3.5, groupBreakAfter =
           }}>
             {m.photo ? (
               <img src={m.photo} alt={m.name} style={{
-                height: 80, width: 64, objectFit: 'contain', objectPosition: 'top',
+                height: 104, width: 84, objectFit: 'contain', objectPosition: 'top',
                 flexShrink: 0,
                 filter: `drop-shadow(0 0 12px ${m.glow.replace('0.5','0.4')})`,
               }} />
@@ -309,7 +313,7 @@ function PanelStage({ members, height = 580, expandFlex = 3.5, groupBreakAfter =
                   animate={{ scale: isActive ? 1.04 : 1 }}
                   transition={{ duration:0.5 }}
                   style={{
-                    height: isActive ? (m.photoExpandedHeight ?? 360) : (m.photoHeight ?? 180),
+                    height: isActive ? (m.photoExpandedHeight ?? 430) : (m.photoHeight ?? 230),
                     transition:'height 0.55s cubic-bezier(0.4,0,0.2,1)',
                     objectFit:'contain', objectPosition:'top center',
                     filter:`drop-shadow(0 0 28px ${m.glow})`,
@@ -479,7 +483,7 @@ export default function Team() {
               <span className="label" style={{ fontSize:9, opacity:0.5 }}>Product Leadership</span>
             </div>
           </div>
-          <PanelStage members={[...directors, ...productOfficers]} height={540} expandFlex={2.8} groupBreakAfter={directors.length - 1} />
+          <PanelStage members={[...directors, ...productOfficers]} height={620} expandFlex={2.8} groupBreakAfter={directors.length - 1} />
           <div style={{ textAlign:'center', marginTop:18, marginBottom:0 }}>
             <span className="label" style={{ fontSize:9, opacity:0.3 }}>
               Hover to reveal · Click to lock
@@ -496,7 +500,7 @@ export default function Team() {
             title="Leadership that drives"
             italic="every decision."
           />
-          <PanelStage members={cabinet} height={580} expandFlex={3.5} />
+          <PanelStage members={cabinet} height={660} expandFlex={3.5} />
           <div style={{ textAlign:'center', marginTop:18, marginBottom:0 }}>
             <span className="label" style={{ fontSize:9, opacity:0.3 }}>
               Hover to reveal · Click to lock
