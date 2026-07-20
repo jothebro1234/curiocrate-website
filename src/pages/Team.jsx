@@ -138,6 +138,18 @@ const directors = [
     dark: '#0e0018',
     number: '07',
   },
+  {
+    id: 'curriculum3',
+    name: 'Kayla Oh',
+    role: 'Director of Curriculum',
+    bio: 'Designs hands-on curriculum that turns big scientific ideas into lessons kids can touch, test, and explore.',
+    photo: '/boardmembers/kaylaohdoc.png',
+    photoHeight: 210, photoExpandedHeight: 380,
+    color: '#fcd34d',
+    glow: 'rgba(252,211,77,0.5)',
+    dark: '#0d0a00',
+    number: '08',
+  },
 ]
 
 const productOfficers = [
@@ -146,6 +158,8 @@ const productOfficers = [
     name: 'Cristobal Sanchez',
     role: 'Product Officer',
     bio: 'Shapes the roadmap for CurioCrate\'s kits and tools, working closely with the team to turn ideas into products students love.',
+    photo: '/boardmembers/cristobalsanchezPO.png',
+    photoHeight: 210, photoExpandedHeight: 380,
     emoji: '🧩',
     color: '#fda4af',
     glow: 'rgba(253,164,175,0.5)',
@@ -157,6 +171,8 @@ const productOfficers = [
     name: 'Timothy Cho',
     role: 'Product Officer',
     bio: 'Partners with directors and the executive cabinet to prioritize features and keep every kit release on track.',
+    photo: '/boardmembers/timothychoPO.png',
+    photoHeight: 210, photoExpandedHeight: 380,
     emoji: '🧩',
     color: '#fda4af',
     glow: 'rgba(253,164,175,0.5)',
