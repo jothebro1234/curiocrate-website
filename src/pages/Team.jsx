@@ -61,6 +61,7 @@ const directors = [
     bio: 'Amplifies CurioCrate\'s reach through creative campaigns that connect the mission to communities far and wide.',
     photo: '/boardmembers/chloekoodirectorofcurriculum.png',
     photoHeight: 260, photoExpandedHeight: 440,
+    photoOffsetY: -44,
     color: '#93c5fd',
     glow: 'rgba(147,197,253,0.5)',
     dark: '#020c18',
@@ -73,9 +74,9 @@ const directors = [
     bio: 'Amplifies CurioCrate\'s story, connecting the mission to the public through compelling campaigns and outreach.',
     photo: '/boardmembers/danielkimDirectorofpublicity.png',
     photoHeight: 210, photoExpandedHeight: 380,
-    color: '#fca5a5',
-    glow: 'rgba(252,165,165,0.5)',
-    dark: '#120000',
+    color: '#93c5fd',
+    glow: 'rgba(147,197,253,0.5)',
+    dark: '#020c18',
     number: '02',
   },
   {
@@ -97,9 +98,9 @@ const directors = [
     bio: 'Keeps programs moving smoothly from planning through execution, turning vision into tangible impact.',
     photo: '/boardmembers/pragyajaindirectorofoperations.png',
     photoHeight: 195, photoExpandedHeight: 360,
-    color: '#fcd34d',
-    glow: 'rgba(252,211,77,0.5)',
-    dark: '#0d0a00',
+    color: '#a5b4fc',
+    glow: 'rgba(165,180,252,0.5)',
+    dark: '#050618',
     number: '04',
   },
   {
@@ -121,9 +122,9 @@ const directors = [
     bio: 'Spreads the CurioCrate story through engaging outreach and media, growing awareness one community at a time.',
     photo: '/boardmembers/abigailsondirectorofpublicity.png',
     photoHeight: 210, photoExpandedHeight: 380,
-    color: '#86efac',
-    glow: 'rgba(134,239,172,0.5)',
-    dark: '#001208',
+    color: '#93c5fd',
+    glow: 'rgba(147,197,253,0.5)',
+    dark: '#020c18',
     number: '06',
   },
   {
@@ -133,9 +134,10 @@ const directors = [
     bio: 'Crafts engaging, standards-aligned curriculum that turns everyday materials into extraordinary learning experiences.',
     photo: '/boardmembers/yashithateekaramandirectorofcurriculum.png',
     photoHeight: 310, photoExpandedHeight: 480,
-    color: '#f0abfc',
-    glow: 'rgba(240,171,252,0.5)',
-    dark: '#0e0018',
+    photoOffsetY: -37,
+    color: '#7dd3fc',
+    glow: 'rgba(125,211,252,0.5)',
+    dark: '#000d18',
     number: '07',
   },
   {
@@ -145,9 +147,9 @@ const directors = [
     bio: 'Designs hands-on curriculum that turns big scientific ideas into lessons kids can touch, test, and explore.',
     photo: '/boardmembers/kaylaohdoc.png',
     photoHeight: 210, photoExpandedHeight: 380,
-    color: '#fcd34d',
-    glow: 'rgba(252,211,77,0.5)',
-    dark: '#0d0a00',
+    color: '#7dd3fc',
+    glow: 'rgba(125,211,252,0.5)',
+    dark: '#000d18',
     number: '08',
   },
 ]
@@ -299,7 +301,7 @@ function PanelStage({ members, height = 580, expandFlex = 3.5, groupBreakAfter =
             {/* Photo / emoji */}
             <div style={{
               position:'absolute', top:'50%', left:'50%',
-              transform:'translate(-50%, -58%)', zIndex:1,
+              transform:`translate(-50%, ${m.photoOffsetY ?? -58}%)`, zIndex:1,
             }}>
               {m.photo ? (
                 <motion.img
