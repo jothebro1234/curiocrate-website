@@ -305,7 +305,7 @@ function PanelStage({ members, height = 580, expandFlex = 3.5, groupBreakAfter =
             {/* Photo / emoji */}
             <div style={{
               position:'absolute', top:'50%', left:'50%',
-              transform:`translate(-50%, ${m.photoOffsetY ?? -58}%)`, zIndex:1,
+              transform:`translate(-50%, ${m.photoOffsetY ?? -58}%) translateY(35px)`, zIndex:1,
             }}>
               {m.photo ? (
                 <motion.img
