@@ -175,34 +175,60 @@ function ImpactArea({ center, radiusKm, color }) {
   ))
 }
 
-// Blue circle = chapter
+// Nudges markers that share (near-)identical coordinates apart in a small ring so
+// several locations in the same area render as distinct dots instead of one stacked blob.
+function spreadOverlapping(markers) {
+  const groups = new Map()
+  markers.forEach((m, i) => {
+    const key = `${m.coords[0].toFixed(2)},${m.coords[1].toFixed(2)}`
+    if (!groups.has(key)) groups.set(key, [])
+    groups.get(key).push(i)
+  })
+  const spread = [...markers]
+  groups.forEach(indices => {
+    if (indices.length < 2) return
+    const jitterDeg = 0.035
+    indices.forEach((idx, j) => {
+      const angle = (2 * Math.PI * j) / indices.length
+      const [lat, lng] = markers[idx].coords
+      spread[idx] = {
+        ...markers[idx],
+        coords: [lat + jitterDeg * Math.sin(angle), lng + jitterDeg * Math.cos(angle)],
+      }
+    })
+  })
+  return spread
+}
+
+// Blue circle = chapter. Solid dark ring (instead of a soft glow) keeps adjacent
+// markers visually separable even when they're close together or zoomed way out.
 const chapterIcon = L.divIcon({
   html: `<div style="
-    width:14px;height:14px;border-radius:50%;
-    background:rgba(168,212,240,0.9);
-    border:3px solid rgba(168,212,240,0.35);
-    box-shadow:0 0 16px rgba(168,212,240,0.7), 0 0 32px rgba(168,212,240,0.3);
+    width:16px;height:16px;border-radius:50%;
+    background:rgba(168,212,240,0.95);
+    border:2px solid rgba(6,13,31,0.95);
+    box-shadow:0 0 5px rgba(168,212,240,0.9), 0 1px 3px rgba(0,0,0,0.7);
     cursor:pointer;
   "></div>`,
   className: '',
-  iconSize: [14, 14],
-  iconAnchor: [7, 7],
+  iconSize: [16, 16],
+  iconAnchor: [8, 8],
   popupAnchor: [0, -10],
 })
 
 // Amber diamond = teaching location
 const teachingIcon = L.divIcon({
   html: `<div style="
-    width:11px;height:11px;border-radius:2px;
-    background:rgba(251,191,36,0.9);
-    border:2px solid rgba(251,191,36,0.4);
-    box-shadow:0 0 14px rgba(251,191,36,0.7), 0 0 28px rgba(251,191,36,0.3);
+    width:13px;height:13px;border-radius:2px;
+    background:rgba(251,191,36,0.95);
+    border:2px solid rgba(6,13,31,0.95);
+    box-shadow:0 0 5px rgba(251,191,36,0.9), 0 1px 3px rgba(0,0,0,0.7);
     cursor:pointer;
     transform:rotate(45deg);
   "></div>`,
   className: '',
-  iconSize: [11, 11],
-  iconAnchor: [5, 5],
+  iconSize: [13, 13],
+  iconAnchor: [6, 6],
   popupAnchor: [0, -10],
 })
 
@@ -228,7 +254,12 @@ function LeafletMap({ chaptersData }) {
     .map(([school, lngLat]) => ({ school, coords: [lngLat[1], lngLat[0]] }))
 
   // Teaching location markers (must have coordinates in the sheet)
-  const teachingMarkers = teachingRows.filter(c => c.latitude && c.longitude)
+  const teachingMarkers = teachingRows
+    .filter(c => c.latitude && c.longitude)
+    .map(c => ({ ...c, coords: [c.latitude, c.longitude] }))
+
+  const spreadChapters = spreadOverlapping([...chapterMarkers, ...hardcoded])
+  const spreadTeaching = spreadOverlapping(teachingMarkers)
 
   return (
     <div style={{ position: 'relative' }}>
@@ -247,7 +278,7 @@ function LeafletMap({ chaptersData }) {
           maxZoom={20}
         />
 
-        {[...chapterMarkers, ...hardcoded].map((m, i) => (
+        {spreadChapters.map((m, i) => (
           <>
             <ImpactArea key={`chapter-area-${i}`} center={m.coords} radiusKm={m.radius || 12} color="rgba(168,212,240,1)" />
             <Marker key={`chapter-${i}`} position={m.coords} icon={chapterIcon}>
@@ -267,10 +298,10 @@ function LeafletMap({ chaptersData }) {
           </>
         ))}
 
-        {teachingMarkers.map((m, i) => (
+        {spreadTeaching.map((m, i) => (
           <>
-            <ImpactArea key={`impact-area-${i}`} center={[m.latitude, m.longitude]} radiusKm={m.radius || 12} color="rgba(251,191,36,1)" />
-            <Marker key={`teaching-${i}`} position={[m.latitude, m.longitude]} icon={teachingIcon}>
+            <ImpactArea key={`impact-area-${i}`} center={m.coords} radiusKm={m.radius || 12} color="rgba(251,191,36,1)" />
+            <Marker key={`teaching-${i}`} position={m.coords} icon={teachingIcon}>
               <Popup>
                 <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", minWidth: 180 }}>
                   <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: '#fbbf24', marginBottom: 6 }}>Impact</div>
