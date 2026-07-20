@@ -191,6 +191,7 @@ const departmentHeads = [
   {
     id: 'head-curriculum',
     name: 'Head of Curriculum Department',
+    shortName: 'Curriculum',
     role: 'Position Open',
     bio: 'This seat is open — reach out if you want to help shape CurioCrate\'s curriculum direction.',
     emoji: '📚',
@@ -202,6 +203,7 @@ const departmentHeads = [
   {
     id: 'head-marketing',
     name: 'Head of Marketing Department',
+    shortName: 'Marketing',
     role: 'Position Open',
     bio: 'This seat is open — reach out if you want to help lead CurioCrate\'s marketing efforts.',
     emoji: '📣',
@@ -213,6 +215,7 @@ const departmentHeads = [
   {
     id: 'head-operations',
     name: 'Head of Operations',
+    shortName: 'Operations',
     role: 'Position Open',
     bio: 'This seat is open — reach out if you want to help run CurioCrate\'s events and logistics.',
     emoji: '⚙️',
@@ -224,6 +227,7 @@ const departmentHeads = [
   {
     id: 'head-product',
     name: 'Head of Product Department',
+    shortName: 'Product',
     role: 'Position Open',
     bio: 'This seat is open — reach out if you want to help lead CurioCrate\'s kit and product roadmap.',
     emoji: '🧩',
@@ -410,7 +414,7 @@ function PanelStage({ members, height = 580, expandFlex = 3.5, groupBreakAfter =
                       writingMode:'vertical-rl', textOrientation:'mixed',
                       transform:'rotate(180deg)', margin:'0 auto', letterSpacing:'0.05em',
                     }}>
-                      {m.name}
+                      {m.shortName ?? m.name}
                     </div>
                   </motion.div>
                 ) : (
