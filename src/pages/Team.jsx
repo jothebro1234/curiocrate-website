@@ -170,7 +170,7 @@ const productOfficers = [
     color: '#fda4af',
     glow: 'rgba(253,164,175,0.5)',
     dark: '#160006',
-    number: '01',
+    number: '08',
   },
   {
     id: 'po2',
@@ -183,6 +183,31 @@ const productOfficers = [
     color: '#fda4af',
     glow: 'rgba(253,164,175,0.5)',
     dark: '#160006',
+    number: '09',
+  },
+]
+
+const departmentHeads = [
+  {
+    id: 'head-marketing',
+    name: 'Marketing Head',
+    role: 'Position Open',
+    bio: 'This seat is open — reach out if you want to help lead CurioCrate\'s marketing efforts.',
+    emoji: '📣',
+    color: '#e879f9',
+    glow: 'rgba(232,121,249,0.5)',
+    dark: '#170018',
+    number: '01',
+  },
+  {
+    id: 'head-curriculum',
+    name: 'Curriculum Head',
+    role: 'Position Open',
+    bio: 'This seat is open — reach out if you want to help shape CurioCrate\'s curriculum direction.',
+    emoji: '📚',
+    color: '#fbbf24',
+    glow: 'rgba(251,191,36,0.5)',
+    dark: '#170f00',
     number: '02',
   },
 ]
@@ -477,7 +502,13 @@ export default function Team() {
             title="Specialists who build"
             italic="the mission daily."
           />
-          <PanelStage members={directors} height={620} expandFlex={2.8} />
+          <div className="team-directors-row" style={{ display:'flex', margin:'0 40px 12px' }}>
+            <div style={{ flex: directors.length }} />
+            <div style={{ flex: productOfficers.length, textAlign:'center' }}>
+              <span className="label" style={{ fontSize:9, opacity:0.5 }}>Product Leadership</span>
+            </div>
+          </div>
+          <PanelStage members={[...directors, ...productOfficers]} height={620} expandFlex={2.8} groupBreakAfter={directors.length - 1} />
           <div style={{ textAlign:'center', marginTop:18, marginBottom:0 }}>
             <span className="label" style={{ fontSize:9, opacity:0.3 }}>
               Hover to reveal · Click to lock
@@ -486,15 +517,15 @@ export default function Team() {
         </div>
 
         {/* ══════════════════════════════════════════════════════════════════════
-            PRODUCT LEADERSHIP
+            DEPARTMENT HEADS
         ══════════════════════════════════════════════════════════════════════ */}
         <div style={{ padding:'72px 0 20px' }}>
           <SectionHeading
-            label="Product Leadership"
-            title="Turning ideas into"
-            italic="kits kids love."
+            label="Department Heads"
+            title="Leading the teams"
+            italic="behind the mission."
           />
-          <PanelStage members={productOfficers} height={560} expandFlex={2.2} />
+          <PanelStage members={departmentHeads} height={560} expandFlex={2.2} />
           <div style={{ textAlign:'center', marginTop:18, marginBottom:0 }}>
             <span className="label" style={{ fontSize:9, opacity:0.3 }}>
               Hover to reveal · Click to lock
@@ -763,6 +794,7 @@ export default function Team() {
           .team-header  { padding: 96px 20px 48px !important; }
           .team-founder { margin: 40px 20px 20px !important; min-height: 70vh !important; }
           .team-join-cta { margin: 40px 20px 72px !important; padding: 40px 24px !important; }
+          .team-directors-row { flex-direction: column !important; margin-left: 0 !important; margin-right: 0 !important; }
         }
       `}</style>
 
