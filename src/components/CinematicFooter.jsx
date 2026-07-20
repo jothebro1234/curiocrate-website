@@ -17,7 +17,7 @@ export default function CinematicFooter() {
           {/* Brand */}
           <div>
             <img
-              src="/images/cclogo.png"
+              src="/images/cclogosmall.png"
               alt="CurioCrate"
               style={{ height:40, marginBottom:16, filter:'drop-shadow(0 0 10px rgba(168,212,240,0.3))' }}
             />

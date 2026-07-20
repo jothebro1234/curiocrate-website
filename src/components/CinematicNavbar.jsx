@@ -101,7 +101,7 @@ export default function CinematicNavbar() {
         {/* Brand */}
         <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
           <img
-            src="/images/cclogo.png" alt="CurioCrate"
+            src="/images/cclogofull.png" alt="CurioCrate"
             style={{ height: 34, objectFit: 'contain', filter: 'drop-shadow(0 0 10px rgba(168,212,240,0.5))' }}
           />
           <span style={{
@@ -269,7 +269,7 @@ export default function CinematicNavbar() {
         {/* Overlay header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 48 }}>
           <NavLink to="/" onClick={() => setMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-            <img src="/images/cclogo.png" alt="CurioCrate" style={{ height: 30, objectFit: 'contain', filter: 'drop-shadow(0 0 8px rgba(168,212,240,0.4))' }} />
+            <img src="/images/cclogosmall.png" alt="CurioCrate" style={{ height: 30, objectFit: 'contain', filter: 'drop-shadow(0 0 8px rgba(168,212,240,0.4))' }} />
             <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 17, color: 'var(--pastel2)', fontWeight: 300 }}>CurioCrate</span>
           </NavLink>
           <button
