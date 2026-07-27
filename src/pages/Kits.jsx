@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Canvas } from '@react-three/fiber'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
@@ -7,7 +8,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import PageTransition from '../components/PageTransition'
 import Scene from '../components/kitExperience/Scene'
 import { useMobile } from '../hooks/useMobile'
-import { TOTAL_VH, CAPTIONS, CHAPTER_KEYS, chapterIndexForProgress, CTA_LINKS, COMPONENTS, SNAP_POINTS } from '../components/kitExperience/content'
+import { TOTAL_VH, CAPTIONS, CHAPTER_KEYS, chapterIndexForProgress, CTA_LINKS, COMPONENTS } from '../components/kitExperience/content'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -75,28 +76,20 @@ function KitsExperience() {
   const pinRef = useRef(null)
   const progressRef = useRef(0)
   const [chapterIdx, setChapterIdx] = useState(0)
+  const [active, setActive] = useState(true)
 
   useEffect(() => {
     const st = ScrollTrigger.create({
       trigger: spacerRef.current,
       start: 'top top',
       end: 'bottom bottom',
-      pin: pinRef.current,
-      pinType: 'transform',
-      pinSpacing: false,
       scrub: true,
-      snap: {
-        snapTo: SNAP_POINTS,
-        duration: { min: 0.35, max: 1.1 },
-        delay: 0.15,
-        ease: 'power2.inOut',
-        directional: true,
-      },
       onUpdate: (self) => {
         progressRef.current = self.progress
         const idx = chapterIndexForProgress(self.progress)
         setChapterIdx((prev) => (prev === idx ? prev : idx))
       },
+      onToggle: (self) => setActive(self.isActive),
     })
     return () => st.kill()
   }, [])
@@ -106,31 +99,37 @@ function KitsExperience() {
 
   return (
     <div ref={spacerRef} style={{ position: 'relative', height: `${TOTAL_VH}vh` }}>
-      <div ref={pinRef} style={{ position: 'relative', height: '100vh', overflow: 'hidden', background: '#03050f' }}>
-        <Canvas camera={{ position: [0, 0.5, 15], fov: 38 }} dpr={[1, 1.8]} gl={{ antialias: true }}>
-          <Scene progressRef={progressRef} quality="high" />
-        </Canvas>
-
-        {/* chapter rail */}
-        <div style={{ position: 'absolute', left: 28, top: '50%', transform: 'translateY(-50%)', display: 'flex', flexDirection: 'column', gap: 5, zIndex: 5 }}>
-          {CHAPTER_KEYS.map((k, i) => (
-            <div key={k} style={{
-              width: i === chapterIdx ? 16 : 8, height: 2,
-              background: i === chapterIdx ? 'var(--pastel1)' : 'rgba(168,212,240,0.25)',
-              boxShadow: i === chapterIdx ? '0 0 8px rgba(168,212,240,0.8)' : 'none',
-              transition: 'all 0.4s ease',
-            }} />
-          ))}
-        </div>
-
-        <div style={{
-          position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
-          justifyContent: 'flex-end', alignItems: 'center', padding: '0 24px 90px',
-          pointerEvents: 'none', zIndex: 4,
+      {createPortal(
+        <div ref={pinRef} style={{
+          position: 'fixed', inset: 0, zIndex: 1, overflow: 'hidden', background: '#03050f',
+          opacity: active ? 1 : 0, pointerEvents: active ? 'auto' : 'none',
         }}>
-          <Caption chapterKey={chapterKey} caption={caption} />
-        </div>
-      </div>
+          <Canvas camera={{ position: [0, 0.5, 15], fov: 38 }} dpr={[1, 1.8]} gl={{ antialias: true }}>
+            <Scene progressRef={progressRef} quality="high" />
+          </Canvas>
+
+          {/* chapter rail */}
+          <div style={{ position: 'absolute', left: 28, top: '50%', transform: 'translateY(-50%)', display: 'flex', flexDirection: 'column', gap: 5, zIndex: 5 }}>
+            {CHAPTER_KEYS.map((k, i) => (
+              <div key={k} style={{
+                width: i === chapterIdx ? 16 : 8, height: 2,
+                background: i === chapterIdx ? 'var(--pastel1)' : 'rgba(168,212,240,0.25)',
+                boxShadow: i === chapterIdx ? '0 0 8px rgba(168,212,240,0.8)' : 'none',
+                transition: 'all 0.4s ease',
+              }} />
+            ))}
+          </div>
+
+          <div style={{
+            position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+            justifyContent: 'flex-end', alignItems: 'center', padding: '0 24px 90px',
+            pointerEvents: 'none', zIndex: 4,
+          }}>
+            <Caption chapterKey={chapterKey} caption={caption} />
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   )
 }

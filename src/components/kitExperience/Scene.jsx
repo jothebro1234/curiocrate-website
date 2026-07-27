@@ -1,6 +1,6 @@
 import { useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { RoundedBox, Html, Sparkles, Environment } from '@react-three/drei'
+import { RoundedBox, Html, Sparkles, Environment, Text } from '@react-three/drei'
 import { EffectComposer, Bloom, Vignette, DepthOfField } from '@react-three/postprocessing'
 import * as THREE from 'three'
 import { CH, PACKAGING_CALLOUTS, COMPONENTS, ORBIT_LABELS } from './content'
@@ -27,13 +27,13 @@ function updateCamera(camera, tmp, p) {
     const t = remap(p, CH.orbit)
     const angle = t * Math.PI * 2.3 - Math.PI / 2
     const r = 7.1
-    pos = [Math.cos(angle) * r, 1.1 + Math.sin(t * Math.PI * 2.4) * 0.45, Math.sin(angle) * r]
+    pos = [Math.cos(angle) * r, lerp(0.85, 1.35, t), Math.sin(angle) * r]
     look = [0, 0.1, 0]
   } else if (p < CH.spotlight[1]) {
     const t = ease(remap(p, CH.spotlight))
     const endAngle = Math.PI * 2.3 - Math.PI / 2
     const sx = Math.cos(endAngle) * 7.1, sz = Math.sin(endAngle) * 7.1
-    pos = [lerp(sx, 0, t), lerp(1.1, 0.35, t), lerp(sz, 6.0, t)]
+    pos = [lerp(sx, 0, t), lerp(1.35, 0.35, t), lerp(sz, 6.0, t)]
     look = [0, 0.1, 0]
   } else if (p < CH.packaging[1]) {
     const t = remap(p, CH.packaging)
@@ -48,8 +48,8 @@ function updateCamera(camera, tmp, p) {
     const range = idx === 0 ? CH.comp1 : idx === 1 ? CH.comp2 : CH.comp3
     const t = ease(remap(p, range))
     const swing = Math.sin(t * Math.PI) * 1.1
-    pos = [swing * (idx % 2 === 0 ? 1 : -1), 1.65, 4.1]
-    look = [0, 1.15, 0]
+    pos = [swing * (idx % 2 === 0 ? 1 : -1), 1.85, 5.4]
+    look = [0, 1.75, 0]
   } else {
     const t = ease(remap(p, CH.ending))
     pos = [0, lerp(1.5, 0.7, t), lerp(4.1, 13.5, t)]
@@ -64,11 +64,17 @@ export default function Scene({ progressRef, quality = 'high' }) {
   const trayRef = useRef(null)
   const lidPivotRef = useRef(null)
   const compGroupRefs = useRef([])
-  const titleElRef = useRef(null)
+  const titleRef = useRef(null)
   const particlesGroupRef = useRef(null)
   const boxGroupRef = useRef(null)
   const calloutRefs = useRef({})
   const tmpVec = useMemo(() => new THREE.Vector3(), [])
+  const smoothedP = useRef(0)
+  const allCallouts = useMemo(() => [
+    ...PACKAGING_CALLOUTS.map((c) => ({ id: c.key, t: c.t })),
+    ...COMPONENTS.flatMap((c) => c.callouts.map((cc, ci) => ({ id: `${c.key}-${ci}`, t: cc.t }))),
+    ...ORBIT_LABELS.map((l, i) => ({ id: `orbit-${i}`, t: l.t })),
+  ], [])
 
   const trayMaterial = useMemo(() => new THREE.MeshPhysicalMaterial({
     color: '#0c1018', metalness: 0.55, roughness: 0.38,
@@ -82,8 +88,9 @@ export default function Scene({ progressRef, quality = 'high' }) {
     color: '#050709', metalness: 0.1, roughness: 0.9,
   }), [])
 
-  useFrame((state) => {
-    const p = progressRef.current
+  useFrame((state, delta) => {
+    smoothedP.current += (progressRef.current - smoothedP.current) * Math.min(1, delta * 6)
+    const p = smoothedP.current
     updateCamera(state.camera, tmpVec, p)
 
     // Lid: closed until "opening" chapter, stays open through components, closes during ending
@@ -131,17 +138,12 @@ export default function Scene({ progressRef, quality = 'high' }) {
     else if (p < CH.spotlight[0]) titleOpacity = 1 - ease(remap(p, CH.orbit))
     else if (p < CH.ending[0]) titleOpacity = 0.04
     else { const t = ease(remap(p, CH.ending)); titleOpacity = 0.04 + t * 0.9; titleScale = 1 + t * 0.12 }
-    if (titleElRef.current) {
-      titleElRef.current.style.opacity = String(titleOpacity)
-      titleElRef.current.style.transform = `scale(${titleScale})`
+    if (titleRef.current) {
+      titleRef.current.fillOpacity = titleOpacity
+      titleRef.current.scale.setScalar(titleScale)
     }
 
     // Packaging + component callouts: continuous fade in/out over each anchor's own window
-    const allCallouts = [
-      ...PACKAGING_CALLOUTS.map((c) => ({ id: c.key, t: c.t })),
-      ...COMPONENTS.flatMap((c) => c.callouts.map((cc, ci) => ({ id: `${c.key}-${ci}`, t: cc.t }))),
-      ...ORBIT_LABELS.map((l, i) => ({ id: `orbit-${i}`, t: l.t })),
-    ]
     allCallouts.forEach(({ id, t: [s, e] }) => {
       const el = calloutRefs.current[id]
       if (!el) return
@@ -170,30 +172,20 @@ export default function Scene({ progressRef, quality = 'high' }) {
         <Sparkles count={quality === 'high' ? 90 : 40} scale={[10, 6, 10]} size={1.4} speed={0.15} opacity={0.35} color="#a8d4f0" />
       </group>
 
-      <Html
-        position={[0, 1.55, -3.4]}
-        center
-        distanceFactor={9}
-        zIndexRange={[10, 0]}
-        style={{ pointerEvents: 'none' }}
+      <Text
+        ref={titleRef}
+        position={[0, 1.85, -3.6]}
+        fontSize={0.95}
+        letterSpacing={-0.01}
+        color="#f0f7ff"
+        anchorX="center"
+        anchorY="middle"
+        material-transparent
+        material-toneMapped={false}
+        fillOpacity={0}
       >
-        <div
-          ref={titleElRef}
-          style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontWeight: 300,
-            fontSize: 74,
-            letterSpacing: '-0.01em',
-            color: 'var(--cream)',
-            whiteSpace: 'nowrap',
-            textShadow: '0 0 50px rgba(168,212,240,0.6), 0 0 120px rgba(168,212,240,0.3)',
-            opacity: 0,
-            transition: 'opacity 0.1s linear',
-          }}
-        >
-          Example Kit
-        </div>
-      </Html>
+        Example Kit
+      </Text>
 
       <group ref={boxGroupRef}>
         <RoundedBox ref={trayRef} args={[TRAY_W, TRAY_H, TRAY_D]} radius={0.1} smoothness={4} material={trayMaterial} />
