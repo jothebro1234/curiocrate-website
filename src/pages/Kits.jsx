@@ -7,7 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import PageTransition from '../components/PageTransition'
 import Scene from '../components/kitExperience/Scene'
 import { useMobile } from '../hooks/useMobile'
-import { TOTAL_VH, CAPTIONS, CHAPTER_KEYS, chapterIndexForProgress, CTA_LINKS, COMPONENTS } from '../components/kitExperience/content'
+import { TOTAL_VH, CAPTIONS, CHAPTER_KEYS, chapterIndexForProgress, CTA_LINKS, COMPONENTS, SNAP_POINTS } from '../components/kitExperience/content'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -85,6 +85,13 @@ function KitsExperience() {
       pinType: 'transform',
       pinSpacing: false,
       scrub: true,
+      snap: {
+        snapTo: SNAP_POINTS,
+        duration: { min: 0.35, max: 1.1 },
+        delay: 0.15,
+        ease: 'power2.inOut',
+        directional: true,
+      },
       onUpdate: (self) => {
         progressRef.current = self.progress
         const idx = chapterIndexForProgress(self.progress)

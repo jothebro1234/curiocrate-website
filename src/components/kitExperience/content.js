@@ -20,6 +20,24 @@ export const CH = {
 
 export const CHAPTER_KEYS = Object.keys(CH)
 
+// The single "best" resting frame within each chapter — where the camera/box/
+// component composition reads cleanest. One scroll nudge snaps to the nearest
+// (directionally next) of these, so scrolling feels like advancing slides.
+export const BEST_P = {
+  arrival1:  0.02,
+  arrival2:  0.055,
+  orbit:     0.17,
+  spotlight: 0.36,
+  packaging: 0.47,
+  opening:   0.615,
+  comp1:     0.67,
+  comp2:     0.76,
+  comp3:     0.8475,
+  ending:    1,
+}
+
+export const SNAP_POINTS = CHAPTER_KEYS.map((k) => BEST_P[k])
+
 export function chapterIndexForProgress(p) {
   for (let i = 0; i < CHAPTER_KEYS.length; i++) {
     const [, end] = CH[CHAPTER_KEYS[i]]
