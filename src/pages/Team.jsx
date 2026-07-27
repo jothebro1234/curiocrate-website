@@ -95,6 +95,28 @@ const directors = [
     number: '03',
   },
   {
+    id: 'pub-katelyn',
+    name: 'Katelyn Jun',
+    role: 'Director of Publicity',
+    bio: 'Builds creative campaigns and community partnerships that carry the CurioCrate story further.',
+    emoji: '📣',
+    color: '#a855f7',
+    glow: 'rgba(168,85,247,0.5)',
+    dark: '#0d0018',
+    number: '04',
+  },
+  {
+    id: 'pub-soorene',
+    name: 'Soorene Kim',
+    role: 'Director of Publicity',
+    bio: 'Champions CurioCrate\'s voice across social and community channels, turning outreach into lasting connections.',
+    emoji: '📣',
+    color: '#a855f7',
+    glow: 'rgba(168,85,247,0.5)',
+    dark: '#0d0018',
+    number: '05',
+  },
+  {
     id: 'curriculum2',
     name: 'Yashitha Teekaraman',
     role: 'Director of Curriculum',
@@ -105,7 +127,7 @@ const directors = [
     color: '#2dd4bf',
     glow: 'rgba(45,212,191,0.5)',
     dark: '#00120f',
-    number: '04',
+    number: '06',
   },
   {
     id: 'curriculum3',
@@ -117,7 +139,7 @@ const directors = [
     color: '#2dd4bf',
     glow: 'rgba(45,212,191,0.5)',
     dark: '#00120f',
-    number: '05',
+    number: '07',
   },
   {
     id: 'fundraising',
@@ -129,7 +151,7 @@ const directors = [
     color: '#facc15',
     glow: 'rgba(250,204,21,0.5)',
     dark: '#170f00',
-    number: '06',
+    number: '08',
   },
 ]
 
