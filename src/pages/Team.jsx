@@ -540,7 +540,7 @@ export default function Team() {
             title="Leading the teams"
             italic="behind the mission."
           />
-          <PanelStage members={departmentHeads} height={560} expandFlex={2.2} />
+          <PanelStage members={departmentHeads} height={640} expandFlex={2.6} />
           <div style={{ textAlign:'center', marginTop:18, marginBottom:0 }}>
             <span className="label" style={{ fontSize:9, opacity:0.3 }}>
               Hover to reveal · Click to lock
