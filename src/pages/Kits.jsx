@@ -71,7 +71,7 @@ function Caption({ chapterKey, caption }) {
   )
 }
 
-function KitsExperience() {
+function KitsExperience({ isMobile }) {
   const spacerRef = useRef(null)
   const pinRef = useRef(null)
   const progressRef = useRef(0)
@@ -104,8 +104,12 @@ function KitsExperience() {
           position: 'fixed', inset: 0, zIndex: 1, overflow: 'hidden', background: '#03050f',
           opacity: active ? 1 : 0, pointerEvents: active ? 'auto' : 'none',
         }}>
-          <Canvas camera={{ position: [0, 0.5, 15], fov: 38 }} dpr={[1, 1.8]} gl={{ antialias: true }}>
-            <Scene progressRef={progressRef} quality="high" />
+          <Canvas
+            camera={{ position: [0, 0.5, 15], fov: isMobile ? 50 : 38 }}
+            dpr={isMobile ? [1, 1.5] : [1, 1.8]}
+            gl={{ antialias: true }}
+          >
+            <Scene progressRef={progressRef} quality={isMobile ? 'low' : 'high'} />
           </Canvas>
 
           {/* chapter rail */}
@@ -192,7 +196,7 @@ export default function Kits() {
 
   return (
     <PageTransition>
-      {isMobile || reducedMotion ? <KitsFallback /> : <KitsExperience />}
+      {reducedMotion ? <KitsFallback /> : <KitsExperience isMobile={isMobile} />}
     </PageTransition>
   )
 }
