@@ -607,7 +607,7 @@ export default function Home() {
                       }}>Initiatives</div>
 
                       {[
-                        { to: '/initiatives/kits', label: 'Opportunities' },
+                        { to: '/initiatives/kits', label: 'Initiatives' },
                         { to: '/initiatives/teaching', label: 'Hands-On Teaching / Curriculum Developer' },
                       ].map(item => (
                         <Link

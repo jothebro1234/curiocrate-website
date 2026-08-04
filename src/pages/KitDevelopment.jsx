@@ -58,32 +58,15 @@ const TABS = [
 ]
 
 const STEM_DETAILS = [
+  { label: 'WHO', value: '2 to 3 high school students' },
   { label: 'START DATE', value: 'TBD' },
   { label: 'END DATE', value: 'TBD' },
   { label: 'FORMAT', value: 'Video pitch + one-pager' },
-  { label: 'PARTNER', value: 'Youth Civics Think Tank' },
 ]
 
-const STEM_TRACKS = [
-  {
-    n: '01',
-    title: 'National Student Competition',
-    body: 'A "for students, by students" national competition where participants research and pitch STEM equity solutions through video and infographic submissions.',
-    prompts: [
-      { label: 'Video Prompt', text: 'You have 3 minutes to pitch to School Board Member Ms. Garcia. Convince her why STEM advocacy matters, and tell her exactly one action you want her to take.' },
-      { label: 'One-Pager Prompt', text: 'If you could change one aspect of STEM education for middle and elementary school students, what would it be, why does the data support it, and how could it realistically be implemented?' },
-    ],
-  },
-  {
-    n: '02',
-    title: 'Kit Development Program',
-    body: 'Physical, NGSS-aligned STEM kits double as both a teacher\'s curriculum resource and an independent student exploration tool, backed by research from Youth Civics Think Tank showing how they outperform current classroom curricula.',
-  },
-  {
-    n: '03',
-    title: 'Direct Advocacy Push',
-    body: 'Student and organizational leaders meet with superintendents, school board members, and NGSS officials to push for real endorsement and funding.',
-  },
+const STEM_PROMPTS = [
+  { label: 'Video Prompt', text: 'You have 3 minutes to pitch to School Board Member Ms. Garcia. Convince her why STEM advocacy matters, and tell her exactly one action you want her to take.' },
+  { label: 'One-Pager Prompt', text: 'If you could change one aspect of STEM education for middle and elementary school students, what would it be, why does the data support it, and how could it realistically be implemented?' },
 ]
 
 export default function KitDevelopment() {
@@ -178,20 +161,20 @@ export default function KitDevelopment() {
                     {/* Big $300+ prize */}
                     <div style={{
                       fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: 'clamp(72px, 11vw, 128px)',
+                      fontSize: 'clamp(64px, 10vw, 112px)',
                       fontWeight: 300,
                       color: 'var(--pastel1)',
-                      lineHeight: 0.85,
+                      lineHeight: 1,
                       letterSpacing: '-0.05em',
-                      textShadow: '0 0 100px rgba(168,212,240,0.6), 0 0 40px rgba(168,212,240,0.3)',
-                      marginBottom: 6,
+                      textShadow: '0 0 60px rgba(168,212,240,0.5), 0 0 24px rgba(168,212,240,0.3)',
+                      marginBottom: 18,
                     }}>
                       <AnimatedAmount target={300} duration={2000} holdDelay={500} onComplete={() => setCountDone(true)} />+
                     </div>
                     <div style={{
                       fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
-                      color: 'var(--pastel1)', opacity: 0.55, marginBottom: 20,
+                      color: 'var(--pastel1)', opacity: 0.55, marginBottom: 24,
                     }}>
                       In Prize Money
                     </div>
@@ -213,40 +196,40 @@ export default function KitDevelopment() {
                       {/* Headline */}
                       <p style={{
                         fontFamily: "'Cormorant Garamond', serif",
-                        fontSize: 'clamp(19px, 2.4vw, 28px)',
-                        fontWeight: 300, color: 'var(--cream)',
-                        lineHeight: 1.3, margin: '0 0 16px',
+                        fontSize: 'clamp(20px, 2.6vw, 30px)',
+                        fontWeight: 400, color: 'var(--cream)',
+                        lineHeight: 1.35, margin: '0 0 18px',
                       }}>
                         A national platform where students turn STEM equity research into real policy action.
                       </p>
 
                       {/* Description — short, no em dashes, bigger and legible */}
                       <p style={{
-                        fontSize: 16, color: 'var(--cream)', lineHeight: 1.7,
-                        maxWidth: 600, margin: '0 0 30px', opacity: 0.82,
+                        fontSize: 17, color: 'var(--cream)', lineHeight: 1.75,
+                        maxWidth: 600, margin: '0 0 32px', opacity: 0.88,
                       }}>
-                        Students research and pitch real STEM equity solutions, then bring their strongest ideas straight to the school leaders who can act on them.
+                        Teams research and pitch real STEM equity solutions on video, then bring their strongest ideas straight to the school leaders who can act on them.
                       </p>
 
                       {/* 2x2 details grid */}
                       <div style={{
                         display: 'grid',
                         gridTemplateColumns: '1fr 1fr',
-                        gap: '16px 64px',
-                        marginBottom: 34,
+                        gap: '18px 64px',
+                        marginBottom: 36,
                       }}>
                         {STEM_DETAILS.map(d => (
                           <div key={d.label} style={{ borderLeft: '3px solid rgba(168,212,240,0.3)', paddingLeft: 14 }}>
                             <div style={{
                               fontFamily: "'JetBrains Mono', monospace",
                               fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase',
-                              color: 'var(--pastel1)', opacity: 0.6, marginBottom: 4,
+                              color: 'var(--pastel1)', opacity: 0.6, marginBottom: 5,
                             }}>
                               {d.label}
                             </div>
                             <div style={{
                               fontFamily: "'Plus Jakarta Sans', sans-serif",
-                              fontSize: 15, fontWeight: 600, color: 'var(--cream)',
+                              fontSize: 16, fontWeight: 600, color: 'var(--cream)',
                             }}>
                               {d.value}
                             </div>
@@ -254,60 +237,34 @@ export default function KitDevelopment() {
                         ))}
                       </div>
 
-                      {/* Three tracks */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginBottom: 34 }}>
-                        {STEM_TRACKS.map(track => (
-                          <div key={track.n} style={{ borderLeft: '3px solid rgba(168,212,240,0.3)', paddingLeft: 18 }}>
-                            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 6 }}>
-                              <span style={{
-                                fontFamily: "'JetBrains Mono', monospace",
-                                fontSize: 10, fontWeight: 700, color: 'var(--pastel1)', opacity: 0.6,
-                              }}>{track.n}</span>
-                              <span style={{
-                                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                                fontSize: 16, fontWeight: 600, color: 'var(--cream)',
-                              }}>{track.title}</span>
-                            </div>
+                      {/* Prompts */}
+                      <div style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
+                        color: 'var(--pastel1)', opacity: 0.6, marginBottom: 14,
+                      }}>
+                        The Prompts
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 36 }}>
+                        {STEM_PROMPTS.map(p => (
+                          <div key={p.label} style={{
+                            background: 'rgba(168,212,240,0.06)',
+                            border: '1px solid rgba(168,212,240,0.12)',
+                            borderRadius: 10, padding: '16px 20px', maxWidth: 600,
+                          }}>
+                            <div style={{
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: 9.5, letterSpacing: '2px', textTransform: 'uppercase',
+                              color: 'var(--pastel1)', opacity: 0.7, marginBottom: 6,
+                            }}>{p.label}</div>
                             <p style={{
-                              fontSize: 14.5, color: 'var(--muted)', lineHeight: 1.7,
-                              maxWidth: 600, margin: track.prompts ? '0 0 14px' : 0, opacity: 0.85,
-                            }}>
-                              {track.body}
-                            </p>
-                            {track.prompts && (
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                                {track.prompts.map(p => (
-                                  <div key={p.label} style={{
-                                    background: 'rgba(168,212,240,0.05)',
-                                    border: '1px solid rgba(168,212,240,0.1)',
-                                    borderRadius: 8, padding: '10px 14px', maxWidth: 580,
-                                  }}>
-                                    <div style={{
-                                      fontFamily: "'JetBrains Mono', monospace",
-                                      fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase',
-                                      color: 'var(--pastel1)', opacity: 0.6, marginBottom: 4,
-                                    }}>{p.label}</div>
-                                    <p style={{
-                                      fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic',
-                                      fontSize: 15.5, color: 'var(--cream)', opacity: 0.85,
-                                      lineHeight: 1.55, margin: 0,
-                                    }}>“{p.text}”</p>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
+                              fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic',
+                              fontSize: 17, color: 'var(--cream)', opacity: 0.92,
+                              lineHeight: 1.6, margin: 0,
+                            }}>“{p.text}”</p>
                           </div>
                         ))}
                       </div>
-
-                      {/* Closing */}
-                      <p style={{
-                        fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic',
-                        fontSize: 16, color: 'var(--pastel1)', lineHeight: 1.6,
-                        maxWidth: 600, margin: '0 0 30px', opacity: 0.9,
-                      }}>
-                        Winning work gets published and shared through both organizations, and turns straight into real conversations with school leaders.
-                      </p>
 
                       {/* CTA */}
                       <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 10 }}>

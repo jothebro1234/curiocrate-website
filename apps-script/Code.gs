@@ -110,6 +110,19 @@
  *   On approval: the email is added/merged into the Directors sheet as tier "director" (never
  *   downgrading someone who already has more access) with the requested title in col D, and
  *   appended to the matching Chapters!AuthorizedDirectors so they're scoped to that chapter.
+ *
+ * KITSTATUS SHEET columns (A–B) — free-form key/value pairs describing the physical kit's
+ * status, read by the marketing site's Kits page:
+ *   A=Key  B=Value
+ *   Every row is one key/value pair; add as many rows/keys as needed. The marketing site
+ *   (src/pages/Kits.jsx) currently only reads one specific key:
+ *     LaunchAt — the target date/time the countdown timer counts down to. Enter it as a real
+ *                Sheets date+time value (Format > Number > Date time), or type an ISO string
+ *                like "2026-12-25 09:00:00" directly into the cell. If this key is missing or
+ *                blank, the countdown page shows a static "00 : 00 : 00 : 00" with a "launch
+ *                date coming soon" message instead of a fake/misleading countdown.
+ *   Any other keys are read and returned too (for future status fields) but nothing on the
+ *   site currently displays them — this sheet is intentionally a flexible catch-all.
  */
 
 const SS = SpreadsheetApp.getActiveSpreadsheet();
@@ -121,6 +134,7 @@ const SHEET_EVENTS         = 'Events';
 const SHEET_CHAPTERS       = 'Chapters';
 const SHEET_DIRECTORS      = 'Directors';
 const SHEET_DIR_REQUESTS   = 'DirectorRequests';
+const SHEET_KIT_STATUS     = 'KitStatus';
 
 /* ── Sheet helpers ──────────────────────────────────────────── */
 function getSheet(name) {
@@ -312,6 +326,8 @@ function doGet(e) {
 
     if (action === 'get_chapters') return getChapters();
 
+    if (action === 'get_kit_status') return getKitStatus();
+
     if (action === 'get_updates') {
         var updatesSheet = SS.getSheetByName('Updates');
         if (!updatesSheet) {
@@ -344,6 +360,30 @@ function doGet(e) {
     return ContentService
         .createTextOutput(JSON.stringify({ ok: true, msg: 'Curio Crate Apps Script running.' }))
         .setMimeType(ContentService.MimeType.JSON);
+}
+
+/* Reads the KitStatus sheet as a flat { Key: Value } object — every row is one key/value pair.
+   Date-formatted cells (e.g. LaunchAt) come through as JS Date objects, which JSON.stringify
+   automatically serializes to an ISO string for the frontend to parse with `new Date(...)`. */
+function getKitStatus() {
+    try {
+        const sheet = SS.getSheetByName(SHEET_KIT_STATUS);
+        if (!sheet) return ContentService.createTextOutput(JSON.stringify({ ok: true, status: {} }))
+            .setMimeType(ContentService.MimeType.JSON);
+        const rows = sheet.getDataRange().getValues();
+        const status = {};
+        for (var i = 0; i < rows.length; i++) {
+            var key = String(rows[i][0] || '').trim();
+            if (!key) continue;
+            var val = rows[i][1];
+            status[key] = (val instanceof Date) ? val : String(val || '').trim();
+        }
+        return ContentService.createTextOutput(JSON.stringify({ ok: true, status: status }))
+            .setMimeType(ContentService.MimeType.JSON);
+    } catch(err) {
+        return ContentService.createTextOutput(JSON.stringify({ ok: false, error: err.toString() }))
+            .setMimeType(ContentService.MimeType.JSON);
+    }
 }
 
 function getChapters() {
