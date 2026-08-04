@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion, useScroll, useTransform, useInView } from 'framer-motion'
-import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import PageTransition from '../components/PageTransition'
@@ -232,6 +232,25 @@ const teachingIcon = L.divIcon({
   popupAnchor: [0, -10],
 })
 
+// Geographic center of the contiguous US — the default view before any chapter/impact
+// markers have loaded (or if none exist), so the map opens framing the whole country
+// rather than any one city.
+const US_CENTER = [39.8283, -98.5795]
+const US_DEFAULT_ZOOM = 4
+
+// Once real markers are in, re-frame the map to fit all of them with some breathing room —
+// this way the "best" default view adapts automatically as chapters/impact locations are
+// added or removed, instead of a hardcoded center/zoom drifting out of date.
+function FitToMarkers({ markers }) {
+  const map = useMap()
+  useEffect(() => {
+    if (!markers.length) return
+    const bounds = L.latLngBounds(markers.map(m => m.coords))
+    map.fitBounds(bounds, { padding: [48, 48], maxZoom: 6 })
+  }, [map, markers])
+  return null
+}
+
 function LeafletMap({ chaptersData }) {
   // Rows from the sheet whose type is "Chapter" (or blank)
   const chapterRows = chaptersData.filter(c => c.type !== 'Impact')
@@ -264,8 +283,8 @@ function LeafletMap({ chaptersData }) {
   return (
     <div style={{ position: 'relative' }}>
       <MapContainer
-        center={[34.05, -118.1]}
-        zoom={8}
+        center={US_CENTER}
+        zoom={US_DEFAULT_ZOOM}
         minZoom={2}
         maxZoom={18}
         style={{ height: '480px', width: '100%', background: '#060d1f' }}
@@ -277,6 +296,8 @@ function LeafletMap({ chaptersData }) {
           subdomains="abcd"
           maxZoom={20}
         />
+
+        <FitToMarkers markers={[...spreadChapters, ...spreadTeaching]} />
 
         {spreadChapters.map((m, i) => (
           <>

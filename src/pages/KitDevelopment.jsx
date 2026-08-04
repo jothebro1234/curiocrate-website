@@ -54,7 +54,29 @@ const DETAILS = [
 
 const TABS = [
   { num: '01', label: 'Kit Development' },
-  { num: '02', label: 'More Coming Soon' },
+  { num: '02', label: 'STEM Advocacy Competition' },
+]
+
+const STEM_TRACKS = [
+  {
+    n: '01',
+    title: 'National Student Competition',
+    body: 'A "for students, by students" national competition where participants research and pitch STEM equity solutions through video and infographic submissions.',
+    prompts: [
+      { label: 'Video Prompt', text: 'You have 3 minutes to pitch to School Board Member Ms. Garcia. Convince her why STEM advocacy matters, and tell her exactly one action you want her to take.' },
+      { label: 'One-Pager Prompt', text: 'If you could change one aspect of STEM education for middle and elementary school students, what would it be, why does the data support it, and how could it realistically be implemented?' },
+    ],
+  },
+  {
+    n: '02',
+    title: 'Kit Development Program',
+    body: 'Physical, NGSS-aligned STEM kits are designed to double as both a teacher’s curriculum resource and an independent student exploration tool. Youth Civics Think Tank helps CurioCrate research and finalize the statistics that show the impact of these kits and how they outperform current classroom curricula.',
+  },
+  {
+    n: '03',
+    title: 'Direct Advocacy Push',
+    body: 'Student and organizational leaders meet with superintendents, school board members, and NGSS officials to push for real endorsement and funding.',
+  },
 ]
 
 export default function KitDevelopment() {
@@ -251,31 +273,99 @@ export default function KitDevelopment() {
                   </motion.div>
                 ) : (
                   <motion.div
-                    key="soon"
+                    key="stem"
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.3 }}
-                    style={{
-                      padding: '80px 44px',
-                      display: 'flex', flexDirection: 'column',
-                      alignItems: 'flex-start', justifyContent: 'center',
-                    }}
+                    style={{ padding: '40px 44px 44px' }}
                   >
+                    {/* Partnership eyebrow */}
                     <div style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: 'clamp(36px, 5vw, 64px)',
-                      fontWeight: 300, color: 'rgba(168,212,240,0.2)',
-                      letterSpacing: '-0.02em', lineHeight: 1.1,
-                      marginBottom: 16,
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase',
+                      color: 'var(--pastel1)', opacity: 0.65, marginBottom: 16,
                     }}>
-                      Coming soon.
+                      CurioCrate × Youth Civics Think Tank
                     </div>
+
+                    {/* Headline */}
+                    <p style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: 'clamp(22px, 2.8vw, 34px)',
+                      fontWeight: 300, color: 'var(--cream)',
+                      lineHeight: 1.25, margin: '0 0 16px',
+                    }}>
+                      A national platform where students turn STEM equity research into real policy action.
+                    </p>
+
+                    {/* Description */}
                     <p style={{
                       fontSize: 14, color: 'var(--muted)', lineHeight: 1.75,
-                      maxWidth: 400, margin: 0, opacity: 0.5,
+                      maxWidth: 640, margin: '0 0 34px', opacity: 0.85,
                     }}>
-                      New opportunities are on the way. Check back soon.
+                      A joint initiative built to close two gaps at once: the lack of hands-on STEM resources in underserved communities, and the lack of a real platform for students to turn that problem into policy action. Students don't just learn about STEM equity — they build the tools that address it, then take those tools in front of the people who can actually expand access to them. The program runs on three connected tracks.
+                    </p>
+
+                    {/* Three tracks */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 26, marginBottom: 34 }}>
+                      {STEM_TRACKS.map(track => (
+                        <div key={track.n} style={{ borderLeft: '3px solid rgba(168,212,240,0.3)', paddingLeft: 18 }}>
+                          <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 6 }}>
+                            <span style={{
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: 10, fontWeight: 700, color: 'var(--pastel1)', opacity: 0.6,
+                            }}>{track.n}</span>
+                            <span style={{
+                              fontFamily: "'Plus Jakarta Sans', sans-serif",
+                              fontSize: 15, fontWeight: 600, color: 'var(--cream)',
+                            }}>{track.title}</span>
+                          </div>
+                          <p style={{
+                            fontSize: 13.5, color: 'var(--muted)', lineHeight: 1.7,
+                            maxWidth: 600, margin: track.prompts ? '0 0 14px' : 0, opacity: 0.8,
+                          }}>
+                            {track.body}
+                          </p>
+                          {track.prompts && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                              {track.prompts.map(p => (
+                                <div key={p.label} style={{
+                                  background: 'rgba(168,212,240,0.05)',
+                                  border: '1px solid rgba(168,212,240,0.1)',
+                                  borderRadius: 8, padding: '10px 14px', maxWidth: 580,
+                                }}>
+                                  <div style={{
+                                    fontFamily: "'JetBrains Mono', monospace",
+                                    fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase',
+                                    color: 'var(--pastel1)', opacity: 0.6, marginBottom: 4,
+                                  }}>{p.label}</div>
+                                  <p style={{
+                                    fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic',
+                                    fontSize: 14.5, color: 'var(--cream)', opacity: 0.85,
+                                    lineHeight: 1.55, margin: 0,
+                                  }}>“{p.text}”</p>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Closing */}
+                    <p style={{
+                      fontSize: 13.5, color: 'var(--muted)', lineHeight: 1.75,
+                      maxWidth: 640, margin: '0 0 12px', opacity: 0.8,
+                    }}>
+                      Winning research and one-pagers get published and amplified through both organizations' networks, turning strong student work into something with actual reach instead of a grade.
+                    </p>
+                    <p style={{
+                      fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic',
+                      fontSize: 15.5, color: 'var(--pastel1)', lineHeight: 1.6,
+                      maxWidth: 640, margin: 0, opacity: 0.9,
+                    }}>
+                      The end goal: a self-sustaining pipeline — students identify the gaps, build tested solutions for both classroom and independent use, and carry that evidence directly into the rooms where district-level decisions get made.
                     </p>
                   </motion.div>
                 )}
