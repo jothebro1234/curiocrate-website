@@ -49,10 +49,12 @@
  *   L=AuthorizedDirectors (comma-separated emails)
  *   M=Type  N=Latitude  O=Longitude  P=Radius (km, default 12)
  *   Q=Instagram (handle like "@curiocrate" or a full URL)  R=PresidentMessage (short quote)
- *   (Type: "Chapter" or "Impact". Leave blank = "Chapter". Only rows with
- *    Type="Chapter" (or blank) show in the "Our Chapters" list/cards — set
- *    Type="Impact" for one-off teaching locations that should only appear
- *    as map markers, not chapter cards.)
+ *   (Type: "Chapter" or "Impact", matched case-insensitively (see getChapters()).
+ *    Leave blank = "Chapter". Only rows with Type="Chapter" (or blank) show in
+ *    the "Our Chapters" list/cards — set Type="Impact" for one-off teaching
+ *    locations (e.g. YMCAs, elementary schools) that should only appear as
+ *    map markers, not chapter cards. High school chapters should always be
+ *    Type="Chapter".)
  *   (Radius: area of impact in kilometres. Leave blank = 12 km.)
  *
  * DIRECTORS SHEET columns (A–C):
@@ -255,7 +257,7 @@ function getChapters() {
                     secretary:           String(r[9]  || '').trim(),
                     socialMedia:         String(r[10] || '').trim(),
                     authorizedDirectors: String(r[11] || '').trim(),
-                    type:                String(r[12] || '').trim() || 'Chapter',
+                    type:                /^impact$/i.test(String(r[12] || '').trim()) ? 'Impact' : 'Chapter',
                     latitude:            isNaN(lat) ? null : lat,
                     longitude:           isNaN(lng) ? null : lng,
                     radius:              parseFloat(r[15]) || 12,
