@@ -99,7 +99,8 @@ const directors = [
     name: 'Katelyn Jun',
     role: 'Director of Publicity',
     bio: 'Builds creative campaigns and community partnerships that carry the CurioCrate story further.',
-    emoji: '📣',
+    photo: '/boardmembers/katelynjundop.png',
+    photoHeight: 270, photoExpandedHeight: 450,
     color: '#a855f7',
     glow: 'rgba(168,85,247,0.5)',
     dark: '#0d0018',
@@ -158,19 +159,6 @@ const directors = [
 
 const productOfficers = [
   {
-    id: 'po1',
-    name: 'Cristobal Sanchez',
-    role: 'Product Officer',
-    bio: 'Shapes the roadmap for CurioCrate\'s kits and tools, working closely with the team to turn ideas into products students love.',
-    photo: '/boardmembers/cristobalsanchezPO.png',
-    photoHeight: 270, photoExpandedHeight: 450,
-    emoji: '🧩',
-    color: '#fda4af',
-    glow: 'rgba(253,164,175,0.5)',
-    dark: '#160006',
-    number: '08',
-  },
-  {
     id: 'po2',
     name: 'Timothy Cho',
     role: 'Product Officer',
@@ -181,7 +169,7 @@ const productOfficers = [
     color: '#fda4af',
     glow: 'rgba(253,164,175,0.5)',
     dark: '#160006',
-    number: '09',
+    number: '08',
   },
 ]
 
@@ -225,6 +213,19 @@ const departmentHeads = [
     glow: 'rgba(251,146,60,0.5)',
     dark: '#170900',
     number: '03',
+  },
+  {
+    id: 'head-product',
+    name: 'Cristobal Sanchez',
+    shortName: 'Product',
+    role: 'Head of Product Development',
+    bio: 'Shapes the roadmap for CurioCrate\'s kits and tools, working closely with the team to turn ideas into products students love.',
+    photo: '/boardmembers/cristobalsanchezPO.png',
+    photoHeight: 270, photoExpandedHeight: 450,
+    color: '#fda4af',
+    glow: 'rgba(253,164,175,0.5)',
+    dark: '#160006',
+    number: '04',
   },
 ]
 
