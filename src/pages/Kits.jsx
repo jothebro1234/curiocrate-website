@@ -1,202 +1,175 @@
-import { useEffect, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
-import { Canvas } from '@react-three/fiber'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import PageTransition from '../components/PageTransition'
-import Scene from '../components/kitExperience/Scene'
-import { useMobile } from '../hooks/useMobile'
-import { TOTAL_VH, CAPTIONS, CHAPTER_KEYS, chapterIndexForProgress, CTA_LINKS, COMPONENTS } from '../components/kitExperience/content'
 
-gsap.registerPlugin(ScrollTrigger)
+const CATALOG = [
+  { icon: '🧪', name: 'Chemistry Discovery Kit', color: '#a8d4f0', glow: 'rgba(168,212,240,0.5)' },
+  { icon: '🤖', name: 'Robotics Explorer Kit',    color: '#c5b4f8', glow: 'rgba(197,180,248,0.5)' },
+  { icon: '⚙️', name: 'Physics Lab Kit',          color: '#fda4af', glow: 'rgba(253,164,175,0.5)' },
+  { icon: '🌱', name: 'Biology Field Kit',         color: '#a8e8c8', glow: 'rgba(168,232,200,0.5)' },
+  { icon: '🔭', name: 'Astronomy Starter Kit',     color: '#e8c96e', glow: 'rgba(232,201,110,0.5)' },
+  { icon: '🛠️', name: 'Engineering Build Kit',     color: '#f0a8d0', glow: 'rgba(240,168,208,0.5)' },
+]
 
-function Caption({ chapterKey, caption }) {
-  if (!caption || (!caption.line && !caption.eyebrow)) return null
+function KitCard({ kit, index }) {
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={chapterKey}
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-        style={{ textAlign: 'center', maxWidth: 560 }}
-      >
-        {caption.eyebrow && (
-          <div className="label" style={{ marginBottom: 10, opacity: 0.6, letterSpacing: '3px' }}>{caption.eyebrow}</div>
-        )}
-        {caption.line && (
-          <p style={{
-            fontFamily: caption.hint ? "'JetBrains Mono', monospace" : "'Cormorant Garamond', serif",
-            fontStyle: caption.hint ? 'normal' : 'italic',
-            fontSize: caption.hint ? 11 : 'clamp(20px, 2.6vw, 30px)',
-            letterSpacing: caption.hint ? '3px' : '0',
-            textTransform: caption.hint ? 'uppercase' : 'none',
-            color: caption.hint ? 'var(--pastel1)' : 'var(--cream)',
-            opacity: caption.hint ? 0.6 : 0.92,
-            lineHeight: 1.3,
-          }}>{caption.line}</p>
-        )}
-        {caption.badge && (
-          <div style={{
-            display: 'inline-block', marginTop: 14, padding: '6px 16px',
-            border: '1px solid rgba(240,192,112,0.4)', borderRadius: 20,
-            fontFamily: "'JetBrains Mono', monospace", fontSize: 9,
-            letterSpacing: '2px', color: '#f0c070',
-          }}>{caption.badge}</div>
-        )}
-        {caption.cta && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35, duration: 0.6 }}
-            style={{ display: 'flex', gap: 14, justifyContent: 'center', marginTop: 28, pointerEvents: 'auto', flexWrap: 'wrap' }}
-          >
-            {CTA_LINKS.map((c) => (
-              <Link key={c.to} to={c.to} style={{
-                fontFamily: "'JetBrains Mono', monospace", fontSize: 10.5,
-                letterSpacing: '2px', textTransform: 'uppercase', textDecoration: 'none',
-                padding: '13px 24px', border: '1px solid rgba(168,212,240,0.3)', borderRadius: 4,
-                color: 'var(--pastel1)', background: 'rgba(168,212,240,0.05)', transition: 'all 0.3s ease',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(168,212,240,0.14)'; e.currentTarget.style.boxShadow = '0 0 24px rgba(168,212,240,0.2)' }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(168,212,240,0.05)'; e.currentTarget.style.boxShadow = 'none' }}
-              >{c.label}</Link>
-            ))}
-          </motion.div>
-        )}
-      </motion.div>
-    </AnimatePresence>
-  )
-}
+    <motion.div
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7, delay: Math.min(index * 0.08, 0.4), ease: [0.4, 0, 0.2, 1] }}
+      style={{
+        position: 'relative', overflow: 'hidden',
+        padding: '40px 28px 32px', borderRadius: 20,
+        background: 'rgba(6,12,32,0.6)', backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(168,212,240,0.1)',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.35)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
+        transition: 'transform 0.3s ease, border-color 0.3s ease',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.borderColor = `${kit.color}40` }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.1)' }}
+    >
+      {/* Glow */}
+      <div style={{
+        position: 'absolute', top: -60, left: '50%', transform: 'translateX(-50%)',
+        width: 200, height: 200, borderRadius: '50%', pointerEvents: 'none',
+        background: `radial-gradient(circle, ${kit.glow.replace('0.5', '0.18')} 0%, transparent 70%)`,
+      }} />
 
-function KitsExperience({ isMobile }) {
-  const spacerRef = useRef(null)
-  const pinRef = useRef(null)
-  const progressRef = useRef(0)
-  const [chapterIdx, setChapterIdx] = useState(0)
-  const [active, setActive] = useState(true)
-
-  useEffect(() => {
-    const st = ScrollTrigger.create({
-      trigger: spacerRef.current,
-      start: 'top top',
-      end: 'bottom bottom',
-      scrub: true,
-      onUpdate: (self) => {
-        progressRef.current = self.progress
-        const idx = chapterIndexForProgress(self.progress)
-        setChapterIdx((prev) => (prev === idx ? prev : idx))
-      },
-      onToggle: (self) => setActive(self.isActive),
-    })
-    return () => st.kill()
-  }, [])
-
-  const chapterKey = CHAPTER_KEYS[chapterIdx]
-  const caption = CAPTIONS[chapterKey]
-
-  return (
-    <div ref={spacerRef} style={{ position: 'relative', height: `${TOTAL_VH}vh` }}>
-      {createPortal(
-        <div ref={pinRef} style={{
-          position: 'fixed', inset: 0, zIndex: 1, overflow: 'hidden', background: '#03050f',
-          opacity: active ? 1 : 0, pointerEvents: active ? 'auto' : 'none',
-        }}>
-          <Canvas
-            camera={{ position: [0, 0.5, 15], fov: isMobile ? 50 : 38 }}
-            dpr={isMobile ? [1, 1.5] : [1, 1.8]}
-            gl={{ antialias: true }}
-          >
-            <Scene progressRef={progressRef} quality={isMobile ? 'low' : 'high'} />
-          </Canvas>
-
-          {/* chapter rail */}
-          <div style={{ position: 'absolute', left: 28, top: '50%', transform: 'translateY(-50%)', display: 'flex', flexDirection: 'column', gap: 5, zIndex: 5 }}>
-            {CHAPTER_KEYS.map((k, i) => (
-              <div key={k} style={{
-                width: i === chapterIdx ? 16 : 8, height: 2,
-                background: i === chapterIdx ? 'var(--pastel1)' : 'rgba(168,212,240,0.25)',
-                boxShadow: i === chapterIdx ? '0 0 8px rgba(168,212,240,0.8)' : 'none',
-                transition: 'all 0.4s ease',
-              }} />
-            ))}
-          </div>
-
-          <div style={{
-            position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
-            justifyContent: 'flex-end', alignItems: 'center', padding: '0 24px 90px',
-            pointerEvents: 'none', zIndex: 4,
-          }}>
-            <Caption chapterKey={chapterKey} caption={caption} />
-          </div>
-        </div>,
-        document.body
-      )}
-    </div>
-  )
-}
-
-function KitsFallback() {
-  const progressRef = useRef(0.30)
-  return (
-    <div style={{ minHeight: '100vh', position: 'relative', zIndex: 1, background: '#03050f' }}>
-      <div style={{ height: '62vh', position: 'relative' }}>
-        <Canvas camera={{ position: [0, 0.35, 6.2], fov: 38 }} dpr={[1, 1.5]} gl={{ antialias: true }}>
-          <Scene progressRef={progressRef} quality="low" />
-        </Canvas>
+      {/* Icon disc */}
+      <div style={{
+        position: 'relative', width: 84, height: 84, borderRadius: '50%',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: `radial-gradient(circle, ${kit.glow.replace('0.5', '0.16')} 0%, rgba(6,12,32,0.4) 70%)`,
+        border: `1px solid ${kit.color}30`, marginBottom: 22,
+        fontSize: 36,
+      }}>
+        {kit.icon}
       </div>
 
-      <div style={{ padding: '32px 24px 110px', maxWidth: 620, margin: '0 auto', textAlign: 'center' }}>
-        <div className="label" style={{ marginBottom: 12, opacity: 0.5 }}>◈&nbsp; THE LAB &nbsp;◈</div>
-        <h1 style={{
-          fontFamily: "'Cormorant Garamond', serif", fontWeight: 300,
-          fontSize: 'clamp(36px, 8vw, 54px)', color: 'var(--cream)', marginBottom: 12,
-        }}>Example Kit</h1>
-        <p style={{
-          fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic',
-          fontSize: 17, color: 'var(--pastel1)', opacity: 0.8, marginBottom: 48,
-        }}>Designed for creators.</p>
+      <h3 style={{
+        fontFamily: "'Cormorant Garamond', serif", fontWeight: 400,
+        fontSize: 22, color: 'var(--cream)', lineHeight: 1.2, marginBottom: 12,
+      }}>{kit.name}</h3>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 24, textAlign: 'left', marginBottom: 40 }}>
-          {COMPONENTS.map((c) => (
-            <div key={c.key} style={{
-              padding: '18px 20px', border: '1px solid rgba(168,212,240,0.12)',
-              borderRadius: 12, background: 'rgba(8,16,40,0.4)',
-            }}>
-              <div className="label" style={{ opacity: 0.55, marginBottom: 6 }}>{c.name}</div>
-              <p style={{ color: 'var(--muted)', fontSize: 13.5, lineHeight: 1.7 }}>
-                {c.callouts.map((cc) => cc.desc).join(' ')}
-              </p>
-            </div>
-          ))}
-        </div>
+      <div style={{
+        fontFamily: "'JetBrains Mono', monospace", fontSize: 9,
+        letterSpacing: '2.5px', textTransform: 'uppercase',
+        color: kit.color, background: `${kit.color}14`,
+        border: `1px solid ${kit.color}35`, borderRadius: 20,
+        padding: '6px 16px', marginBottom: 14,
+      }}>Coming Soon</div>
 
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          {CTA_LINKS.map((c) => (
-            <Link key={c.to} to={c.to} style={{
-              fontFamily: "'JetBrains Mono', monospace", fontSize: 10.5,
-              letterSpacing: '2px', textTransform: 'uppercase', textDecoration: 'none',
-              padding: '13px 24px', border: '1px solid rgba(168,212,240,0.3)', borderRadius: 4,
-              color: 'var(--pastel1)', background: 'rgba(168,212,240,0.05)',
-            }}>{c.label}</Link>
-          ))}
-        </div>
-      </div>
-    </div>
+      <p style={{ fontSize: 12.5, color: 'var(--muted)', lineHeight: 1.7, opacity: 0.65, maxWidth: 220 }}>
+        Full details, pricing, and photos coming soon.
+      </p>
+    </motion.div>
   )
 }
 
 export default function Kits() {
-  const isMobile = useMobile()
-  const [reducedMotion] = useState(() =>
-    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  )
-
   return (
     <PageTransition>
-      {reducedMotion ? <KitsFallback /> : <KitsExperience isMobile={isMobile} />}
+      <div style={{ minHeight: '100vh', position: 'relative', zIndex: 1 }}>
+
+        {/* ── HERO ── */}
+        <section style={{ padding: '160px 40px 80px', textAlign: 'center' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="label" style={{ marginBottom: 16 }}>The Lab</div>
+            <h1 style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: 'clamp(44px, 7vw, 92px)',
+              fontWeight: 300, color: 'var(--cream)',
+              lineHeight: 1.0, letterSpacing: '-0.03em', marginBottom: 20,
+            }}>
+              Our <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>Kits.</em>
+            </h1>
+            <p style={{
+              fontSize: 16, color: 'var(--muted)', lineHeight: 1.8,
+              maxWidth: 520, margin: '0 auto', opacity: 0.8,
+            }}>
+              Hands-on science kits designed for classrooms and independent explorers alike. The full catalog is in development — here's a first look at what's coming.
+            </p>
+          </motion.div>
+        </section>
+
+        {/* ── CATALOG GRID ── */}
+        <section style={{ padding: '0 40px 100px' }}>
+          <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+              gap: 24,
+            }}>
+              {CATALOG.map((kit, i) => (
+                <KitCard key={kit.name} kit={kit} index={i} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── CTA ── */}
+        <motion.section
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.9 }}
+          style={{ padding: '0 40px 140px' }}
+        >
+          <div style={{
+            maxWidth: 720, margin: '0 auto', textAlign: 'center',
+            padding: '64px 40px', borderRadius: 20,
+            border: '1px solid rgba(168,212,240,0.09)',
+            background: 'rgba(8,16,40,0.5)', backdropFilter: 'blur(20px)',
+          }}>
+            <img src="/images/mascot1.png" alt=""
+              style={{ height: 64, marginBottom: 22, filter: 'drop-shadow(0 0 20px rgba(168,212,240,0.4))', animation: 'drift 5s ease-in-out infinite' }}
+            />
+            <h3 style={{
+              fontFamily: "'Cormorant Garamond', serif", fontSize: 32,
+              fontWeight: 300, color: 'var(--cream)', marginBottom: 14,
+            }}>
+              Want to help design the first kit?
+            </h3>
+            <p style={{
+              color: 'var(--muted)', fontSize: 14.5,
+              maxWidth: 420, margin: '0 auto 30px', lineHeight: 1.7,
+            }}>
+              We're looking for students and volunteers to help build our first official kits from the ground up.
+            </p>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Link to="/initiatives/kits" style={{
+                fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
+                letterSpacing: '3px', textTransform: 'uppercase', textDecoration: 'none',
+                padding: '14px 30px', borderRadius: 4,
+                border: '1px solid rgba(168,212,240,0.4)',
+                color: 'var(--cream)', background: 'rgba(168,212,240,0.1)',
+                transition: 'all 0.3s ease',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.18)'; e.currentTarget.style.boxShadow = '0 0 24px rgba(168,212,240,0.2)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.1)'; e.currentTarget.style.boxShadow = 'none' }}
+              >See Opportunities →</Link>
+              <Link to="/newsletter" style={{
+                fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
+                letterSpacing: '3px', textTransform: 'uppercase', textDecoration: 'none',
+                padding: '14px 30px', borderRadius: 4,
+                border: '1px solid rgba(168,212,240,0.22)',
+                color: 'rgba(197,227,247,0.7)', background: 'transparent',
+                transition: 'all 0.3s ease',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.07)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+              >Get Updates →</Link>
+            </div>
+          </div>
+        </motion.section>
+
+      </div>
     </PageTransition>
   )
 }

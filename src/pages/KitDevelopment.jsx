@@ -53,8 +53,15 @@ const DETAILS = [
 ]
 
 const TABS = [
-  { num: '01', label: 'Kit Development' },
-  { num: '02', label: 'STEM Advocacy Competition' },
+  { num: '01', label: 'STEM Advocacy Competition' },
+  { num: '02', label: 'Kit Development' },
+]
+
+const STEM_DETAILS = [
+  { label: 'START DATE', value: 'TBD' },
+  { label: 'END DATE', value: 'TBD' },
+  { label: 'FORMAT', value: 'Video pitch + one-pager' },
+  { label: 'PARTNER', value: 'Youth Civics Think Tank' },
 ]
 
 const STEM_TRACKS = [
@@ -70,7 +77,7 @@ const STEM_TRACKS = [
   {
     n: '02',
     title: 'Kit Development Program',
-    body: 'Physical, NGSS-aligned STEM kits are designed to double as both a teacher’s curriculum resource and an independent student exploration tool. Youth Civics Think Tank helps CurioCrate research and finalize the statistics that show the impact of these kits and how they outperform current classroom curricula.',
+    body: 'Physical, NGSS-aligned STEM kits double as both a teacher\'s curriculum resource and an independent student exploration tool, backed by research from Youth Civics Think Tank showing how they outperform current classroom curricula.',
   },
   {
     n: '03',
@@ -160,6 +167,189 @@ export default function KitDevelopment() {
             }}>
               <AnimatePresence mode="wait">
                 {activeTab === 0 ? (
+                  <motion.div
+                    key="stem"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.3 }}
+                    style={{ padding: '40px 44px 44px' }}
+                  >
+                    {/* Big $300+ prize */}
+                    <div style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: 'clamp(72px, 11vw, 128px)',
+                      fontWeight: 300,
+                      color: 'var(--pastel1)',
+                      lineHeight: 0.85,
+                      letterSpacing: '-0.05em',
+                      textShadow: '0 0 100px rgba(168,212,240,0.6), 0 0 40px rgba(168,212,240,0.3)',
+                      marginBottom: 6,
+                    }}>
+                      <AnimatedAmount target={300} duration={2000} holdDelay={500} onComplete={() => setCountDone(true)} />+
+                    </div>
+                    <div style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
+                      color: 'var(--pastel1)', opacity: 0.55, marginBottom: 20,
+                    }}>
+                      In Prize Money
+                    </div>
+
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={countDone ? { opacity: 1, y: 0 } : {}}
+                      transition={{ duration: 0.7 }}
+                    >
+                      {/* Partnership eyebrow */}
+                      <div style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase',
+                        color: 'var(--pastel1)', opacity: 0.65, marginBottom: 14,
+                      }}>
+                        CurioCrate × Youth Civics Think Tank
+                      </div>
+
+                      {/* Headline */}
+                      <p style={{
+                        fontFamily: "'Cormorant Garamond', serif",
+                        fontSize: 'clamp(19px, 2.4vw, 28px)',
+                        fontWeight: 300, color: 'var(--cream)',
+                        lineHeight: 1.3, margin: '0 0 16px',
+                      }}>
+                        A national platform where students turn STEM equity research into real policy action.
+                      </p>
+
+                      {/* Description — short, no em dashes, bigger and legible */}
+                      <p style={{
+                        fontSize: 16, color: 'var(--cream)', lineHeight: 1.7,
+                        maxWidth: 600, margin: '0 0 30px', opacity: 0.82,
+                      }}>
+                        Students research and pitch real STEM equity solutions, then bring their strongest ideas straight to the school leaders who can act on them.
+                      </p>
+
+                      {/* 2x2 details grid */}
+                      <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr',
+                        gap: '16px 64px',
+                        marginBottom: 34,
+                      }}>
+                        {STEM_DETAILS.map(d => (
+                          <div key={d.label} style={{ borderLeft: '3px solid rgba(168,212,240,0.3)', paddingLeft: 14 }}>
+                            <div style={{
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase',
+                              color: 'var(--pastel1)', opacity: 0.6, marginBottom: 4,
+                            }}>
+                              {d.label}
+                            </div>
+                            <div style={{
+                              fontFamily: "'Plus Jakarta Sans', sans-serif",
+                              fontSize: 15, fontWeight: 600, color: 'var(--cream)',
+                            }}>
+                              {d.value}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Three tracks */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginBottom: 34 }}>
+                        {STEM_TRACKS.map(track => (
+                          <div key={track.n} style={{ borderLeft: '3px solid rgba(168,212,240,0.3)', paddingLeft: 18 }}>
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 6 }}>
+                              <span style={{
+                                fontFamily: "'JetBrains Mono', monospace",
+                                fontSize: 10, fontWeight: 700, color: 'var(--pastel1)', opacity: 0.6,
+                              }}>{track.n}</span>
+                              <span style={{
+                                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                                fontSize: 16, fontWeight: 600, color: 'var(--cream)',
+                              }}>{track.title}</span>
+                            </div>
+                            <p style={{
+                              fontSize: 14.5, color: 'var(--muted)', lineHeight: 1.7,
+                              maxWidth: 600, margin: track.prompts ? '0 0 14px' : 0, opacity: 0.85,
+                            }}>
+                              {track.body}
+                            </p>
+                            {track.prompts && (
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                {track.prompts.map(p => (
+                                  <div key={p.label} style={{
+                                    background: 'rgba(168,212,240,0.05)',
+                                    border: '1px solid rgba(168,212,240,0.1)',
+                                    borderRadius: 8, padding: '10px 14px', maxWidth: 580,
+                                  }}>
+                                    <div style={{
+                                      fontFamily: "'JetBrains Mono', monospace",
+                                      fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase',
+                                      color: 'var(--pastel1)', opacity: 0.6, marginBottom: 4,
+                                    }}>{p.label}</div>
+                                    <p style={{
+                                      fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic',
+                                      fontSize: 15.5, color: 'var(--cream)', opacity: 0.85,
+                                      lineHeight: 1.55, margin: 0,
+                                    }}>“{p.text}”</p>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Closing */}
+                      <p style={{
+                        fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic',
+                        fontSize: 16, color: 'var(--pastel1)', lineHeight: 1.6,
+                        maxWidth: 600, margin: '0 0 30px', opacity: 0.9,
+                      }}>
+                        Winning work gets published and shared through both organizations, and turns straight into real conversations with school leaders.
+                      </p>
+
+                      {/* CTA */}
+                      <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 10 }}>
+                        <div style={{ position: 'relative', display: 'inline-flex' }}>
+                          <span
+                            style={{
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
+                              background: 'var(--pastel1)', color: 'var(--dark)',
+                              borderRadius: 6, padding: '12px 32px',
+                              fontWeight: 700, textDecoration: 'none',
+                              display: 'inline-flex', alignItems: 'center', gap: 8,
+                              opacity: 0.4,
+                            }}
+                          >
+                            Apply Now
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                              <path d="M7 17L17 7M17 7H7M17 7v10"/>
+                            </svg>
+                          </span>
+                          {/* Overlay: blocks the CTA and shows a "not allowed" cursor */}
+                          <div
+                            title="Applications open soon. Dates TBD."
+                            style={{
+                              position: 'absolute',
+                              inset: 0,
+                              borderRadius: 6,
+                              cursor: 'not-allowed',
+                            }}
+                          />
+                        </div>
+                        <span style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 10, letterSpacing: '1px',
+                          color: '#fbbf24', opacity: 0.85,
+                        }}>
+                          Applications open soon. Dates TBD.
+                        </span>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                ) : (
                   <motion.div
                     key="kit"
                     initial={{ opacity: 0, y: 12 }}
@@ -270,103 +460,6 @@ export default function KitDevelopment() {
                         </span>
                       </div>
                     </motion.div>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="stem"
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.3 }}
-                    style={{ padding: '40px 44px 44px' }}
-                  >
-                    {/* Partnership eyebrow */}
-                    <div style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase',
-                      color: 'var(--pastel1)', opacity: 0.65, marginBottom: 16,
-                    }}>
-                      CurioCrate × Youth Civics Think Tank
-                    </div>
-
-                    {/* Headline */}
-                    <p style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: 'clamp(22px, 2.8vw, 34px)',
-                      fontWeight: 300, color: 'var(--cream)',
-                      lineHeight: 1.25, margin: '0 0 16px',
-                    }}>
-                      A national platform where students turn STEM equity research into real policy action.
-                    </p>
-
-                    {/* Description */}
-                    <p style={{
-                      fontSize: 14, color: 'var(--muted)', lineHeight: 1.75,
-                      maxWidth: 640, margin: '0 0 34px', opacity: 0.85,
-                    }}>
-                      A joint initiative built to close two gaps at once: the lack of hands-on STEM resources in underserved communities, and the lack of a real platform for students to turn that problem into policy action. Students don't just learn about STEM equity — they build the tools that address it, then take those tools in front of the people who can actually expand access to them. The program runs on three connected tracks.
-                    </p>
-
-                    {/* Three tracks */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 26, marginBottom: 34 }}>
-                      {STEM_TRACKS.map(track => (
-                        <div key={track.n} style={{ borderLeft: '3px solid rgba(168,212,240,0.3)', paddingLeft: 18 }}>
-                          <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 6 }}>
-                            <span style={{
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: 10, fontWeight: 700, color: 'var(--pastel1)', opacity: 0.6,
-                            }}>{track.n}</span>
-                            <span style={{
-                              fontFamily: "'Plus Jakarta Sans', sans-serif",
-                              fontSize: 15, fontWeight: 600, color: 'var(--cream)',
-                            }}>{track.title}</span>
-                          </div>
-                          <p style={{
-                            fontSize: 13.5, color: 'var(--muted)', lineHeight: 1.7,
-                            maxWidth: 600, margin: track.prompts ? '0 0 14px' : 0, opacity: 0.8,
-                          }}>
-                            {track.body}
-                          </p>
-                          {track.prompts && (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                              {track.prompts.map(p => (
-                                <div key={p.label} style={{
-                                  background: 'rgba(168,212,240,0.05)',
-                                  border: '1px solid rgba(168,212,240,0.1)',
-                                  borderRadius: 8, padding: '10px 14px', maxWidth: 580,
-                                }}>
-                                  <div style={{
-                                    fontFamily: "'JetBrains Mono', monospace",
-                                    fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase',
-                                    color: 'var(--pastel1)', opacity: 0.6, marginBottom: 4,
-                                  }}>{p.label}</div>
-                                  <p style={{
-                                    fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic',
-                                    fontSize: 14.5, color: 'var(--cream)', opacity: 0.85,
-                                    lineHeight: 1.55, margin: 0,
-                                  }}>“{p.text}”</p>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Closing */}
-                    <p style={{
-                      fontSize: 13.5, color: 'var(--muted)', lineHeight: 1.75,
-                      maxWidth: 640, margin: '0 0 12px', opacity: 0.8,
-                    }}>
-                      Winning research and one-pagers get published and amplified through both organizations' networks, turning strong student work into something with actual reach instead of a grade.
-                    </p>
-                    <p style={{
-                      fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic',
-                      fontSize: 15.5, color: 'var(--pastel1)', lineHeight: 1.6,
-                      maxWidth: 640, margin: 0, opacity: 0.9,
-                    }}>
-                      The end goal: a self-sustaining pipeline — students identify the gaps, build tested solutions for both classroom and independent use, and carry that evidence directly into the rooms where district-level decisions get made.
-                    </p>
                   </motion.div>
                 )}
               </AnimatePresence>

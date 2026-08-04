@@ -7,6 +7,8 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import PageTransition from '../components/PageTransition'
 import AutoplayVideo from '../components/AutoplayVideo'
+import FadingText from '../components/FadingText'
+import NewsArticleModal from '../components/NewsArticleModal'
 import { stats } from '../data/stats'
 import { news } from '../data/news'
 import { chapters as staticChapters } from '../data/chapters'
@@ -368,6 +370,7 @@ export default function Home() {
   const [chaptersData,  setChaptersData]  = useState([])
   const [selectedStat,  setSelectedStat]  = useState(null)
   const [newsData,      setNewsData]      = useState(null)
+  const [selectedNews,  setSelectedNews]  = useState(null)
   const [kitsMenuOpen,  setKitsMenuOpen]  = useState(false)
 
   const heroRef        = useRef(null)
@@ -604,7 +607,7 @@ export default function Home() {
                       }}>Initiatives</div>
 
                       {[
-                        { to: '/initiatives/kits', label: 'Become a High School Kit Developer' },
+                        { to: '/initiatives/kits', label: 'Opportunities' },
                         { to: '/initiatives/teaching', label: 'Hands-On Teaching / Curriculum Developer' },
                       ].map(item => (
                         <Link
@@ -941,13 +944,18 @@ export default function Home() {
                       lineHeight: 1.18, letterSpacing: '-0.025em', marginBottom: 22,
                       textShadow: '0 2px 12px rgba(0,0,0,0.9)',
                     }}>{newsData[0].title}</h3>
-                    <p style={{
-                      fontSize: 13.5, color: 'rgba(230,243,255,0.95)',
-                      lineHeight: 1.85, maxWidth: 440,
-                      textShadow: '0 1px 8px rgba(0,0,0,0.8)',
-                    }}>
-                      {newsData[0].body}<span className="news-cursor">_</span>
-                    </p>
+                    <FadingText
+                      text={newsData[0].body}
+                      maxLines={4}
+                      fadeColor="rgba(5,9,23,0.98)"
+                      onReadMore={() => setSelectedNews(newsData[0])}
+                      suffix={<span className="news-cursor">_</span>}
+                      style={{
+                        fontSize: 13.5, color: 'rgba(230,243,255,0.95)',
+                        lineHeight: 1.85, maxWidth: 440,
+                        textShadow: '0 1px 8px rgba(0,0,0,0.8)',
+                      }}
+                    />
                     {newsData[0].link && (
                       <a href={newsData[0].link} target="_blank" rel="noopener noreferrer" style={{
                         display: 'inline-block', marginTop: 20,
@@ -960,7 +968,7 @@ export default function Home() {
                       }}
                       onMouseEnter={e => { e.currentTarget.style.background = `${newsColor(newsData[0].category)}14` }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
-                      >Read More →</a>
+                      >View Source →</a>
                     )}
                   </div>
 
@@ -1056,7 +1064,14 @@ export default function Home() {
                       lineHeight: 1.22, marginBottom: 10,
                     }}>{item.title}</h3>
 
-                    <p style={{ fontSize: 12.5, color: 'rgba(210,232,248,0.82)', lineHeight: 1.75 }}>{item.body}</p>
+                    <FadingText
+                      text={item.body}
+                      maxLines={3}
+                      fadeColor="rgba(5,9,22,0.96)"
+                      onReadMore={() => setSelectedNews(item)}
+                      moreStyle={{ fontSize: 7.5, letterSpacing: '2px' }}
+                      style={{ fontSize: 12.5, color: 'rgba(210,232,248,0.82)', lineHeight: 1.75 }}
+                    />
 
                     <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                       {item.link ? (
@@ -1068,7 +1083,7 @@ export default function Home() {
                         }}
                         onMouseEnter={e => { e.currentTarget.style.opacity = '1' }}
                         onMouseLeave={e => { e.currentTarget.style.opacity = '0.85' }}
-                        >Read More →</a>
+                        >View Source →</a>
                       ) : <span />}
                       <span style={{
                         fontFamily: "'JetBrains Mono', monospace",
@@ -1084,6 +1099,13 @@ export default function Home() {
 
           </div>}
         </div>
+
+        {/* Full-article modal */}
+        <AnimatePresence>
+          {selectedNews && (
+            <NewsArticleModal item={selectedNews} accentColor={newsColor(selectedNews.category)} onClose={() => setSelectedNews(null)} />
+          )}
+        </AnimatePresence>
       </section>
 
       {/* ─── WHAT IS CURIOCRATE ─── */}

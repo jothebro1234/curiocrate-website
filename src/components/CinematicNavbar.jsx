@@ -8,7 +8,7 @@ const NAV_LEFT = [
 ]
 
 const INITIATIVES_ITEMS = [
-  { path: '/initiatives/kits',     label: 'Kit Development'  },
+  { path: '/initiatives/kits',     label: 'Opportunities'    },
   { path: '/initiatives/teaching', label: 'Hands-On Teaching' },
 ]
 

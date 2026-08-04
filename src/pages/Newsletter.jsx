@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
+import FadingText from '../components/FadingText'
+import NewsArticleModal from '../components/NewsArticleModal'
 import { news as fallback } from '../data/news'
 import { driveUrl, filterForNewsletter, primaryCategory } from '../utils/updates'
 
@@ -10,8 +12,17 @@ function formatDate(str) {
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 }
 
+const CATEGORY_COLORS = {
+  Chapters:     '#a8d4f0',
+  Events:       '#a8e8c8',
+  Milestones:   '#e8c96e',
+  Partnerships: '#c5b4f8',
+}
+function categoryColor(cat) { return CATEGORY_COLORS[cat] || '#a8d4f0' }
+
 export default function Newsletter() {
   const [items, setItems] = useState(null)
+  const [selected, setSelected] = useState(null)
 
   useEffect(() => {
     const url = import.meta.env.VITE_APPS_SCRIPT_URL
@@ -73,7 +84,7 @@ export default function Newsletter() {
               No updates yet. Check back soon.
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
               {items.map((item, i) => (
                 <motion.article
                   key={i}
@@ -123,10 +134,15 @@ export default function Newsletter() {
 
                     {/* Body */}
                     {item.body && (
-                      <p style={{
-                        fontSize: 14, color: 'var(--muted)', lineHeight: 1.8,
-                        margin: '0 0 20px', opacity: 0.8, maxWidth: 520,
-                      }}>{item.body}</p>
+                      <div style={{ marginBottom: 20, maxWidth: 520 }}>
+                        <FadingText
+                          text={item.body}
+                          maxLines={4}
+                          fadeColor="rgba(9,16,39,0.97)"
+                          onReadMore={() => setSelected(item)}
+                          style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.8, opacity: 0.8 }}
+                        />
+                      </div>
                     )}
 
                     {/* Link */}
@@ -148,7 +164,7 @@ export default function Newsletter() {
                         onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.08)' }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
                       >
-                        Read More
+                        View Source
                         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                           <path d="M7 17L17 7M17 7H7M17 7v10"/>
                         </svg>
@@ -174,6 +190,12 @@ export default function Newsletter() {
             </div>
           )}
         </div>
+
+        <AnimatePresence>
+          {selected && (
+            <NewsArticleModal item={selected} accentColor={categoryColor(selected.category)} onClose={() => setSelected(null)} />
+          )}
+        </AnimatePresence>
       </section>
     </PageTransition>
   )
