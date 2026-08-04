@@ -171,6 +171,17 @@ const productOfficers = [
     dark: '#160006',
     number: '08',
   },
+  {
+    id: 'po3',
+    name: 'Amine Abadli',
+    role: 'Product Officer',
+    bio: 'Partners with directors and the executive cabinet to prioritize features and keep every kit release on track.',
+    emoji: '🧩',
+    color: '#fda4af',
+    glow: 'rgba(253,164,175,0.5)',
+    dark: '#160006',
+    number: '09',
+  },
 ]
 
 const departmentHeads = [
