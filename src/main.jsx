@@ -7,7 +7,7 @@ import App from './App.jsx'
 // (which serves an old response for an old hashed filename indefinitely, since
 // /assets/* is cached as immutable) gets bypassed by a URL it has never seen before.
 // Bump this whenever a deploy needs to guarantee a fresh asset URL. See CLAUDE.md.
-window.__CURIOCRATE_BUILD__ = '2026-08-04-01'
+window.__CURIOCRATE_BUILD__ = '2026-08-04-02'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
