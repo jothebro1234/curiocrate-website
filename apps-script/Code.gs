@@ -111,18 +111,26 @@
  *   downgrading someone who already has more access) with the requested title in col D, and
  *   appended to the matching Chapters!AuthorizedDirectors so they're scoped to that chapter.
  *
- * KITSTATUS SHEET columns (A–B) — free-form key/value pairs describing the physical kit's
- * status, read by the marketing site's Kits page:
- *   A=Key  B=Value
- *   Every row is one key/value pair; add as many rows/keys as needed. The marketing site
- *   (src/pages/Kits.jsx) currently only reads one specific key:
- *     LaunchAt — the target date/time the countdown timer counts down to. Enter it as a real
- *                Sheets date+time value (Format > Number > Date time), or type an ISO string
- *                like "2026-12-25 09:00:00" directly into the cell. If this key is missing or
- *                blank, the countdown page shows a static "00 : 00 : 00 : 00" with a "launch
- *                date coming soon" message instead of a fake/misleading countdown.
- *   Any other keys are read and returned too (for future status fields) but nothing on the
- *   site currently displays them — this sheet is intentionally a flexible catch-all.
+ * KITSTATUS SHEET columns (A–C) — free-form key/value pairs (plus an optional per-row note)
+ * describing the physical kit's status, read by the marketing site's Kits page:
+ *   A=Key  B=Value  C=Text (optional)
+ *   Every row is one key/value pair; add as many rows/keys as needed. Column C, if filled in,
+ *   is returned as "<Key>Text" alongside that row's own "<Key>" value — e.g. typing something
+ *   in column C on the LaunchAt row comes back from getKitStatus() as LaunchAtText. The
+ *   marketing site (src/pages/Kits.jsx) currently reads two specific keys:
+ *     LaunchAt     — the target date/time the countdown timer counts down to. Enter it as a
+ *                    real Sheets date+time value (Format > Number > Date time — this matters:
+ *                    it's evaluated in the spreadsheet's own timezone, File > Settings > Time
+ *                    zone, so make sure that's set to what you actually mean), or type an ISO
+ *                    string like "2026-12-25 09:00:00" directly into the cell. If this key is
+ *                    missing or blank, the countdown page shows a static "00 : 00 : 00 : 00"
+ *                    with a "launch date coming soon" message instead of a fake/misleading
+ *                    countdown.
+ *     LaunchAtText — optional. Column C on the SAME row as LaunchAt. Replaces the default
+ *                    "Our first kit is launching in" caption shown above the countdown with
+ *                    whatever text you put here.
+ *   Any other keys/columns are read and returned too (for future status fields) but nothing
+ *   on the site currently displays them — this sheet is intentionally a flexible catch-all.
  */
 
 const SS = SpreadsheetApp.getActiveSpreadsheet();
@@ -377,6 +385,10 @@ function getKitStatus() {
             if (!key) continue;
             var val = rows[i][1];
             status[key] = (val instanceof Date) ? val : String(val || '').trim();
+            // Column C, if filled in, is optional accompanying free text for that row's key —
+            // exposed as "<Key>Text" (e.g. LaunchAt's column C comes back as LaunchAtText).
+            var extra = String(rows[i][2] || '').trim();
+            if (extra) status[key + 'Text'] = extra;
         }
         return ContentService.createTextOutput(JSON.stringify({ ok: true, status: status }))
             .setMimeType(ContentService.MimeType.JSON);

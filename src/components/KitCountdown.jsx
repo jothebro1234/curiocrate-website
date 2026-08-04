@@ -23,9 +23,9 @@ function pseudoRandom(seed) {
 // A short-lived glow ring + tiny outward-emitting particles, mounted fresh (via `key`) each
 // time a digit changes, so it plays once and unmounts.
 function DigitBurst({ seed = 0 }) {
-  const particles = useMemo(() => Array.from({ length: 5 }, (_, i) => {
-    const angle = (Math.PI * 2 * i) / 5 + pseudoRandom(seed + i) * 0.6
-    const dist = 12 + pseudoRandom(seed + i + 0.5) * 10
+  const particles = useMemo(() => Array.from({ length: 6 }, (_, i) => {
+    const angle = (Math.PI * 2 * i) / 6 + pseudoRandom(seed + i) * 0.6
+    const dist = 26 + pseudoRandom(seed + i + 0.5) * 22
     return { x: Math.cos(angle) * dist, y: Math.sin(angle) * dist }
   }), [seed])
 
@@ -36,8 +36,8 @@ function DigitBurst({ seed = 0 }) {
         animate={{ opacity: 0 }}
         transition={{ duration: 0.4 }}
         style={{
-          position: 'absolute', inset: -8, borderRadius: 8, pointerEvents: 'none',
-          boxShadow: '0 0 28px 5px rgba(147,197,253,0.9)',
+          position: 'absolute', inset: -16, borderRadius: 16, pointerEvents: 'none',
+          boxShadow: '0 0 48px 9px rgba(147,197,253,0.9)',
         }}
       />
       {particles.map((p, i) => (
@@ -47,7 +47,7 @@ function DigitBurst({ seed = 0 }) {
           animate={{ x: p.x, y: p.y, opacity: 0, scale: 0.3 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
           style={{
-            position: 'absolute', top: '50%', left: '50%', width: 3, height: 3, borderRadius: '50%',
+            position: 'absolute', top: '50%', left: '50%', width: 5, height: 5, borderRadius: '50%',
             background: 'rgba(191,219,254,0.95)', pointerEvents: 'none',
           }}
         />
@@ -104,8 +104,8 @@ function PulseRings() {
           animate={{ scale: 2.4, opacity: 0 }}
           transition={{ duration: 1.5, repeat: Infinity, delay, ease: 'easeOut' }}
           style={{
-            position: 'absolute', width: 280, height: 280, borderRadius: '50%',
-            border: '1.5px solid rgba(147,197,253,0.75)', pointerEvents: 'none',
+            position: 'absolute', width: 420, height: 420, borderRadius: '50%',
+            border: '2px solid rgba(147,197,253,0.75)', pointerEvents: 'none',
           }}
         />
       ))}
@@ -173,7 +173,7 @@ function parseLaunchAt(raw) {
   return isNaN(d) ? null : d
 }
 
-export default function KitCountdown({ launchAtRaw }) {
+export default function KitCountdown({ launchAtRaw, introText }) {
   const launchAt = useMemo(() => parseLaunchAt(launchAtRaw), [launchAtRaw])
   const hasTarget = !!launchAt
 
@@ -258,11 +258,11 @@ export default function KitCountdown({ launchAtRaw }) {
           >
             <div style={{
               fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic',
-              fontSize: 'clamp(16px, 2.2vw, 22px)', color: 'rgba(197,227,247,0.75)',
-              letterSpacing: '0.02em', marginBottom: 36,
+              fontSize: 'clamp(20px, 3vw, 32px)', color: 'rgba(197,227,247,0.75)',
+              letterSpacing: '0.02em', marginBottom: 48,
               textShadow: '0 0 30px rgba(96,165,250,0.4)',
             }}>
-              Our first kit is launching in
+              {introText || 'Our first kit is launching in'}
             </div>
 
             {isFinal3 && (
@@ -272,24 +272,24 @@ export default function KitCountdown({ launchAtRaw }) {
               }} />
             )}
 
-            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 'clamp(6px, 1.6vw, 18px)' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 'clamp(10px, 2.6vw, 32px)' }}>
               {groups.map((val, gi) => (
-                <div key={GROUP_LABELS[gi]} style={{ display: 'flex', alignItems: 'flex-end', gap: 'clamp(6px, 1.6vw, 18px)' }}>
+                <div key={GROUP_LABELS[gi]} style={{ display: 'flex', alignItems: 'flex-end', gap: 'clamp(10px, 2.6vw, 32px)' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <div style={{ display: 'flex' }}>
                       {String(val).padStart(2, '0').split('').map((c, ci) => (
-                        <FlipDigit key={ci} char={c} fontSize="clamp(40px, 9vw, 92px)" />
+                        <FlipDigit key={ci} char={c} fontSize="clamp(72px, 17vw, 220px)" />
                       ))}
                     </div>
                     <div style={{
-                      fontFamily: "'JetBrains Mono', monospace", fontSize: 'clamp(8px, 1vw, 10px)',
-                      letterSpacing: '3px', color: 'rgba(147,197,253,0.55)', marginTop: 10,
+                      fontFamily: "'JetBrains Mono', monospace", fontSize: 'clamp(11px, 1.6vw, 16px)',
+                      letterSpacing: '4px', color: 'rgba(147,197,253,0.55)', marginTop: 18,
                     }}>{GROUP_LABELS[gi]}</div>
                   </div>
                   {gi < groups.length - 1 && (
                     <div style={{
-                      fontFamily: "'JetBrains Mono', monospace", fontSize: 'clamp(28px, 6vw, 60px)',
-                      color: 'rgba(147,197,253,0.35)', paddingBottom: 'clamp(14px, 2vw, 22px)',
+                      fontFamily: "'JetBrains Mono', monospace", fontSize: 'clamp(48px, 11vw, 140px)',
+                      color: 'rgba(147,197,253,0.35)', paddingBottom: 'clamp(26px, 4vw, 52px)',
                     }}>:</div>
                   )}
                 </div>
@@ -305,8 +305,8 @@ export default function KitCountdown({ launchAtRaw }) {
 
             {!hasTarget && (
               <div style={{
-                fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: '2px',
-                textTransform: 'uppercase', color: 'rgba(197,227,247,0.4)', marginTop: 34,
+                fontFamily: "'JetBrains Mono', monospace", fontSize: 13, letterSpacing: '2px',
+                textTransform: 'uppercase', color: 'rgba(197,227,247,0.4)', marginTop: 44,
               }}>
                 Launch date coming soon
               </div>
@@ -324,13 +324,13 @@ export default function KitCountdown({ launchAtRaw }) {
               src="/images/cclogofull.png"
               alt="CurioCrate"
               style={{
-                height: 'clamp(80px, 14vw, 140px)', margin: '0 auto 26px',
-                filter: 'drop-shadow(0 0 40px rgba(96,165,250,0.6)) drop-shadow(0 0 90px rgba(96,165,250,0.3))',
+                height: 'clamp(110px, 20vw, 220px)', margin: '0 auto 34px',
+                filter: 'drop-shadow(0 0 50px rgba(96,165,250,0.6)) drop-shadow(0 0 110px rgba(96,165,250,0.3))',
               }}
             />
             <p style={{
               fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic',
-              fontSize: 'clamp(18px, 2.6vw, 26px)', color: 'rgba(197,227,247,0.85)',
+              fontSize: 'clamp(22px, 3.4vw, 34px)', color: 'rgba(197,227,247,0.85)',
             }}>
               The first kit has arrived.
             </p>
@@ -366,7 +366,7 @@ export default function KitCountdown({ launchAtRaw }) {
 
         .kc-halo {
           position: absolute;
-          width: min(70vw, 900px); height: min(70vw, 900px);
+          width: min(92vw, 1300px); height: min(92vw, 1300px);
           border-radius: 50%;
           background: conic-gradient(from 0deg, rgba(96,165,250,0.35), transparent 25%, rgba(129,140,248,0.28) 55%, transparent 85%);
           filter: blur(90px);
