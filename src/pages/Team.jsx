@@ -145,10 +145,9 @@ const directors = [
   },
   {
     id: 'fundraising',
-    name: 'Director of Fundraising',
-    shortName: 'Fundraising',
-    role: 'We\'re Hiring',
-    bio: 'We\'re looking for our next Director of Fundraising to help lead CurioCrate\'s fundraising efforts — reach out if that\'s you.',
+    name: 'Yash Grover',
+    role: 'Director of Fundraising',
+    bio: 'Drives the strategy and partnerships behind CurioCrate\'s fundraising, turning generosity into more kits in more hands.',
     emoji: '💰',
     color: '#facc15',
     glow: 'rgba(250,204,21,0.5)',

@@ -69,7 +69,7 @@
  * column value — both sides detect that and keep treating those literally, unconverted,
  * exactly as before.
  *
- * CHAPTERS SHEET columns (A–L, plus M=Type):
+ * CHAPTERS SHEET columns (A–R):
  *   A=Email  B=Name  C=School  D=Logo  E=State  F=City
  *   G=PresidentPhoto  H=VicePresident  I=Treasurer  J=Secretary  K=SocialMedia
  *   L=AuthorizedDirectors (comma-separated emails — grants those emails chapter-scoped
@@ -79,6 +79,13 @@
  *            school chapters and show in the marketing site's "Our Chapters" list; "Impact"
  *            marks a one-off teaching location (e.g. a YMCA or elementary school) that should
  *            only ever appear as a map marker, never in the chapter list.
+ *   N=Latitude  O=Longitude — real coordinates for the Home page map marker. Chapter rows
+ *            fall back to a static src/data/chapterLocations.js lookup by school name on the
+ *            frontend when these are blank; Impact rows have no such fallback, so they only
+ *            show up on the map when these are filled in.
+ *   P=Radius (impact-area circle radius in kilometres on the map. Leave blank = 12 km.)
+ *   Q=Instagram (handle like "@curiocrate" or a full URL — shown on the chapter detail modal)
+ *   R=PresidentMessage (short quote shown on the chapter detail modal)
  *
  * DIRECTORS SHEET columns (A–D):
  *   A=Email  B=Name
@@ -129,7 +136,7 @@ function initSheetHeaders(sh, name) {
     const headers = {
         Curriculum: ['AssignmentName','DueDate','Hours','Contributors','SlidesLink','StartDate','MaxVolunteers','RegisteredVolunteers','Instructions','CardColor','CardDeco','CardLabel','ChapterLabel','DurationDays','TriggeredAt','PostedAt','Timezone','DueInstant','StartInstant','TriggeredInstant','Topic'],
         Events:     ['EventName','Date','Hours','Attendees','IsAssembly','IsLeadership','MaxVolunteers','RegisteredList','SignupCloseDate','Instructions','ChapterLabel','CardColor','CardDeco','CardLabel','RequiresYMCA','PostedAt','Timezone','EventInstant','CloseInstant'],
-        Chapters:   ['Email','Name','School','Logo','State','City','PresidentPhoto','VicePresident','Treasurer','Secretary','SocialMedia','AuthorizedDirectors'],
+        Chapters:   ['Email','Name','School','Logo','State','City','PresidentPhoto','VicePresident','Treasurer','Secretary','SocialMedia','AuthorizedDirectors','Type','Latitude','Longitude','Radius','Instagram','PresidentMessage'],
         Directors:  ['Email','Name','Tier','Title'],
         DirectorRequests: ['RequestId','RequestedEmail','RequestedName','RequestedTitle','RequestedByEmail','RequestedByName','ChapterSchool','Status','RequestedAt','DecidedAt','DecidedBy'],
     };
@@ -348,6 +355,8 @@ function getChapters() {
         const chapters = rows.slice(1)
             .filter(function(r) { return String(r[2]).trim(); })
             .map(function(r) {
+                var lat = parseFloat(r[13]);
+                var lng = parseFloat(r[14]);
                 return {
                     email:                String(r[0]  || '').trim(),
                     president:            String(r[1]  || '').trim(),
@@ -366,7 +375,12 @@ function getChapters() {
                     // sheet value like "impact" still counts. Blank/anything else = "Chapter".
                     // Without this field the frontend's type filters (OurChapters.jsx/Home.jsx)
                     // always saw `undefined`, so Impact rows leaked into the chapter list.
-                    type: /^impact$/i.test(String(r[12] || '').trim()) ? 'Impact' : 'Chapter',
+                    type:                 /^impact$/i.test(String(r[12] || '').trim()) ? 'Impact' : 'Chapter',
+                    latitude:             isNaN(lat) ? null : lat,
+                    longitude:            isNaN(lng) ? null : lng,
+                    radius:               parseFloat(r[15]) || 12,
+                    instagram:            String(r[16] || '').trim(),
+                    presidentMessage:     String(r[17] || '').trim(),
                 };
             });
         return ContentService.createTextOutput(JSON.stringify({ ok: true, chapters: chapters }))
