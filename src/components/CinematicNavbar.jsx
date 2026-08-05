@@ -1,22 +1,24 @@
 import { useState, useEffect, useRef } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
+import { useLanguage } from '../i18n/useLanguage'
+import LanguageSwitcher from './LanguageSwitcher'
 
 const NAV_LEFT = [
-  { path: '/',            label: 'Discover'    },
-  { path: '/kits',        label: 'Kits'        },
-  { path: '/newsletter',  label: 'Newsletter'  },
+  { path: '/',            labelKey: 'nav.discover'  },
+  { path: '/kits',        labelKey: 'nav.kits'      },
+  { path: '/newsletter',  labelKey: 'nav.newsletter' },
 ]
 
 const INITIATIVES_ITEMS = [
-  { path: '/initiatives/kits',     label: 'Initiatives'      },
-  { path: '/initiatives/teaching', label: 'Hands-On Teaching' },
+  { path: '/initiatives/kits',     labelKey: 'nav.initiatives'      },
+  { path: '/initiatives/teaching', labelKey: 'nav.handsOnTeaching' },
 ]
 
 const ABOUT_ITEMS = [
-  { path: '/chapters', label: 'Our Chapters' },
-  { path: '/gallery',  label: 'Gallery'      },
-  { path: '/team',     label: 'Team'         },
-  { path: '/contact',  label: 'Contact Us'   },
+  { path: '/chapters', labelKey: 'nav.ourChapters' },
+  { path: '/gallery',  labelKey: 'nav.gallery'      },
+  { path: '/team',     labelKey: 'nav.team'         },
+  { path: '/contact',  labelKey: 'nav.contactUs'    },
 ]
 
 const ALL_NAV = [...NAV_LEFT, ...INITIATIVES_ITEMS, ...ABOUT_ITEMS]
@@ -48,6 +50,7 @@ function NavItem({ path, label, end }) {
 }
 
 export default function CinematicNavbar() {
+  const { t } = useLanguage()
   const [visible,          setVisible]          = useState(true)
   const [lastY,            setLastY]            = useState(0)
   const [atTop,            setAtTop]            = useState(true)
@@ -109,7 +112,7 @@ export default function CinematicNavbar() {
         {/* Desktop nav */}
         <div className="nav-desktop" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
 
-          {NAV_LEFT.map(r => <NavItem key={r.path} path={r.path} label={r.label} end={r.path === '/'} />)}
+          {NAV_LEFT.map(r => <NavItem key={r.path} path={r.path} label={t(r.labelKey)} end={r.path === '/'} />)}
 
           {/* Initiatives dropdown */}
           <div style={{ position: 'relative' }} onMouseEnter={openInitiatives} onMouseLeave={closeInitiatives}>
@@ -123,7 +126,7 @@ export default function CinematicNavbar() {
               cursor: 'pointer', transition: 'all 0.3s ease',
               display: 'flex', alignItems: 'center', gap: 6,
             }}>
-              Initiatives
+              {t('nav.initiatives')}
               <span style={{
                 fontSize: 8, opacity: 0.6,
                 transform: initiativesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -159,7 +162,7 @@ export default function CinematicNavbar() {
                   })}
                   onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.06)'; e.currentTarget.style.color = 'var(--pastel2)' }}
                   onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--muted)' }}
-                >{item.label}</NavLink>
+                >{t(item.labelKey)}</NavLink>
               ))}
             </div>
           </div>
@@ -176,7 +179,7 @@ export default function CinematicNavbar() {
               cursor: 'pointer', transition: 'all 0.3s ease',
               display: 'flex', alignItems: 'center', gap: 6,
             }}>
-              About Us
+              {t('nav.aboutUs')}
               <span style={{
                 fontSize: 8, opacity: 0.6,
                 transform: aboutOpen ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -212,10 +215,12 @@ export default function CinematicNavbar() {
                   })}
                   onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.06)'; e.currentTarget.style.color = 'var(--pastel2)' }}
                   onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--muted)' }}
-                >{item.label}</NavLink>
+                >{t(item.labelKey)}</NavLink>
               ))}
             </div>
           </div>
+
+          <LanguageSwitcher size="sm" />
 
           {/* Get Involved (external CTA) */}
           <a
@@ -230,7 +235,7 @@ export default function CinematicNavbar() {
             }}
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.1)'; e.currentTarget.style.boxShadow = '0 0 20px rgba(168,212,240,0.15)' }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none' }}
-          >Become a Member</a>
+          >{t('nav.becomeAMember')}</a>
         </div>
 
         {/* Hamburger (mobile only) */}
@@ -275,7 +280,7 @@ export default function CinematicNavbar() {
               cursor: 'pointer', padding: '8px 14px',
               fontFamily: "'JetBrains Mono', monospace", letterSpacing: '2px',
             }}
-          >ESC</button>
+          >{t('nav.esc')}</button>
         </div>
 
         {/* Nav links */}
@@ -297,24 +302,25 @@ export default function CinematicNavbar() {
                 transition: 'color 0.2s',
                 display: 'block',
               })}
-            >{item.label}</NavLink>
+            >{t(item.labelKey)}</NavLink>
           ))}
         </nav>
 
         {/* Bottom CTA */}
-        <div style={{ paddingTop: 32 }}>
+        <div style={{ paddingTop: 32, display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'center' }}>
+          <LanguageSwitcher />
           <a
             href="https://portal.curiocrate.org"
             target="_blank" rel="noopener noreferrer"
             onClick={() => setMenuOpen(false)}
             style={{
-              display: 'block', textAlign: 'center',
+              display: 'block', width: '100%', textAlign: 'center',
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
               textDecoration: 'none', padding: '16px 24px', borderRadius: 6,
               color: 'var(--pastel1)', border: '1px solid rgba(168,212,240,0.3)',
             }}
-          >Become a Member →</a>
+          >{t('nav.becomeAMember')} →</a>
         </div>
       </div>
 

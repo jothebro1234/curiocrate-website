@@ -13,6 +13,7 @@ import Team from './pages/Team'
 import OurChapters from './pages/OurChapters'
 import Contact from './pages/Contact'
 import ScrollToTop from './components/ScrollToTop'
+import { LanguageProvider } from './i18n/LanguageContext'
 import './index.css'
 
 function AnimatedRoutes() {
@@ -36,12 +37,14 @@ function AnimatedRoutes() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <ParticleField />
-      <CinematicNavbar />
-      <AnimatedRoutes />
-      <CinematicFooter />
-    </BrowserRouter>
+    <LanguageProvider>
+      <BrowserRouter>
+        <ScrollToTop />
+        <ParticleField />
+        <CinematicNavbar />
+        <AnimatedRoutes />
+        <CinematicFooter />
+      </BrowserRouter>
+    </LanguageProvider>
   )
 }

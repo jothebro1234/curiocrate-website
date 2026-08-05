@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
+import { useLanguage } from '../i18n/useLanguage'
 
 export default function CinematicFooter() {
+  const { t } = useLanguage()
   return (
     <footer style={{
       position:'relative', zIndex:1,
@@ -22,31 +24,32 @@ export default function CinematicFooter() {
               style={{ height:40, marginBottom:16, filter:'drop-shadow(0 0 10px rgba(168,212,240,0.3))' }}
             />
             <p style={{ fontSize:13, color:'var(--muted)', lineHeight:1.7, maxWidth:200 }}>
-              Hands-on science kits for underserved communities.
+              {t('footer.tagline')}
             </p>
           </div>
           {/* Nav */}
           {[
-            { label:'Explore', links:[{l:'Kits',p:'/kits'},{l:'Our Chapters',p:'/chapters'},{l:'Mission',p:'/#what-is-curiocrate'},{l:'Gallery',p:'/gallery'},{l:'Team',p:'/team'}] },
-            { label:'Connect', links:[{l:'Contact Us',p:'/contact'},{l:'ckf.curiocrate@curiocrate.org',p:'mailto:ckf.curiocrate@curiocrate.org'}] },
-            { label:'Program', links:[{l:'Volunteering Opportunities',p:'https://portal.curiocrate.org'},{l:'Start a Chapter',p:'https://forms.gle/nEBfc84qHXxcmT4k8'},{l:'Partner With Us',p:'mailto:ckf.curiocrate@curiocrate.org'}] },
+            { labelKey:'footer.explore', links:[{lKey:'nav.kits',p:'/kits'},{lKey:'nav.ourChapters',p:'/chapters'},{lKey:'footer.mission',p:'/#what-is-curiocrate'},{lKey:'nav.gallery',p:'/gallery'},{lKey:'nav.team',p:'/team'}] },
+            { labelKey:'footer.connect', links:[{lKey:'nav.contactUs',p:'/contact'},{l:'ckf.curiocrate@curiocrate.org',p:'mailto:ckf.curiocrate@curiocrate.org'}] },
+            { labelKey:'footer.program', links:[{lKey:'footer.volunteeringOpportunities',p:'https://portal.curiocrate.org'},{lKey:'footer.startAChapter',p:'https://forms.gle/nEBfc84qHXxcmT4k8'},{lKey:'footer.partnerWithUs',p:'mailto:ckf.curiocrate@curiocrate.org'}] },
           ].map(col => (
-            <div key={col.label}>
-              <div className="label" style={{ marginBottom:20, fontSize:9 }}>{col.label}</div>
-              {col.links.map(link => (
-                link.p.startsWith('http') || link.p.startsWith('mailto')
-                  ? <a key={link.l} href={link.p} target={link.p.startsWith('http')?'_blank':undefined}
+            <div key={col.labelKey}>
+              <div className="label" style={{ marginBottom:20, fontSize:9 }}>{t(col.labelKey)}</div>
+              {col.links.map(link => {
+                const label = link.lKey ? t(link.lKey) : link.l
+                return link.p.startsWith('http') || link.p.startsWith('mailto')
+                  ? <a key={label} href={link.p} target={link.p.startsWith('http')?'_blank':undefined}
                       rel="noopener noreferrer"
                       style={{ display:'block', fontSize:13, color:'var(--muted)', textDecoration:'none', marginBottom:10, transition:'color 0.2s' }}
                       onMouseEnter={e=>{e.currentTarget.style.color='var(--pastel2)'}}
                       onMouseLeave={e=>{e.currentTarget.style.color='var(--muted)'}}
-                    >{link.l}</a>
-                  : <Link key={link.l} to={link.p}
+                    >{label}</a>
+                  : <Link key={label} to={link.p}
                       style={{ display:'block', fontSize:13, color:'var(--muted)', textDecoration:'none', marginBottom:10, transition:'color 0.2s' }}
                       onMouseEnter={e=>{e.currentTarget.style.color='var(--pastel2)'}}
                       onMouseLeave={e=>{e.currentTarget.style.color='var(--muted)'}}
-                    >{link.l}</Link>
-              ))}
+                    >{label}</Link>
+              })}
             </div>
           ))}
         </div>
@@ -57,7 +60,7 @@ export default function CinematicFooter() {
           display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:12,
         }}>
           <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10, color:'rgba(168,212,240,0.25)', letterSpacing:'2px' }}>
-            © {new Date().getFullYear()} CURIOCRATE · 501(c)(3) NONPROFIT
+            © {new Date().getFullYear()} CURIOCRATE · {t('footer.copyright')}
           </div>
           <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10, color:'rgba(168,212,240,0.2)', letterSpacing:'1px' }}>
             curiocrate.org
