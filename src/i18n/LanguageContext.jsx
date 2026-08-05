@@ -41,9 +41,13 @@ function getInitialLanguage() {
 }
 
 /* Resolves a dot-path key (e.g. "home.hero.title") against the active dictionary, falling
-   back to the English dictionary, then to the raw key itself, so a missing translation
-   never crashes or renders blank — worst case it silently shows English or the key. */
-function resolve(dict, fallbackDict, path) {
+   back to the English dictionary, then to an explicit fallback if given, then to the raw
+   key itself — so a missing translation never crashes or renders blank — worst case it
+   silently shows English (or the given fallback, or the key). The explicit-fallback param
+   is for dynamic/data-driven content (e.g. a bio pulled from an array of people): pass the
+   original English string as the fallback so an as-yet-untranslated entry still reads fine
+   instead of showing a raw "team.cabinet.someone.bio"-style path. */
+function resolve(dict, fallbackDict, path, explicitFallback) {
   const parts = path.split('.')
   let node = dict
   for (const p of parts) { node = node?.[p]; if (node === undefined) break }
@@ -51,6 +55,7 @@ function resolve(dict, fallbackDict, path) {
   let fallbackNode = fallbackDict
   for (const p of parts) { fallbackNode = fallbackNode?.[p]; if (fallbackNode === undefined) break }
   if (typeof fallbackNode === 'string') return fallbackNode
+  if (typeof explicitFallback === 'string') return explicitFallback
   return path
 }
 
@@ -66,7 +71,7 @@ export function LanguageProvider({ children }) {
 
   const t = useMemo(() => {
     const dict = DICTIONARIES[lang] || EN
-    return (path) => resolve(dict, EN, path)
+    return (path, explicitFallback) => resolve(dict, EN, path, explicitFallback)
   }, [lang])
 
   const value = useMemo(() => ({ lang, setLang, t }), [lang, t])
