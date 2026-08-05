@@ -2,14 +2,16 @@ import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { motion } from 'framer-motion'
 import { driveUrl } from '../utils/updates'
+import { useLanguage } from '../i18n/useLanguage'
 
-function formatDate(str) {
+function formatDate(str, locale) {
   if (!str) return ''
   const d = new Date(str + 'T00:00:00')
-  return isNaN(d) ? str : d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+  return isNaN(d) ? str : d.toLocaleDateString(locale, { month: 'long', day: 'numeric', year: 'numeric' })
 }
 
 export default function NewsArticleModal({ item, accentColor = '#a8d4f0', onClose }) {
+  const { t, lang } = useLanguage()
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     const fn = e => { if (e.key === 'Escape') onClose() }
@@ -58,7 +60,7 @@ export default function NewsArticleModal({ item, accentColor = '#a8d4f0', onClos
             background: 'none', border: '1px solid rgba(168,212,240,0.2)',
             borderRadius: 8, color: 'var(--muted)', fontSize: 11, cursor: 'pointer',
             padding: '7px 14px', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '2px',
-          }}>ESC · CLOSE</button>
+          }}>{t('common.esc')} · {t('common.close')}</button>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, marginTop: item.image ? 0 : 8 }}>
             {item.category && (
@@ -70,7 +72,7 @@ export default function NewsArticleModal({ item, accentColor = '#a8d4f0', onClos
             )}
             {item.date && (
               <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '1.5px', color: 'var(--muted)', opacity: 0.5 }}>
-                {formatDate(item.date)}
+                {formatDate(item.date, lang === 'es' ? 'es-ES' : 'en-US')}
               </span>
             )}
           </div>
@@ -95,7 +97,7 @@ export default function NewsArticleModal({ item, accentColor = '#a8d4f0', onClos
             onMouseEnter={e => { e.currentTarget.style.background = `${accentColor}14` }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
             >
-              View Source
+              {t('common.viewSource')}
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                 <path d="M7 17L17 7M17 7H7M17 7v10"/>
               </svg>

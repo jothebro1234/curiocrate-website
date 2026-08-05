@@ -7,6 +7,7 @@ export const en = {
     readMore: 'Read more',
     viewSource: 'View Source',
     loading: 'Loading...',
+    close: 'Close',
   },
   nav: {
     discover: 'Discover',
@@ -40,6 +41,7 @@ export const es = {
     readMore: 'Leer más',
     viewSource: 'Ver fuente',
     loading: 'Cargando...',
+    close: 'Cerrar',
   },
   nav: {
     discover: 'Descubrir',

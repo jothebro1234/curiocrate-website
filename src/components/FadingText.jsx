@@ -1,8 +1,12 @@
+import { useLanguage } from '../i18n/useLanguage'
+
 // Clips long body text to a fixed number of lines, fading it to transparent at the bottom
 // instead of an abrupt cutoff, with a "Read more" trigger to view the full text elsewhere
 // (e.g. a modal). Renders the text in full, untouched, if it's short enough to fit.
-export default function FadingText({ text, maxLines = 4, style = {}, fadeColor, onReadMore, moreLabel = 'Read more', moreStyle = {}, suffix = null }) {
+export default function FadingText({ text, maxLines = 4, style = {}, fadeColor, onReadMore, moreLabel, moreStyle = {}, suffix = null }) {
+  const { t } = useLanguage()
   if (!text) return null
+  const resolvedMoreLabel = moreLabel ?? t('common.readMore')
 
   const fontSize = typeof style.fontSize === 'number' ? style.fontSize : 14
   const lineHeight = typeof style.lineHeight === 'number' ? style.lineHeight : 1.6
@@ -38,7 +42,7 @@ export default function FadingText({ text, maxLines = 4, style = {}, fadeColor, 
           }}
           onMouseEnter={e => { e.currentTarget.style.opacity = '1' }}
           onMouseLeave={e => { e.currentTarget.style.opacity = '0.85' }}
-        >{moreLabel} →</button>
+        >{resolvedMoreLabel} →</button>
       )}
     </div>
   )
