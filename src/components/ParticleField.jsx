@@ -1,6 +1,12 @@
 import { useEffect, useRef } from 'react'
 
 const PARTICLE_COUNT = 120
+const PARTICLE_COUNT_MOBILE = 40
+// The nearby-particle connecting lines are an O(n^2) distance check every frame — cheap
+// enough at desktop particle counts, but a real cost on low-power mobile GPUs/CPUs. Skip
+// them on mobile rather than just thinning particles, since that loop (not particle count
+// alone) is the actual expensive part.
+const MOBILE_BREAKPOINT = 768
 
 function rand(min, max) { return Math.random() * (max - min) + min }
 
@@ -12,6 +18,8 @@ export default function ParticleField() {
   useEffect(() => {
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
+    const isMobile = window.innerWidth < MOBILE_BREAKPOINT
+    const particleCount = isMobile ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT
     let raf
 
     const resize = () => {
@@ -22,7 +30,7 @@ export default function ParticleField() {
     window.addEventListener('resize', resize)
     window.addEventListener('mousemove', e => { mouse.current = { x: e.clientX, y: e.clientY } })
 
-    particles.current = Array.from({ length: PARTICLE_COUNT }, () => ({
+    particles.current = Array.from({ length: particleCount }, () => ({
       x:    rand(0, window.innerWidth),
       y:    rand(0, window.innerHeight),
       vx:   rand(-0.15, 0.15),
@@ -75,19 +83,21 @@ export default function ParticleField() {
           ctx.fill()
         }
 
-        // Connect nearby particles
-        for (let j = i + 1; j < particles.current.length; j++) {
-          const q = particles.current[j]
-          const cx = p.x - q.x
-          const cy = p.y - q.y
-          const d = Math.sqrt(cx*cx + cy*cy)
-          if (d < 90) {
-            ctx.beginPath()
-            ctx.moveTo(p.x, p.y)
-            ctx.lineTo(q.x, q.y)
-            ctx.strokeStyle = `rgba(168,212,240,${(1 - d/90) * 0.06})`
-            ctx.lineWidth = 0.5
-            ctx.stroke()
+        // Connect nearby particles (desktop only — see MOBILE_BREAKPOINT note above)
+        if (!isMobile) {
+          for (let j = i + 1; j < particles.current.length; j++) {
+            const q = particles.current[j]
+            const cx = p.x - q.x
+            const cy = p.y - q.y
+            const d = Math.sqrt(cx*cx + cy*cy)
+            if (d < 90) {
+              ctx.beginPath()
+              ctx.moveTo(p.x, p.y)
+              ctx.lineTo(q.x, q.y)
+              ctx.strokeStyle = `rgba(168,212,240,${(1 - d/90) * 0.06})`
+              ctx.lineWidth = 0.5
+              ctx.stroke()
+            }
           }
         }
       })

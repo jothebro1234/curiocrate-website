@@ -86,7 +86,7 @@ export default function CinematicNavbar() {
 
   return (
     <>
-      <nav style={{
+      <nav className="cn-nav" style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '18px 36px',
@@ -325,6 +325,10 @@ export default function CinematicNavbar() {
           .nav-desktop   { display: none !important; }
           .nav-hamburger { display: flex !important; }
           nav { padding: 14px 20px !important; }
+          /* On mobile the hero heading sits close enough to the top that a fully transparent
+             "atTop" nav lets it visually collide with the logo/hamburger — always keep a
+             legible backdrop here regardless of scroll position. */
+          .cn-nav { background: linear-gradient(to bottom, rgba(6,13,31,0.92) 0%, rgba(6,13,31,0.55) 65%, rgba(6,13,31,0.2) 100%) !important; backdrop-filter: blur(14px) !important; }
         }
       `}</style>
     </>

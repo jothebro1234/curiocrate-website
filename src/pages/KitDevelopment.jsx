@@ -81,7 +81,7 @@ export default function KitDevelopment() {
         flexDirection: 'column',
         justifyContent: 'center',
         padding: '100px 48px 60px',
-      }}>
+      }} className="kd-page">
         <div style={{ maxWidth: 900, width: '100%', margin: '0 auto' }}>
 
           {/* Eyebrow */}
@@ -110,9 +110,10 @@ export default function KitDevelopment() {
                 return (
                   <button
                     key={tab.num}
+                    className="kd-tab"
                     onClick={() => setActiveTab(i)}
                     style={{
-                      display: 'flex', alignItems: 'center', gap: 10,
+                      display: 'flex', alignItems: 'center', gap: 10, flex: 1,
                       padding: '13px 24px',
                       background: isActive ? 'rgba(168,212,240,0.1)' : 'rgba(168,212,240,0.03)',
                       border: '1px solid rgba(168,212,240,0.18)',
@@ -128,7 +129,7 @@ export default function KitDevelopment() {
                       fontSize: 11, fontWeight: 700,
                       color: isActive ? 'var(--pastel1)' : 'rgba(168,212,240,0.3)',
                     }}>{tab.num}</span>
-                    <span style={{
+                    <span className="kd-tab-label" style={{
                       fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase',
                       color: isActive ? 'var(--cream)' : 'var(--muted)',
@@ -156,7 +157,7 @@ export default function KitDevelopment() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.3 }}
-                    style={{ padding: '40px 44px 44px' }}
+                    className="kd-panel" style={{ padding: '40px 44px 44px' }}
                   >
                     {/* Big $300+ prize */}
                     <div style={{
@@ -313,7 +314,7 @@ export default function KitDevelopment() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.3 }}
-                    style={{ padding: '40px 44px 44px' }}
+                    className="kd-panel" style={{ padding: '40px 44px 44px' }}
                   >
                     {/* Big $1,000 */}
                     <div style={{
@@ -425,6 +426,15 @@ export default function KitDevelopment() {
 
         </div>
       </div>
+
+      <style>{`
+        @media(max-width:640px){
+          .kd-page { padding: 96px 16px 48px !important; }
+          .kd-tab { flex-direction: column !important; gap: 4px !important; padding: 10px 8px !important; text-align: center; }
+          .kd-tab-label { font-size: 8.5px !important; letter-spacing: 1px !important; white-space: normal !important; line-height: 1.3 !important; }
+          .kd-panel { padding: 28px 22px 32px !important; }
+        }
+      `}</style>
     </PageTransition>
   )
 }

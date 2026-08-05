@@ -68,7 +68,7 @@ function FlipDigit({ char, fontSize }) {
   }, [char])
 
   return (
-    <span style={{
+    <span className="kc-digit" style={{
       position: 'relative', display: 'inline-block',
       fontSize, width: '0.62em', height: '1em',
       fontFamily: "'JetBrains Mono', monospace", fontWeight: 700,
@@ -272,7 +272,7 @@ export default function KitCountdown({ launchAtRaw, introText }) {
               }} />
             )}
 
-            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 'clamp(10px, 2.6vw, 32px)' }}>
+            <div className="kc-groups" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'center', gap: 'clamp(10px, 2.6vw, 32px)' }}>
               {groups.map((val, gi) => (
                 <div key={GROUP_LABELS[gi]} style={{ display: 'flex', alignItems: 'flex-end', gap: 'clamp(10px, 2.6vw, 32px)' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -287,7 +287,7 @@ export default function KitCountdown({ launchAtRaw, introText }) {
                     }}>{GROUP_LABELS[gi]}</div>
                   </div>
                   {gi < groups.length - 1 && (
-                    <div style={{
+                    <div className="kc-colon" style={{
                       fontFamily: "'JetBrains Mono', monospace", fontSize: 'clamp(48px, 11vw, 140px)',
                       color: 'rgba(147,197,253,0.35)', paddingBottom: 'clamp(26px, 4vw, 52px)',
                     }}>:</div>
@@ -378,6 +378,16 @@ export default function KitCountdown({ launchAtRaw, introText }) {
 
         .kc-flicker { animation: kcFlicker 0.5s ease-in-out infinite alternate; }
         @keyframes kcFlicker { from { opacity: 0.35; } to { opacity: 1; } }
+
+        /* Below ~480px the desktop-tuned clamp() floor is still too wide for the digits to
+           fit on one line without overflowing — override with viewport-appropriate sizes
+           rather than letting them wrap (a 2-line countdown reads as broken, not designed). */
+        @media(max-width:480px){
+          .kc-digit { font-size: 40px !important; }
+          .kc-colon { font-size: 24px !important; padding-bottom: 8px !important; }
+          .kc-groups { gap: 6px !important; }
+          .kc-groups > div { gap: 6px !important; }
+        }
       `}</style>
     </div>
   )

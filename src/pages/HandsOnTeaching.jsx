@@ -25,7 +25,7 @@ export default function HandsOnTeaching() {
     <PageTransition>
 
       {/* Header */}
-      <section style={{ padding: '140px 48px 80px', position: 'relative', zIndex: 1 }}>
+      <section className="hot-section" style={{ padding: '140px 48px 80px', position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div className="hands-on-header-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
             <div>
@@ -80,7 +80,7 @@ export default function HandsOnTeaching() {
       </section>
 
       {/* In Focus photo grid */}
-      <section style={{ padding: '0 48px 100px', position: 'relative', zIndex: 1 }}>
+      <section className="hot-section" style={{ padding: '0 48px 100px', position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -105,6 +105,7 @@ export default function HandsOnTeaching() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.9, delay: 0.1 }}
+            className="hot-photo-grid"
             style={{
               display: 'grid',
               gridTemplateColumns: '2fr 1fr',
@@ -151,7 +152,7 @@ export default function HandsOnTeaching() {
       </section>
 
       {/* Two parts */}
-      <section style={{ padding: '0 48px 120px', position: 'relative', zIndex: 1 }}>
+      <section className="hot-section" style={{ padding: '0 48px 120px', position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -171,7 +172,7 @@ export default function HandsOnTeaching() {
             </h2>
           </motion.div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 48 }}>
+          <div className="hot-parts-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 48 }}>
             {PARTS.map((part, i) => (
               <motion.div
                 key={part.num}
@@ -251,6 +252,15 @@ export default function HandsOnTeaching() {
         </div>
       </section>
 
+      <style>{`
+        @media(max-width:768px){
+          .hot-section { padding-left: 20px !important; padding-right: 20px !important; }
+          .hands-on-header-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+          .hot-photo-grid { grid-template-columns: 1fr !important; grid-template-rows: repeat(3, 200px) !important; height: auto !important; }
+          .hot-photo-grid > div { grid-row: auto !important; border-radius: 12px !important; }
+          .hot-parts-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </PageTransition>
   )
 }

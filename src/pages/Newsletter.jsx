@@ -43,7 +43,7 @@ export default function Newsletter() {
 
   return (
     <PageTransition>
-      <section style={{ position: 'relative', zIndex: 1, padding: '140px 40px 120px' }}>
+      <section className="nl-section" style={{ position: 'relative', zIndex: 1, padding: '140px 40px 120px' }}>
         <div style={{ maxWidth: 860, margin: '0 auto' }}>
 
           {/* Header */}
@@ -88,6 +88,7 @@ export default function Newsletter() {
               {items.map((item, i) => (
                 <motion.article
                   key={i}
+                  className="nl-card"
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -197,6 +198,14 @@ export default function Newsletter() {
           )}
         </AnimatePresence>
       </section>
+
+      <style>{`
+        @media(max-width:640px){
+          .nl-section { padding: 110px 20px 72px !important; }
+          .nl-card { grid-template-columns: 1fr !important; }
+          .nl-card > div:last-child { height: 200px !important; border-left: none !important; border-top: 1px solid rgba(168,212,240,0.08); }
+        }
+      `}</style>
     </PageTransition>
   )
 }

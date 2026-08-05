@@ -1229,7 +1229,7 @@ export default function Home() {
           </motion.div>
 
           {/* Stats — horizontal scroll below the map */}
-          <div style={{
+          <div className="home-stats-grid" style={{
             display: 'flex',
             marginTop: 20,
             overflowX: 'auto', overflowY: 'hidden',
@@ -1562,6 +1562,7 @@ export default function Home() {
           .home-partners-row { gap: 24px !important; flex-wrap: wrap !important; }
           .home-partner-logo { width: 100px !important; height: 36px !important; }
           .home-alumni-grid { grid-template-columns: 1fr !important; }
+          .alumni-logo-watermark { width: 130px !important; height: 130px !important; }
         }
         @media(max-width:1100px) and (min-width:769px){
           .home-alumni-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
