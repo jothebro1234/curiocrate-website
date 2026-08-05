@@ -95,6 +95,37 @@ function FlipDigit({ char, fontSize }) {
   )
 }
 
+// Pulsing concentric rings around a glowing core, shown while the KitStatus fetch is in
+// flight — Apps Script backends are inherently slow to respond, so this can last a second
+// or two; this keeps that wait feeling deliberate/cinematic instead of like a broken page.
+function LoadingOrb() {
+  return (
+    <div style={{ position: 'relative', width: 110, height: 110, margin: '0 auto' }}>
+      {[0, 0.5, 1].map(delay => (
+        <motion.div
+          key={delay}
+          initial={{ scale: 0.3, opacity: 0.75 }}
+          animate={{ scale: 1.7, opacity: 0 }}
+          transition={{ duration: 1.8, repeat: Infinity, delay, ease: 'easeOut' }}
+          style={{
+            position: 'absolute', inset: 0, borderRadius: '50%',
+            border: '1.5px solid rgba(147,197,253,0.7)',
+          }}
+        />
+      ))}
+      <motion.div
+        animate={{ scale: [1, 1.15, 1], opacity: [0.85, 1, 0.85] }}
+        transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+        style={{
+          position: 'absolute', inset: 0, margin: 'auto', width: 16, height: 16, borderRadius: '50%',
+          background: '#93c5fd',
+          boxShadow: '0 0 30px 10px rgba(147,197,253,0.75), 0 0 60px 20px rgba(96,165,250,0.35)',
+        }}
+      />
+    </div>
+  )
+}
+
 function PulseRings() {
   return (
     <>
@@ -172,7 +203,7 @@ function parseLaunchAt(raw) {
   return isNaN(d) ? null : d
 }
 
-export default function KitCountdown({ launchAtRaw, introText }) {
+export default function KitCountdown({ launchAtRaw, introText, loading = false }) {
   const { t } = useLanguage()
   const GROUP_LABELS = [t('kits.labels.days'), t('kits.labels.hours'), t('kits.labels.minutes'), t('kits.labels.seconds')]
   const launchAt = useMemo(() => parseLaunchAt(launchAtRaw), [launchAtRaw])
@@ -240,7 +271,25 @@ export default function KitCountdown({ launchAtRaw, introText }) {
       {isFinal3 && <PulseRings />}
 
       <AnimatePresence mode="wait">
-        {phase !== 'reveal' ? (
+        {loading ? (
+          <motion.div
+            key="loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 0.92 }}
+            transition={{ duration: 0.6 }}
+            style={{ position: 'relative', zIndex: 2, textAlign: 'center', padding: '0 24px' }}
+          >
+            <LoadingOrb />
+            <div style={{
+              fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: '4px',
+              textTransform: 'uppercase', color: 'rgba(197,227,247,0.55)', marginTop: 26,
+            }}>
+              {t('kits.loading', 'Syncing countdown')}
+              <span className="kc-loading-dots"><span>.</span><span>.</span><span>.</span></span>
+            </div>
+          </motion.div>
+        ) : phase !== 'reveal' ? (
           <motion.div
             key="timer"
             initial={{ opacity: 0 }}
@@ -379,6 +428,11 @@ export default function KitCountdown({ launchAtRaw, introText }) {
 
         .kc-flicker { animation: kcFlicker 0.5s ease-in-out infinite alternate; }
         @keyframes kcFlicker { from { opacity: 0.35; } to { opacity: 1; } }
+
+        .kc-loading-dots span { opacity: 0.2; animation: kcDotPulse 1.4s infinite; }
+        .kc-loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .kc-loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes kcDotPulse { 0%, 80%, 100% { opacity: 0.2; } 40% { opacity: 1; } }
 
         /* Below ~480px the desktop-tuned clamp() floor is still too wide for the digits to
            fit on one line without overflowing — override with viewport-appropriate sizes

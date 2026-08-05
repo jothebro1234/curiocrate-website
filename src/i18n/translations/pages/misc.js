@@ -30,6 +30,7 @@ export const en = {
     defaultIntro: 'Our first kit is launching in',
     comingSoon: 'Launch date coming soon',
     arrived: 'The first kit has arrived.',
+    loading: 'Syncing countdown',
     labels: {
       days: 'DAYS',
       hours: 'HRS',
@@ -68,6 +69,7 @@ export const es = {
     defaultIntro: 'Nuestro primer kit se lanza en',
     comingSoon: 'Fecha de lanzamiento próximamente',
     arrived: 'El primer kit ya ha llegado.',
+    loading: 'Sincronizando cuenta regresiva',
     labels: {
       days: 'DÍA',
       hours: 'HRS',
