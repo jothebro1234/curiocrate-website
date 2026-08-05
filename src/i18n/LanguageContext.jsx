@@ -1,9 +1,25 @@
 import { useEffect, useMemo, useState } from 'react'
 import { LanguageContext } from './context'
-import en from './translations/en'
-import es from './translations/es'
 
-const DICTIONARIES = { en, es }
+// Auto-discovers every translation file under translations/pages/ at build time (each must
+// export `en` and `es` objects — see translations/pages/common.js for the pattern) and
+// merges them into two flat dictionaries. This means adding a new page's translations is
+// just "add a new file here", never an edit to a shared import list — safe for multiple
+// people/agents to add page translations in parallel without touching the same file.
+const modules = import.meta.glob('./translations/pages/*.js', { eager: true })
+
+function mergeDictionaries() {
+  const en = {}
+  const es = {}
+  for (const mod of Object.values(modules)) {
+    if (mod.en) Object.assign(en, mod.en)
+    if (mod.es) Object.assign(es, mod.es)
+  }
+  return { en, es }
+}
+
+const { en: EN, es: ES } = mergeDictionaries()
+const DICTIONARIES = { en: EN, es: ES }
 const STORAGE_KEY = 'curiocrate_lang'
 
 // Spanish-speaking country/locale codes (ISO 639-1 "es", any region variant) — used to
@@ -49,8 +65,8 @@ export function LanguageProvider({ children }) {
   const setLang = (next) => setLangState(next === 'es' ? 'es' : 'en')
 
   const t = useMemo(() => {
-    const dict = DICTIONARIES[lang] || en
-    return (path) => resolve(dict, en, path)
+    const dict = DICTIONARIES[lang] || EN
+    return (path) => resolve(dict, EN, path)
   }, [lang])
 
   const value = useMemo(() => ({ lang, setLang, t }), [lang, t])

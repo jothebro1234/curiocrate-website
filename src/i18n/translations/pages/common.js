@@ -1,0 +1,69 @@
+// Shared/global strings — nav, footer, and generic UI bits reused across multiple pages
+// (e.g. "Read more", "View Source"). Namespaced under `common`, `nav`, `footer` — see
+// src/i18n/LanguageContext.jsx for how per-page files like this one get merged together,
+// and CLAUDE.md for the convention every other page-translation file should follow.
+export const en = {
+  common: {
+    readMore: 'Read more',
+    viewSource: 'View Source',
+    loading: 'Loading...',
+  },
+  nav: {
+    discover: 'Discover',
+    kits: 'Kits',
+    newsletter: 'Newsletter',
+    initiatives: 'Initiatives',
+    handsOnTeaching: 'Hands-On Teaching',
+    aboutUs: 'About Us',
+    ourChapters: 'Our Chapters',
+    gallery: 'Gallery',
+    team: 'Team',
+    contactUs: 'Contact Us',
+    becomeAMember: 'Become a Member',
+    esc: 'ESC',
+  },
+  footer: {
+    tagline: 'Hands-on science kits for underserved communities.',
+    explore: 'Explore',
+    connect: 'Connect',
+    program: 'Program',
+    mission: 'Mission',
+    volunteeringOpportunities: 'Volunteering Opportunities',
+    startAChapter: 'Start a Chapter',
+    partnerWithUs: 'Partner With Us',
+    copyright: '501(c)(3) NONPROFIT',
+  },
+}
+
+export const es = {
+  common: {
+    readMore: 'Leer más',
+    viewSource: 'Ver fuente',
+    loading: 'Cargando...',
+  },
+  nav: {
+    discover: 'Descubrir',
+    kits: 'Kits',
+    newsletter: 'Boletín',
+    initiatives: 'Iniciativas',
+    handsOnTeaching: 'Enseñanza Práctica',
+    aboutUs: 'Nosotros',
+    ourChapters: 'Nuestros Capítulos',
+    gallery: 'Galería',
+    team: 'Equipo',
+    contactUs: 'Contáctanos',
+    becomeAMember: 'Hazte Miembro',
+    esc: 'ESC',
+  },
+  footer: {
+    tagline: 'Kits de ciencia práctica para comunidades desatendidas.',
+    explore: 'Explorar',
+    connect: 'Conéctate',
+    program: 'Programa',
+    mission: 'Misión',
+    volunteeringOpportunities: 'Oportunidades de Voluntariado',
+    startAChapter: 'Inicia un Capítulo',
+    partnerWithUs: 'Colabora con Nosotros',
+    copyright: 'ORGANIZACIÓN SIN FINES DE LUCRO 501(c)(3)',
+  },
+}
