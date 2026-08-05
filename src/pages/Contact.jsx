@@ -1,28 +1,27 @@
 import { motion } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
+import { useLanguage } from '../i18n/useLanguage'
 
 const contacts = [
   {
-    audience: 'Schools & Organizations',
-    description: 'Interested in bringing CurioCrate kits to your school, district, or community program?',
+    key: 'schools',
     email: 'ckf.curiocrate@curiocrate.org',
     img: '/images/curieschool.png',
   },
   {
-    audience: 'Students & Volunteers',
-    description: 'Do you have any questions about starting a chapter, or want to learn more about our programs?',
+    key: 'students',
     email: 'ckf.curiocrate@curiocrate.org',
     img: '/images/curiequestion.png',
   },
   {
-    audience: 'Sponsors & Partners',
-    description: 'Interested in sponsoring CurioCrate or partnering with us to expand our reach?',
+    key: 'sponsors',
     email: 'ckf.curiocrate@gmail.com',
     img: '/images/curielove.png',
   },
 ]
 
 export default function Contact() {
+  const { t } = useLanguage()
   return (
     <PageTransition>
       <section className="contact-section" style={{ minHeight: '100vh', position: 'relative', zIndex: 1, padding: '140px 40px 100px' }}>
@@ -34,22 +33,22 @@ export default function Contact() {
             transition={{ duration: 0.8 }}
             style={{ textAlign: 'center', marginBottom: 72 }}
           >
-            <div className="label" style={{ marginBottom: 14 }}>Get in Touch</div>
+            <div className="label" style={{ marginBottom: 14 }}>{t('contact.eyebrow')}</div>
             <h1 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(40px,6vw,80px)',
               fontWeight: 300, color: 'var(--cream)',
               lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 20,
-            }}>Contact Us</h1>
+            }}>{t('contact.title')}</h1>
             <p style={{ fontSize: 16, color: 'var(--muted)', maxWidth: 480, margin: '0 auto', lineHeight: 1.7 }}>
-              We'd love to hear from you. Reach out and we'll get back to you as soon as we can.
+              {t('contact.intro')}
             </p>
           </motion.div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             {contacts.map((c, i) => (
               <motion.div
-                key={c.audience}
+                key={c.key}
                 className="contact-card"
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -65,7 +64,7 @@ export default function Contact() {
                 <div className="contact-card-inner" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
                   <img
                     src={c.img}
-                    alt={c.audience}
+                    alt={t(`contact.${c.key}.title`)}
                     style={{
                       width: 80, height: 80, objectFit: 'contain',
                       flexShrink: 0,
@@ -77,9 +76,9 @@ export default function Contact() {
                       fontFamily: "'Cormorant Garamond', serif",
                       fontSize: 24, fontWeight: 400,
                       color: 'var(--cream)', marginBottom: 8,
-                    }}>{c.audience}</div>
+                    }}>{t(`contact.${c.key}.title`)}</div>
                     <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.7, marginBottom: 20 }}>
-                      {c.description}
+                      {t(`contact.${c.key}.description`)}
                     </p>
                     <a href={`mailto:${c.email}`} style={{
                       fontFamily: "'JetBrains Mono', monospace",
@@ -107,7 +106,7 @@ export default function Contact() {
               fontSize: 10, letterSpacing: '2px', color: 'var(--muted)', opacity: 0.4,
             }}
           >
-            We typically respond within 2 to 3 business days.
+            {t('contact.responseTime')}
           </motion.p>
         </div>
       </section>

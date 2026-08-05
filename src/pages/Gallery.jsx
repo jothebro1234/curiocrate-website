@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
+import { useLanguage } from '../i18n/useLanguage'
 import { chronicle } from '../data/gallery'
 
 // ─── LIGHTBOX ─────────────────────────────────────────────────────────────────
 function Lightbox({ photos, startIndex, onClose }) {
+  const { t } = useLanguage()
   const [idx, setIdx] = useState(startIndex)
   const photo = photos[idx]
 
@@ -40,7 +42,7 @@ function Lightbox({ photos, startIndex, onClose }) {
         border:'1px solid rgba(168,212,240,0.2)', borderRadius:8, color:'var(--muted)',
         fontSize:13, cursor:'pointer', padding:'8px 16px',
         fontFamily:"'JetBrains Mono',monospace", letterSpacing:'2px', zIndex:10,
-      }}>ESC · CLOSE</button>
+      }}>{t('common.esc')} · {t('common.close')}</button>
 
       {photos.length > 1 && <>
         <button
@@ -85,6 +87,7 @@ function Lightbox({ photos, startIndex, onClose }) {
 
 // ─── YEAR MODAL ───────────────────────────────────────────────────────────────
 function YearModal({ data, onClose, onOpenPhoto }) {
+  const { t } = useLanguage()
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     return () => { document.body.style.overflow = '' }
@@ -121,7 +124,7 @@ function YearModal({ data, onClose, onOpenPhoto }) {
         }}
           onMouseEnter={e => { e.currentTarget.style.borderColor = data.color; e.currentTarget.style.color = data.color }}
           onMouseLeave={e => { e.currentTarget.style.borderColor = data.color + '33'; e.currentTarget.style.color = 'var(--muted)' }}
-        >ESC · CLOSE</button>
+        >{t('common.esc')} · {t('common.close')}</button>
       </div>
 
       <motion.div
@@ -134,8 +137,8 @@ function YearModal({ data, onClose, onOpenPhoto }) {
           <div style={{ textAlign:'center', padding:'80px 0' }}>
             <motion.div initial={{ opacity:0, scale:.8 }} animate={{ opacity:1, scale:1 }} transition={{ delay:.3 }}
               style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:72, color:data.color, opacity:.3, marginBottom:24 }}>◎</motion.div>
-            <p style={{ fontFamily:"'Cormorant Garamond',serif", fontStyle:'italic', fontSize:22, color:'var(--muted)' }}>Archive forthcoming.</p>
-            <p style={{ fontSize:13, color:'var(--muted)', opacity:.5, marginTop:8 }}>Photos from this chapter will be added soon.</p>
+            <p style={{ fontFamily:"'Cormorant Garamond',serif", fontStyle:'italic', fontSize:22, color:'var(--muted)' }}>{t('gallery.empty.title')}</p>
+            <p style={{ fontSize:13, color:'var(--muted)', opacity:.5, marginTop:8 }}>{t('gallery.empty.subtitle')}</p>
           </div>
         ) : (
           <div className="year-modal-columns" style={{ columns:3, columnGap:12 }}>
@@ -166,6 +169,7 @@ function YearModal({ data, onClose, onOpenPhoto }) {
 
 // ─── CHRONICLE HERO ───────────────────────────────────────────────────────────
 function ChronicleHero({ onOpenYear }) {
+  const { t } = useLanguage()
   const [idx, setIdx] = useState(0)
   const [dir, setDir] = useState(1)
   const current = chronicle[idx]
@@ -317,7 +321,7 @@ function ChronicleHero({ onOpenYear }) {
                   e.currentTarget.style.boxShadow = `0 0 24px ${current.color}20`
                 }}
               >
-                View {current.photos.length} Photo{current.photos.length !== 1 ? 's' : ''}
+                {t('gallery.hero.view')} {current.photos.length} {current.photos.length !== 1 ? t('gallery.hero.photos') : t('gallery.hero.photo')}
                 <span style={{ fontSize:14, lineHeight:1 }}>→</span>
               </motion.button>
             ) : (
@@ -330,7 +334,7 @@ function ChronicleHero({ onOpenYear }) {
                   color:'var(--muted)', textTransform:'uppercase', marginTop:8,
                 }}
               >
-                Archive forthcoming
+                {t('gallery.hero.archiveForthcoming')}
               </motion.div>
             )}
           </div>
@@ -355,7 +359,7 @@ function ChronicleHero({ onOpenYear }) {
       >
         <span style={{ fontSize:22, lineHeight:1 }}>←</span>
         <div style={{ textAlign:'left' }}>
-          <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:8, letterSpacing:'2.5px', color:'var(--muted)', opacity:0.5, textTransform:'uppercase', marginBottom:3 }}>Prev</div>
+          <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:8, letterSpacing:'2.5px', color:'var(--muted)', opacity:0.5, textTransform:'uppercase', marginBottom:3 }}>{t('gallery.hero.prev')}</div>
           <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:20, fontWeight:300, color:'var(--cream)', lineHeight:1 }}>
             {chronicle[(idx - 1 + chronicle.length) % chronicle.length].year}
           </div>
@@ -379,7 +383,7 @@ function ChronicleHero({ onOpenYear }) {
         onMouseLeave={e => { e.currentTarget.style.background = 'rgba(3,5,15,0.65)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.22)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.5)' }}
       >
         <div style={{ textAlign:'right' }}>
-          <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:8, letterSpacing:'2.5px', color:'var(--muted)', opacity:0.5, textTransform:'uppercase', marginBottom:3 }}>Next</div>
+          <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:8, letterSpacing:'2.5px', color:'var(--muted)', opacity:0.5, textTransform:'uppercase', marginBottom:3 }}>{t('gallery.hero.next')}</div>
           <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:20, fontWeight:300, color:'var(--cream)', lineHeight:1 }}>
             {chronicle[(idx + 1) % chronicle.length].year}
           </div>

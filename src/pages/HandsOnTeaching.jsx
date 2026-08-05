@@ -2,18 +2,21 @@ import { motion } from 'framer-motion'
 import { featured } from '../data/gallery'
 import PageTransition from '../components/PageTransition'
 import AutoplayVideo from '../components/AutoplayVideo'
+import { useLanguage } from '../i18n/useLanguage'
 
 const MESSAGE_FROM_PRES_URL = 'https://pub-e7374d03fa9c42bfb531206a5e81830b.r2.dev/messagefrompres.mp4'
 
 const PARTS = [
   {
     num: '01',
+    key: 'inPerson',
     title: 'In-Person Teaching',
     tag: 'On Location',
     desc: 'We travel to schools, community centers, libraries, and other organizations to lead immersive science workshops. Students work through real experiments with materials we bring, guided by trained CurioCrate volunteers.',
   },
   {
     num: '02',
+    key: 'curriculum',
     title: 'Curriculum Development',
     tag: 'Remote / Anywhere',
     desc: 'Help design the lesson guides and experiment curricula that power every CurioCrate session. This role is fully remote and open to anyone passionate about making science accessible and engaging.',
@@ -21,6 +24,7 @@ const PARTS = [
 ]
 
 export default function HandsOnTeaching() {
+  const { t } = useLanguage()
   return (
     <PageTransition>
 
@@ -39,7 +43,7 @@ export default function HandsOnTeaching() {
                   color: 'var(--muted)', opacity: 0.45, marginBottom: 18,
                 }}
               >
-                Initiatives
+                {t('handsOnTeaching.eyebrow')}
               </motion.div>
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
@@ -52,8 +56,8 @@ export default function HandsOnTeaching() {
                   lineHeight: 1.05, letterSpacing: '-0.03em', margin: '0 0 20px',
                 }}
               >
-                Hands-On<br/>
-                <em style={{ color: 'var(--pastel1)' }}>Teaching.</em>
+                {t('handsOnTeaching.headline.line1')}<br/>
+                <em style={{ color: 'var(--pastel1)' }}>{t('handsOnTeaching.headline.line2')}</em>
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, y: 14 }}
@@ -64,7 +68,7 @@ export default function HandsOnTeaching() {
                   maxWidth: 560, margin: 0, opacity: 0.85,
                 }}
               >
-                We bring science directly to communities. From school classrooms to community centers, CurioCrate volunteers run immersive, experiment-based sessions that make learning real and memorable.
+                {t('handsOnTeaching.intro')}
               </motion.p>
             </div>
 
@@ -89,14 +93,14 @@ export default function HandsOnTeaching() {
             transition={{ duration: 0.8 }}
             style={{ marginBottom: 40, textAlign: 'center' }}
           >
-            <div className="label" style={{ marginBottom: 12 }}>In Focus</div>
+            <div className="label" style={{ marginBottom: 12 }}>{t('handsOnTeaching.inFocus.label')}</div>
             <h2 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(28px, 3.5vw, 48px)',
               fontWeight: 300, color: 'var(--cream)', lineHeight: 1.1, margin: 0,
             }}>
-              Science, in the wild.<br/>
-              <em style={{ color: 'var(--pastel1)' }}>Moments that matter.</em>
+              {t('handsOnTeaching.inFocus.headlineLine1')}<br/>
+              <em style={{ color: 'var(--pastel1)' }}>{t('handsOnTeaching.inFocus.headlineLine2')}</em>
             </h2>
           </motion.div>
 
@@ -161,14 +165,14 @@ export default function HandsOnTeaching() {
             transition={{ duration: 0.7 }}
             style={{ marginBottom: 40 }}
           >
-            <div className="label" style={{ marginBottom: 12 }}>How to Get Involved</div>
+            <div className="label" style={{ marginBottom: 12 }}>{t('handsOnTeaching.involved.label')}</div>
             <h2 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(28px, 3.5vw, 46px)',
               fontWeight: 300, color: 'var(--cream)', lineHeight: 1.1, margin: 0,
             }}>
-              Two ways to make<br/>
-              <em style={{ color: 'var(--pastel1)' }}>an impact.</em>
+              {t('handsOnTeaching.involved.headlineLine1')}<br/>
+              <em style={{ color: 'var(--pastel1)' }}>{t('handsOnTeaching.involved.headlineLine2')}</em>
             </h2>
           </motion.div>
 
@@ -200,7 +204,7 @@ export default function HandsOnTeaching() {
                     background: 'rgba(168,212,240,0.08)',
                     border: '1px solid rgba(168,212,240,0.15)',
                     borderRadius: 4, padding: '3px 8px',
-                  }}>{part.tag}</span>
+                  }}>{t(`handsOnTeaching.parts.${part.key}.tag`, part.tag)}</span>
                 </div>
                 <h3 style={{
                   fontFamily: "'Cormorant Garamond', serif",
@@ -208,12 +212,12 @@ export default function HandsOnTeaching() {
                   fontWeight: 300, color: 'var(--cream)',
                   lineHeight: 1.2, margin: '0 0 14px',
                 }}>
-                  {part.title}
+                  {t(`handsOnTeaching.parts.${part.key}.title`, part.title)}
                 </h3>
                 <p style={{
                   fontSize: 14, color: 'var(--muted)', lineHeight: 1.75, margin: 0, opacity: 0.8,
                 }}>
-                  {part.desc}
+                  {t(`handsOnTeaching.parts.${part.key}.desc`, part.desc)}
                 </p>
               </motion.div>
             ))}
@@ -242,7 +246,7 @@ export default function HandsOnTeaching() {
               onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; e.currentTarget.style.transform = 'translateY(-2px)' }}
               onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)' }}
             >
-              Join via Portal
+              {t('handsOnTeaching.joinViaPortal')}
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                 <path d="M7 17L17 7M17 7H7M17 7v10"/>
               </svg>

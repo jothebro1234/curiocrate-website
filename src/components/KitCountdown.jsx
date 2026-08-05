@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useLanguage } from '../i18n/useLanguage'
 
 function getRemaining(target, now) {
   const diff = Math.max(0, target.getTime() - now)
@@ -160,8 +161,6 @@ function CountdownParticles({ intense }) {
   return <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
 }
 
-const GROUP_LABELS = ['DAYS', 'HRS', 'MIN', 'SEC']
-
 // Parses whatever the KitStatus sheet's LaunchAt value comes through as — either a real ISO
 // datetime string (Date cells serialize to ISO via JSON.stringify on the Apps Script side) or
 // a plain "YYYY-MM-DD HH:MM:SS"-style string typed directly into the cell, which the Date
@@ -174,6 +173,8 @@ function parseLaunchAt(raw) {
 }
 
 export default function KitCountdown({ launchAtRaw, introText }) {
+  const { t } = useLanguage()
+  const GROUP_LABELS = [t('kits.labels.days'), t('kits.labels.hours'), t('kits.labels.minutes'), t('kits.labels.seconds')]
   const launchAt = useMemo(() => parseLaunchAt(launchAtRaw), [launchAtRaw])
   const hasTarget = !!launchAt
 
@@ -262,7 +263,7 @@ export default function KitCountdown({ launchAtRaw, introText }) {
               letterSpacing: '0.02em', marginBottom: 48,
               textShadow: '0 0 30px rgba(96,165,250,0.4)',
             }}>
-              {introText || 'Our first kit is launching in'}
+              {introText || t('kits.defaultIntro', 'Our first kit is launching in')}
             </div>
 
             {isFinal3 && (
@@ -308,7 +309,7 @@ export default function KitCountdown({ launchAtRaw, introText }) {
                 fontFamily: "'JetBrains Mono', monospace", fontSize: 13, letterSpacing: '2px',
                 textTransform: 'uppercase', color: 'rgba(197,227,247,0.4)', marginTop: 44,
               }}>
-                Launch date coming soon
+                {t('kits.comingSoon')}
               </div>
             )}
           </motion.div>
@@ -332,7 +333,7 @@ export default function KitCountdown({ launchAtRaw, introText }) {
               fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic',
               fontSize: 'clamp(22px, 3.4vw, 34px)', color: 'rgba(197,227,247,0.85)',
             }}>
-              The first kit has arrived.
+              {t('kits.arrived')}
             </p>
           </motion.div>
         )}

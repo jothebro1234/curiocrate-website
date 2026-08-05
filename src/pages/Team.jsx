@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
 import { useMobile } from '../hooks/useMobile'
+import { useLanguage } from '../i18n/useLanguage'
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 
@@ -55,7 +56,7 @@ const cabinet = [
     dark: '#0a0018',
     number: '04',
   },
-]
+].map(m => ({ ...m, ns: 'cabinet' }))
 
 const directors = [
   {
@@ -154,7 +155,7 @@ const directors = [
     dark: '#170f00',
     number: '08',
   },
-]
+].map(m => ({ ...m, ns: 'directors' }))
 
 const productOfficers = [
   {
@@ -181,7 +182,7 @@ const productOfficers = [
     dark: '#160006',
     number: '09',
   },
-]
+].map(m => ({ ...m, ns: 'productOfficers' }))
 
 const departmentHeads = [
   {
@@ -237,7 +238,7 @@ const departmentHeads = [
     dark: '#160006',
     number: '04',
   },
-]
+].map(m => ({ ...m, ns: 'departmentHeads' }))
 
 // ─── PANEL STAGE (reusable for Cabinet + Directors) ───────────────────────────
 function PanelStage({ members, height = 580, expandFlex = 3.5, groupBreakAfter = null }) {
@@ -245,6 +246,7 @@ function PanelStage({ members, height = 580, expandFlex = 3.5, groupBreakAfter =
   const [hovered, setHovered] = useState(null)
   const focus = hovered ?? active
   const isMobile = useMobile()
+  const { t } = useLanguage()
 
   if (isMobile) {
     return (
@@ -276,12 +278,12 @@ function PanelStage({ members, height = 580, expandFlex = 3.5, groupBreakAfter =
               <div style={{
                 fontFamily: "'JetBrains Mono', monospace", fontSize: 8,
                 letterSpacing: '2px', textTransform: 'uppercase', color: m.color, marginBottom: 6,
-              }}>{m.role}</div>
+              }}>{t(`team.${m.ns}.${m.id}.role`, m.role)}</div>
               <div style={{
                 fontFamily: "'Cormorant Garamond', serif",
                 fontSize: 22, fontWeight: 300, color: 'var(--cream)', lineHeight: 1.1, marginBottom: 7,
               }}>{m.name}</div>
-              <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.65 }}>{m.bio}</p>
+              <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.65 }}>{t(`team.${m.ns}.${m.id}.bio`, m.bio)}</p>
             </div>
           </div>
         ))}
@@ -415,7 +417,7 @@ function PanelStage({ members, height = 580, expandFlex = 3.5, groupBreakAfter =
                       writingMode:'vertical-rl', textOrientation:'mixed',
                       transform:'rotate(180deg)', margin:'0 auto', letterSpacing:'0.05em',
                     }}>
-                      {m.shortName ?? m.name}
+                      {m.shortName ? t(`team.${m.ns}.${m.id}.shortName`, m.shortName) : m.name}
                     </div>
                   </motion.div>
                 ) : (
@@ -425,7 +427,7 @@ function PanelStage({ members, height = 580, expandFlex = 3.5, groupBreakAfter =
                   >
                     <div className="label" style={{ color:m.color, fontSize:10, marginBottom:8, display:'flex', alignItems:'center', gap:10 }}>
                       <div style={{ width:18, height:1, background:m.color }}/>
-                      {m.role}
+                      {t(`team.${m.ns}.${m.id}.role`, m.role)}
                     </div>
                     <h2 style={{
                       fontFamily:"'Cormorant Garamond', serif",
@@ -440,7 +442,7 @@ function PanelStage({ members, height = 580, expandFlex = 3.5, groupBreakAfter =
                       fontSize:13, color:'var(--muted)', lineHeight:1.7,
                       marginBottom:18, maxWidth:340,
                     }}>
-                      {m.bio}
+                      {t(`team.${m.ns}.${m.id}.bio`, m.bio)}
                     </p>
                   </motion.div>
                 )}
@@ -489,6 +491,7 @@ function SectionHeading({ label, title, italic, delay = 0 }) {
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 export default function Team() {
+  const { t } = useLanguage()
   return (
     <PageTransition>
       <div style={{ minHeight:'100vh', position:'relative', zIndex:1 }}>
@@ -500,22 +503,22 @@ export default function Team() {
             animate={{ opacity:1, y:0 }}
             transition={{ duration:0.8 }}
           >
-            <div className="label" style={{ marginBottom:14 }}>The People</div>
+            <div className="label" style={{ marginBottom:14 }}>{t('team.header.eyebrow')}</div>
             <h1 style={{
               fontFamily:"'Cormorant Garamond', serif",
               fontSize:'clamp(44px, 6vw, 80px)',
               fontWeight:300, color:'var(--cream)',
               lineHeight:1.05, letterSpacing:'-0.02em', marginBottom:14,
             }}>
-              Meet the minds<br/>
-              <em style={{ color:'var(--pastel1)', fontStyle:'italic' }}>behind CurioCrate.</em>
+              {t('team.header.title')}<br/>
+              <em style={{ color:'var(--pastel1)', fontStyle:'italic' }}>{t('team.header.titleItalic')}</em>
             </h1>
             <p style={{
               fontFamily:"'Cormorant Garamond', serif",
               fontStyle:'italic', fontSize:18,
               color:'var(--pastel1)', opacity:0.7,
             }}>
-              "Create Change in our Community through Curiosity."
+              {t('team.header.quote')}
             </p>
           </motion.div>
         </div>
@@ -525,20 +528,20 @@ export default function Team() {
         ══════════════════════════════════════════════════════════════════════ */}
         <div style={{ padding:'72px 0 20px' }}>
           <SectionHeading
-            label="Directors"
-            title="Specialists who build"
-            italic="the mission daily."
+            label={t('team.sections.directors.label')}
+            title={t('team.sections.directors.title')}
+            italic={t('team.sections.directors.italic')}
           />
           <div className="team-directors-row" style={{ display:'flex', margin:'0 40px 12px' }}>
             <div style={{ flex: directors.length }} />
             <div style={{ flex: productOfficers.length, textAlign:'center' }}>
-              <span className="label" style={{ fontSize:9, opacity:0.5 }}>Product Leadership</span>
+              <span className="label" style={{ fontSize:9, opacity:0.5 }}>{t('team.sections.directors.productLeadership')}</span>
             </div>
           </div>
           <PanelStage members={[...directors, ...productOfficers]} height={620} expandFlex={2.8} groupBreakAfter={directors.length - 1} />
           <div style={{ textAlign:'center', marginTop:18, marginBottom:0 }}>
             <span className="label" style={{ fontSize:9, opacity:0.3 }}>
-              Hover to reveal · Click to lock
+              {t('team.hoverHint')}
             </span>
           </div>
         </div>
@@ -548,14 +551,14 @@ export default function Team() {
         ══════════════════════════════════════════════════════════════════════ */}
         <div style={{ padding:'72px 0 20px' }}>
           <SectionHeading
-            label="Department Heads"
-            title="Leading the teams"
-            italic="behind the mission."
+            label={t('team.sections.departmentHeads.label')}
+            title={t('team.sections.departmentHeads.title')}
+            italic={t('team.sections.departmentHeads.italic')}
           />
           <PanelStage members={departmentHeads} height={640} expandFlex={2.6} />
           <div style={{ textAlign:'center', marginTop:18, marginBottom:0 }}>
             <span className="label" style={{ fontSize:9, opacity:0.3 }}>
-              Hover to reveal · Click to lock
+              {t('team.hoverHint')}
             </span>
           </div>
         </div>
@@ -565,14 +568,14 @@ export default function Team() {
         ══════════════════════════════════════════════════════════════════════ */}
         <div style={{ padding:'72px 0 20px' }}>
           <SectionHeading
-            label="Executive Cabinet"
-            title="Leadership that drives"
-            italic="every decision."
+            label={t('team.sections.cabinet.label')}
+            title={t('team.sections.cabinet.title')}
+            italic={t('team.sections.cabinet.italic')}
           />
           <PanelStage members={cabinet} height={660} expandFlex={3.5} />
           <div style={{ textAlign:'center', marginTop:18, marginBottom:0 }}>
             <span className="label" style={{ fontSize:9, opacity:0.3 }}>
-              Hover to reveal · Click to lock
+              {t('team.hoverHint')}
             </span>
           </div>
         </div>
@@ -647,7 +650,7 @@ export default function Team() {
               fontSize:10, letterSpacing:'8px',
               color:'#67e8f9', opacity:0.65,
             }}>
-              ◈ &nbsp; CHIEF EXECUTIVE · FOUNDER · EST. 2023 &nbsp; ◈
+              ◈ &nbsp; {t('team.founder.eyebrow')} &nbsp; ◈
             </div>
           </motion.div>
 
@@ -714,7 +717,7 @@ export default function Team() {
                 <div style={{ display:'flex', alignItems:'center', gap:16 }}>
                   <div style={{ width:32, height:1, background:'linear-gradient(to right, #67e8f9, transparent)' }}/>
                   <div className="label" style={{ color:'#67e8f9', fontSize:11, letterSpacing:'4px' }}>
-                    Chief Executive Founder
+                    {t('team.founder.roleLabel')}
                   </div>
                 </div>
               </motion.div>
@@ -733,8 +736,7 @@ export default function Team() {
                   color:'var(--muted)', lineHeight:1.8,
                   marginBottom:32, opacity:0.85,
                 }}>
-                  Founded CurioCrate with one conviction: the zip code a child grows up
-                  in should never determine their access to great science.
+                  {t('team.founder.bio')}
                 </p>
                 <a
                   href="mailto:josephyoon25@curiocrate.org"
@@ -749,7 +751,7 @@ export default function Team() {
                   onMouseEnter={e=>{ e.currentTarget.style.background='rgba(103,232,249,0.14)'; e.currentTarget.style.boxShadow='0 0 36px rgba(103,232,249,0.25)'; e.currentTarget.style.borderColor='rgba(103,232,249,0.7)' }}
                   onMouseLeave={e=>{ e.currentTarget.style.background='rgba(103,232,249,0.06)'; e.currentTarget.style.boxShadow='none'; e.currentTarget.style.borderColor='rgba(103,232,249,0.4)' }}
                 >
-                  ✉ &nbsp; Get in Touch
+                  ✉ &nbsp; {t('team.founder.cta')}
                 </a>
               </motion.div>
             </div>
@@ -792,13 +794,13 @@ export default function Team() {
             fontFamily:"'Cormorant Garamond', serif", fontSize:36,
             fontWeight:300, color:'var(--cream)', marginBottom:12,
           }}>
-            Want to join the team?
+            {t('team.join.title')}
           </h3>
           <p style={{
             color:'var(--muted)', fontSize:15,
             maxWidth:400, margin:'0 auto 32px', lineHeight:1.7,
           }}>
-            We're looking for passionate volunteers, educators, and community partners.
+            {t('team.join.description')}
           </p>
           <a href="mailto:josephyoon25@curiocrate.org" style={{
             fontFamily:"'JetBrains Mono', monospace",
@@ -810,7 +812,7 @@ export default function Team() {
           onMouseEnter={e=>{ e.currentTarget.style.background='rgba(168,212,240,0.07)'; e.currentTarget.style.boxShadow='0 0 28px rgba(168,212,240,0.12)' }}
           onMouseLeave={e=>{ e.currentTarget.style.background='transparent'; e.currentTarget.style.boxShadow='none' }}
           >
-            Get in Touch →
+            {t('team.join.cta')} →
           </a>
         </motion.div>
 

@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
+import { useLanguage } from '../i18n/useLanguage'
 import { chapters as staticChapters } from '../data/chapters'
 
 function resolveLogoUrl(url) {
@@ -33,6 +34,7 @@ function InstagramIcon() {
 }
 
 function ChapterModal({ chapter, onClose }) {
+  const { t } = useLanguage()
   const [imgError, setImgError] = useState(false)
   const [presidentImgError, setPresidentImgError] = useState(false)
   const initials = chapter.school
@@ -52,10 +54,10 @@ function ChapterModal({ chapter, onClose }) {
   }, [onClose])
 
   const CABINET_ROLES = [
-    { title: 'Vice President', name: chapter.vicePresident },
-    { title: 'Treasurer', name: chapter.treasurer },
-    { title: 'Secretary', name: chapter.secretary },
-    { title: 'Social Media Manager', name: chapter.socialMedia },
+    { title: t('chapters.roles.vicePresident'), name: chapter.vicePresident },
+    { title: t('chapters.roles.treasurer'), name: chapter.treasurer },
+    { title: t('chapters.roles.secretary'), name: chapter.secretary },
+    { title: t('chapters.roles.socialMediaManager'), name: chapter.socialMedia },
   ].filter(r => r.name)
 
   return createPortal(
@@ -95,7 +97,7 @@ function ChapterModal({ chapter, onClose }) {
             background: 'none', border: '1px solid rgba(168,212,240,0.2)',
             borderRadius: 8, color: 'var(--muted)', fontSize: 11, cursor: 'pointer',
             padding: '7px 14px', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '2px',
-          }}>ESC · CLOSE</button>
+          }}>{t('common.esc')} · {t('common.close')}</button>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <div style={{
@@ -143,7 +145,7 @@ function ChapterModal({ chapter, onClose }) {
               }}
               onMouseEnter={e => { e.currentTarget.style.opacity = 1; e.currentTarget.style.boxShadow = '0 6px 22px rgba(238,42,123,0.5)' }}
               onMouseLeave={e => { e.currentTarget.style.opacity = 0.92; e.currentTarget.style.boxShadow = '0 4px 16px rgba(238,42,123,0.35)' }}
-            ><InstagramIcon /> Instagram</a>
+            ><InstagramIcon /> {t('chapters.modal.instagram')}</a>
           )}
         </div>
 
@@ -182,7 +184,7 @@ function ChapterModal({ chapter, onClose }) {
             <div style={{
               fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
               color: 'var(--pastel1)', opacity: 0.7, marginTop: 20, position: 'relative',
-            }}>President</div>
+            }}>{t('chapters.modal.president')}</div>
             <div style={{
               fontFamily: "'Cormorant Garamond', serif", fontSize: 32, fontWeight: 400,
               color: 'var(--cream)', lineHeight: 1.2, marginTop: 6, position: 'relative',
@@ -201,11 +203,11 @@ function ChapterModal({ chapter, onClose }) {
         {/* Leadership Cabinet */}
         <div style={{ padding: '0 36px 40px', borderTop: '1px solid rgba(168,212,240,0.08)' }}>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--muted)', opacity: 0.45, margin: '28px 0 24px' }}>
-            Leadership Cabinet
+            {t('chapters.modal.leadershipCabinet')}
           </div>
 
           {CABINET_ROLES.length === 0 ? (
-            <p style={{ fontSize: 14, color: 'var(--muted)', opacity: 0.5, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif" }}>More cabinet details coming soon.</p>
+            <p style={{ fontSize: 14, color: 'var(--muted)', opacity: 0.5, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif" }}>{t('chapters.modal.moreCabinetSoon')}</p>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {CABINET_ROLES.map(role => (
@@ -243,7 +245,7 @@ function ChapterModal({ chapter, onClose }) {
           {directorsList.length > 0 && (
             <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid rgba(168,212,240,0.07)' }}>
               <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--muted)', opacity: 0.4, marginBottom: 8 }}>
-                Directors
+                {t('chapters.modal.directors')}
               </div>
               <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'var(--muted)', opacity: 0.6, lineHeight: 1.7 }}>
                 {directorsList.join(', ')}
@@ -267,6 +269,7 @@ function ChapterModal({ chapter, onClose }) {
 }
 
 function ChapterCard({ chapter, index, onClick }) {
+  const { t } = useLanguage()
   const [imgError, setImgError] = useState(false)
   const [hovered, setHovered] = useState(false)
   const initials = chapter.school
@@ -380,19 +383,20 @@ function ChapterCard({ chapter, index, onClick }) {
         letterSpacing: '1.5px', textTransform: 'uppercase',
         opacity: hovered ? 1 : 0,
         transition: 'opacity 0.3s',
-      }}>view cabinet →</div>
+      }}>{t('chapters.card.viewCabinet')} →</div>
     </motion.div>
   )
 }
 
 const HOW_TO_STEPS = [
-  { n: '01', title: 'Fill Out the Application', action: true },
-  { n: '02', title: 'Meet with one of our Chapter Development Officers' },
-  { n: '03', title: 'Build Your Leadership Structure' },
-  { n: '04', title: 'Host Your First Workshop' },
+  { n: '01', titleKey: 'chapters.steps.step1', action: true },
+  { n: '02', titleKey: 'chapters.steps.step2' },
+  { n: '03', titleKey: 'chapters.steps.step3' },
+  { n: '04', titleKey: 'chapters.steps.step4' },
 ]
 
 export default function OurChapters() {
+  const { t } = useLanguage()
   const [chaptersData,    setChaptersData]    = useState([])
   const [chaptersLoading, setChaptersLoading] = useState(true)
   const [searchQuery,     setSearchQuery]     = useState('')
@@ -429,15 +433,15 @@ export default function OurChapters() {
       {/* ─── HERO ─── */}
       <section className="chapters-hero" style={{ position: 'relative', zIndex: 1, padding: '160px 40px 100px', textAlign: 'center' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }}>
-          <div className="label" style={{ marginBottom: 16 }}>The Network</div>
+          <div className="label" style={{ marginBottom: 16 }}>{t('chapters.hero.label')}</div>
           <h1 style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontSize: 'clamp(44px,7vw,96px)',
             fontWeight: 300, color: 'var(--cream)',
             lineHeight: 1.0, letterSpacing: '-0.03em', marginBottom: 24,
-          }}>Our Chapters</h1>
+          }}>{t('chapters.hero.title')}</h1>
           <p style={{ fontSize: 16, color: 'var(--muted)', lineHeight: 1.75, maxWidth: 520, margin: '0 auto 40px' }}>
-            Student-led chapters bringing free science education to communities across the country.
+            {t('chapters.hero.subtitle')}
           </p>
           <a
             href="https://forms.gle/nEBfc84qHXxcmT4k8"
@@ -452,7 +456,7 @@ export default function OurChapters() {
             }}
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.16)'; e.currentTarget.style.boxShadow = '0 0 28px rgba(168,212,240,0.2)' }}
             onMouseLeave={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.08)'; e.currentTarget.style.boxShadow = 'none' }}
-          >Start a Chapter →</a>
+          >{t('chapters.hero.cta')} →</a>
         </motion.div>
       </section>
 
@@ -479,7 +483,7 @@ export default function OurChapters() {
               </svg>
               <input
                 type="text"
-                placeholder="Search by school, president, city, or state…"
+                placeholder={t('chapters.search.placeholder')}
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 style={{
@@ -508,13 +512,13 @@ export default function OurChapters() {
           {chaptersLoading ? (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 200, flexDirection: 'column', gap: 14 }}>
               <div style={{ width: 28, height: 28, borderRadius: '50%', border: '2px solid rgba(168,212,240,0.2)', borderTopColor: 'rgba(168,212,240,0.7)', animation: 'spin 0.9s linear infinite' }} />
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: 3, color: 'var(--muted)', opacity: 0.4 }}>Loading chapters…</span>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: 3, color: 'var(--muted)', opacity: 0.4 }}>{t('chapters.list.loading')}</span>
             </div>
           ) : filteredChapters.length === 0 ? (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 200, gap: 14 }}>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 56, color: 'var(--pastel1)', opacity: 0.18 }}>◎</div>
               <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'var(--muted)', opacity: 0.4, letterSpacing: 2 }}>
-                {searchQuery ? 'No chapters match' : 'Chapters launching soon'}
+                {searchQuery ? t('chapters.list.noMatch') : t('chapters.list.comingSoon')}
               </div>
             </div>
           ) : (
@@ -549,12 +553,12 @@ export default function OurChapters() {
             viewport={{ once: true }} transition={{ duration: 0.8 }}
             style={{ textAlign: 'center', marginBottom: 64 }}
           >
-            <div className="label" style={{ marginBottom: 14 }}>Step by Step</div>
+            <div className="label" style={{ marginBottom: 14 }}>{t('chapters.how.label')}</div>
             <h2 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(30px,4vw,56px)',
               fontWeight: 300, color: 'var(--cream)', lineHeight: 1.05,
-            }}>How to Start a Chapter</h2>
+            }}>{t('chapters.how.title')}</h2>
           </motion.div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
@@ -581,7 +585,7 @@ export default function OurChapters() {
                     fontFamily: "'Cormorant Garamond', serif",
                     fontSize: 24, fontWeight: 400,
                     color: 'var(--cream)', lineHeight: 1.2,
-                  }}>{step.title}</div>
+                  }}>{t(step.titleKey)}</div>
 
                   {step.action && (
                     <a
@@ -596,7 +600,7 @@ export default function OurChapters() {
                       }}
                       onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.08)'; e.currentTarget.style.boxShadow = '0 0 16px rgba(168,212,240,0.15)' }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none' }}
-                    >Apply Now →</a>
+                    >{t('chapters.how.applyNow')} →</a>
                   )}
                 </div>
               </motion.div>
@@ -613,12 +617,12 @@ export default function OurChapters() {
             viewport={{ once: true }} transition={{ duration: 0.8 }}
             style={{ textAlign: 'center', marginBottom: 40 }}
           >
-            <div className="label" style={{ marginBottom: 14 }}>Watch</div>
+            <div className="label" style={{ marginBottom: 14 }}>{t('chapters.video.label')}</div>
             <h2 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(28px,4vw,48px)',
               fontWeight: 300, color: 'var(--cream)', lineHeight: 1.1,
-            }}>See what chapters are all about</h2>
+            }}>{t('chapters.video.title')}</h2>
           </motion.div>
 
           <motion.div

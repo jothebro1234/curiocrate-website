@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
+import { useLanguage } from '../i18n/useLanguage'
 
 function AnimatedAmount({ target = 1000, duration = 2800, holdDelay = 600, onComplete }) {
   const [value, setValue] = useState(0)
@@ -46,30 +47,31 @@ function AnimatedAmount({ target = 1000, duration = 2800, holdDelay = 600, onCom
 }
 
 const DETAILS = [
-  { label: 'WHO', value: '2 to 3 high school students' },
-  { label: 'DATE', value: 'TBD' },
-  { label: 'DELIVERABLE', value: 'Pitch deck and presentation' },
-  { label: 'TARGET IMPACT', value: 'Underserved students and classrooms in Los Angeles and Orange Counties' },
+  { key: 'who', label: 'WHO', value: '2 to 3 high school students' },
+  { key: 'date', label: 'DATE', value: 'TBD' },
+  { key: 'deliverable', label: 'DELIVERABLE', value: 'Pitch deck and presentation' },
+  { key: 'targetImpact', label: 'TARGET IMPACT', value: 'Underserved students and classrooms in Los Angeles and Orange Counties' },
 ]
 
 const TABS = [
-  { num: '01', label: 'STEM Advocacy Competition' },
-  { num: '02', label: 'Kit Development' },
+  { num: '01', key: 'stemAdvocacy', label: 'STEM Advocacy Competition' },
+  { num: '02', key: 'kitDevelopment', label: 'Kit Development' },
 ]
 
 const STEM_DETAILS = [
-  { label: 'WHO', value: '2 to 3 high school students' },
-  { label: 'START DATE', value: 'TBD' },
-  { label: 'END DATE', value: 'TBD' },
-  { label: 'FORMAT', value: 'Video pitch + one-pager' },
+  { key: 'who', label: 'WHO', value: '2 to 3 high school students' },
+  { key: 'startDate', label: 'START DATE', value: 'TBD' },
+  { key: 'endDate', label: 'END DATE', value: 'TBD' },
+  { key: 'format', label: 'FORMAT', value: 'Video pitch + one-pager' },
 ]
 
 const STEM_PROMPTS = [
-  { label: 'Video Prompt', text: 'You have 3 minutes to pitch to School Board Member Ms. Garcia. Convince her why STEM advocacy matters, and tell her exactly one action you want her to take.' },
-  { label: 'One-Pager Prompt', text: 'If you could change one aspect of STEM education for middle and elementary school students, what would it be, why does the data support it, and how could it realistically be implemented?' },
+  { key: 'video', label: 'Video Prompt', text: 'You have 3 minutes to pitch to School Board Member Ms. Garcia. Convince her why STEM advocacy matters, and tell her exactly one action you want her to take.' },
+  { key: 'onePager', label: 'One-Pager Prompt', text: 'If you could change one aspect of STEM education for middle and elementary school students, what would it be, why does the data support it, and how could it realistically be implemented?' },
 ]
 
 export default function KitDevelopment() {
+  const { t } = useLanguage()
   const [activeTab, setActiveTab] = useState(0)
   const [countDone, setCountDone] = useState(false)
 
@@ -95,7 +97,7 @@ export default function KitDevelopment() {
               color: 'var(--muted)', opacity: 0.45, marginBottom: 20,
             }}
           >
-            Initiatives
+            {t('kitDevelopment.eyebrow')}
           </motion.div>
 
           <motion.div
@@ -133,7 +135,7 @@ export default function KitDevelopment() {
                       fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase',
                       color: isActive ? 'var(--cream)' : 'var(--muted)',
-                    }}>{tab.label}</span>
+                    }}>{t(`kitDevelopment.tabs.${tab.key}`, tab.label)}</span>
                   </button>
                 )
               })}
@@ -177,7 +179,7 @@ export default function KitDevelopment() {
                       fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
                       color: 'var(--pastel1)', opacity: 0.55, marginBottom: 24,
                     }}>
-                      In Prize Money
+                      {t('kitDevelopment.stem.prizeMoneyLabel')}
                     </div>
 
                     <motion.div
@@ -191,7 +193,7 @@ export default function KitDevelopment() {
                         fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase',
                         color: 'var(--pastel1)', opacity: 0.65, marginBottom: 14,
                       }}>
-                        CurioCrate × Youth Civics Think Tank
+                        {t('kitDevelopment.stem.partnership')}
                       </div>
 
                       {/* Headline */}
@@ -201,7 +203,7 @@ export default function KitDevelopment() {
                         fontWeight: 400, color: 'var(--cream)',
                         lineHeight: 1.35, margin: '0 0 18px',
                       }}>
-                        A national platform where students turn STEM equity research into real policy action.
+                        {t('kitDevelopment.stem.headline')}
                       </p>
 
                       {/* Description — short, no em dashes, bigger and legible */}
@@ -209,7 +211,7 @@ export default function KitDevelopment() {
                         fontSize: 17, color: 'var(--cream)', lineHeight: 1.75,
                         maxWidth: 600, margin: '0 0 32px', opacity: 0.88,
                       }}>
-                        Teams research and pitch real STEM equity solutions on video, then bring their strongest ideas straight to the school leaders who can act on them.
+                        {t('kitDevelopment.stem.description')}
                       </p>
 
                       {/* 2x2 details grid */}
@@ -220,19 +222,19 @@ export default function KitDevelopment() {
                         marginBottom: 36,
                       }}>
                         {STEM_DETAILS.map(d => (
-                          <div key={d.label} style={{ borderLeft: '3px solid rgba(168,212,240,0.3)', paddingLeft: 14 }}>
+                          <div key={d.key} style={{ borderLeft: '3px solid rgba(168,212,240,0.3)', paddingLeft: 14 }}>
                             <div style={{
                               fontFamily: "'JetBrains Mono', monospace",
                               fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase',
                               color: 'var(--pastel1)', opacity: 0.6, marginBottom: 5,
                             }}>
-                              {d.label}
+                              {t(`kitDevelopment.stem.details.${d.key}.label`, d.label)}
                             </div>
                             <div style={{
                               fontFamily: "'Plus Jakarta Sans', sans-serif",
                               fontSize: 16, fontWeight: 600, color: 'var(--cream)',
                             }}>
-                              {d.value}
+                              {t(`kitDevelopment.stem.details.${d.key}.value`, d.value)}
                             </div>
                           </div>
                         ))}
@@ -244,11 +246,11 @@ export default function KitDevelopment() {
                         fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
                         color: 'var(--pastel1)', opacity: 0.6, marginBottom: 14,
                       }}>
-                        The Prompts
+                        {t('kitDevelopment.stem.promptsLabel')}
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 36 }}>
                         {STEM_PROMPTS.map(p => (
-                          <div key={p.label} style={{
+                          <div key={p.key} style={{
                             background: 'rgba(168,212,240,0.06)',
                             border: '1px solid rgba(168,212,240,0.12)',
                             borderRadius: 10, padding: '16px 20px', maxWidth: 600,
@@ -257,12 +259,12 @@ export default function KitDevelopment() {
                               fontFamily: "'JetBrains Mono', monospace",
                               fontSize: 9.5, letterSpacing: '2px', textTransform: 'uppercase',
                               color: 'var(--pastel1)', opacity: 0.7, marginBottom: 6,
-                            }}>{p.label}</div>
+                            }}>{t(`kitDevelopment.stem.prompts.${p.key}.label`, p.label)}</div>
                             <p style={{
                               fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic',
                               fontSize: 17, color: 'var(--cream)', opacity: 0.92,
                               lineHeight: 1.6, margin: 0,
-                            }}>“{p.text}”</p>
+                            }}>“{t(`kitDevelopment.stem.prompts.${p.key}.text`, p.text)}”</p>
                           </div>
                         ))}
                       </div>
@@ -281,14 +283,14 @@ export default function KitDevelopment() {
                               opacity: 0.4,
                             }}
                           >
-                            Apply Now
+                            {t('kitDevelopment.applyNow')}
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                               <path d="M7 17L17 7M17 7H7M17 7v10"/>
                             </svg>
                           </span>
                           {/* Overlay: blocks the CTA and shows a "not allowed" cursor */}
                           <div
-                            title="Applications open soon. Dates TBD."
+                            title={t('kitDevelopment.stem.applicationsOpenSoon')}
                             style={{
                               position: 'absolute',
                               inset: 0,
@@ -302,7 +304,7 @@ export default function KitDevelopment() {
                           fontSize: 10, letterSpacing: '1px',
                           color: '#fbbf24', opacity: 0.85,
                         }}>
-                          Applications open soon. Dates TBD.
+                          {t('kitDevelopment.stem.applicationsOpenSoon')}
                         </span>
                       </div>
                     </motion.div>
@@ -342,7 +344,7 @@ export default function KitDevelopment() {
                         fontWeight: 300, color: 'var(--cream)',
                         lineHeight: 1.3, margin: '0 0 14px',
                       }}>
-                        Pitch your kit idea and get up to $1,000 to develop and distribute your science kit.
+                        {t('kitDevelopment.kit.headline')}
                       </p>
 
                       {/* Description */}
@@ -350,7 +352,7 @@ export default function KitDevelopment() {
                         fontSize: 14, color: 'var(--muted)', lineHeight: 1.75,
                         maxWidth: 520, margin: '0 0 30px', opacity: 0.8,
                       }}>
-                        Apply to design a hands-on experiment kit. Selected teams receive up to $1,000 and CurioCrate handles production and distribution to 30 to 100 underserved students and classrooms.
+                        {t('kitDevelopment.kit.description')}
                       </p>
 
                       {/* 2x2 details grid */}
@@ -361,19 +363,19 @@ export default function KitDevelopment() {
                         marginBottom: 34,
                       }}>
                         {DETAILS.map(d => (
-                          <div key={d.label} style={{ borderLeft: '3px solid rgba(168,212,240,0.3)', paddingLeft: 14 }}>
+                          <div key={d.key} style={{ borderLeft: '3px solid rgba(168,212,240,0.3)', paddingLeft: 14 }}>
                             <div style={{
                               fontFamily: "'JetBrains Mono', monospace",
                               fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase',
                               color: 'var(--pastel1)', opacity: 0.6, marginBottom: 4,
                             }}>
-                              {d.label}
+                              {t(`kitDevelopment.kit.details.${d.key}.label`, d.label)}
                             </div>
                             <div style={{
                               fontFamily: "'Plus Jakarta Sans', sans-serif",
                               fontSize: 15, fontWeight: 600, color: 'var(--cream)',
                             }}>
-                              {d.value}
+                              {t(`kitDevelopment.kit.details.${d.key}.value`, d.value)}
                             </div>
                           </div>
                         ))}
@@ -393,14 +395,14 @@ export default function KitDevelopment() {
                               opacity: 0.4,
                             }}
                           >
-                            Apply Now
+                            {t('kitDevelopment.applyNow')}
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                               <path d="M7 17L17 7M17 7H7M17 7v10"/>
                             </svg>
                           </span>
                           {/* Overlay: blocks the CTA and shows a "not allowed" cursor */}
                           <div
-                            title="Applications are closed at the moment"
+                            title={t('kitDevelopment.kit.applicationsClosed')}
                             style={{
                               position: 'absolute',
                               inset: 0,
@@ -414,7 +416,7 @@ export default function KitDevelopment() {
                           fontSize: 10, letterSpacing: '1px',
                           color: '#f87171', opacity: 0.85,
                         }}>
-                          Applications are closed at the moment.
+                          {t('kitDevelopment.kit.applicationsClosed')}
                         </span>
                       </div>
                     </motion.div>

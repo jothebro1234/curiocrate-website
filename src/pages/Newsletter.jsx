@@ -5,11 +5,12 @@ import FadingText from '../components/FadingText'
 import NewsArticleModal from '../components/NewsArticleModal'
 import { news as fallback } from '../data/news'
 import { driveUrl, filterForNewsletter, primaryCategory } from '../utils/updates'
+import { useLanguage } from '../i18n/useLanguage'
 
-function formatDate(str) {
+function formatDate(str, locale) {
   if (!str) return ''
   const d = new Date(str)
-  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  return d.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })
 }
 
 const CATEGORY_COLORS = {
@@ -21,6 +22,7 @@ const CATEGORY_COLORS = {
 function categoryColor(cat) { return CATEGORY_COLORS[cat] || '#a8d4f0' }
 
 export default function Newsletter() {
+  const { t, lang } = useLanguage()
   const [items, setItems] = useState(null)
   const [selected, setSelected] = useState(null)
 
@@ -57,31 +59,31 @@ export default function Newsletter() {
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 9, letterSpacing: '4px', textTransform: 'uppercase',
               color: 'var(--muted)', opacity: 0.45, marginBottom: 16,
-            }}>Updates</div>
+            }}>{t('newsletterPage.eyebrow')}</div>
             <h1 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(40px,6vw,72px)',
               fontWeight: 300, color: 'var(--cream)',
               lineHeight: 1.0, letterSpacing: '-0.03em', margin: 0,
             }}>
-              Newsletter
+              {t('newsletterPage.title')}
             </h1>
             <p style={{
               fontSize: 15, color: 'var(--muted)', lineHeight: 1.75,
               maxWidth: 480, marginTop: 18, opacity: 0.7,
             }}>
-              Stay up to date with everything happening at CurioCrate, from milestones to new chapters.
+              {t('newsletterPage.intro')}
             </p>
           </motion.div>
 
           {/* Cards */}
           {items === null ? (
             <div style={{ color: 'var(--muted)', opacity: 0.4, fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>
-              Loading...
+              {t('common.loading')}
             </div>
           ) : items.length === 0 ? (
             <div style={{ color: 'var(--muted)', opacity: 0.4, fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>
-              No updates yet. Check back soon.
+              {t('newsletterPage.empty')}
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -111,7 +113,7 @@ export default function Newsletter() {
                       <span style={{
                         fontFamily: "'JetBrains Mono', monospace",
                         fontSize: 9, letterSpacing: '2px', color: 'var(--muted)', opacity: 0.6,
-                      }}>{formatDate(item.date)}</span>
+                      }}>{formatDate(item.date, lang === 'es' ? 'es-ES' : 'en-US')}</span>
                       {item.category && (
                         <span style={{
                           fontFamily: "'JetBrains Mono', monospace",
@@ -165,7 +167,7 @@ export default function Newsletter() {
                         onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.08)' }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
                       >
-                        View Source
+                        {t('common.viewSource')}
                         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                           <path d="M7 17L17 7M17 7H7M17 7v10"/>
                         </svg>

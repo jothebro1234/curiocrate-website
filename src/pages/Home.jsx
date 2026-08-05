@@ -9,6 +9,7 @@ import PageTransition from '../components/PageTransition'
 import AutoplayVideo from '../components/AutoplayVideo'
 import FadingText from '../components/FadingText'
 import NewsArticleModal from '../components/NewsArticleModal'
+import { useLanguage } from '../i18n/useLanguage'
 import { stats } from '../data/stats'
 import { news } from '../data/news'
 import { chapters as staticChapters } from '../data/chapters'
@@ -27,13 +28,14 @@ const HERO_PHOTOS = [
 ]
 
 const PARTNERS = [
-  { name: 'Society for Science',    logo: '/logos/sfslogo.png' },
-  { name: 'Connect Key Foundation', logo: '/logos/ckflogo.png' },
-  { name: 'YMCA',                   logo: '/logos/ymcamainpng.png' },
+  { key: 'societyForScience',    name: 'Society for Science',    logo: '/logos/sfslogo.png' },
+  { key: 'connectKeyFoundation', name: 'Connect Key Foundation', logo: '/logos/ckflogo.png' },
+  { key: 'ymca',                 name: 'YMCA',                   logo: '/logos/ymcamainpng.png' },
 ]
 
 const GET_INVOLVED_STEPS = [
   {
+    key: 'apply',
     n: '01',
     title: 'Apply as a Volunteer',
     body: 'Join our volunteer network and connect with a team passionate about science education.',
@@ -42,6 +44,7 @@ const GET_INVOLVED_STEPS = [
     img: '/images/curiecomputer.png',
   },
   {
+    key: 'teach',
     n: '02',
     title: 'Teach or Create a Lesson',
     body: 'Design hands-on science lessons or lead your first kit session with real students.',
@@ -50,6 +53,7 @@ const GET_INVOLVED_STEPS = [
     img: '/images/curieteacher.png',
   },
   {
+    key: 'kitDeveloper',
     n: '03',
     title: 'Become a Kit Developer',
     body: 'Work directly on developing official CurioCrate research kit products distributed to communities.',
@@ -59,6 +63,7 @@ const GET_INVOLVED_STEPS = [
     img: '/images/curiekits.png',
   },
   {
+    key: 'startChapter',
     n: '04',
     title: 'Start a Chapter',
     body: 'Lead the program to bring immersive, hands-on science education directly to students at your school and community.',
@@ -75,12 +80,13 @@ const NEWS_COLORS = {
   Partnerships: '#c5b4f8',
 }
 function newsColor(cat) { return NEWS_COLORS[cat] || '#a8d4f0' }
-function formatNewsDate(str) {
+function formatNewsDate(str, locale) {
   const d = new Date(str + 'T00:00:00')
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  return d.toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
 function StatModal({ stat, onClose }) {
+  const { t } = useLanguage()
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     const fn = e => { if (e.key === 'Escape') onClose() }
@@ -139,7 +145,7 @@ function StatModal({ stat, onClose }) {
             background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(168,212,240,0.2)',
             borderRadius: 8, color: 'var(--muted)', fontSize: 11, cursor: 'pointer',
             padding: '7px 14px', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '2px',
-          }}>ESC · CLOSE</button>
+          }}>{t('home.statModal.escClose')}</button>
         </div>
         <div style={{ padding: '24px 36px 36px' }}>
           <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.85, marginBottom: 16 }}>
@@ -254,6 +260,7 @@ function FitToMarkers({ markers }) {
 }
 
 function LeafletMap({ chaptersData }) {
+  const { t } = useLanguage()
   // Rows from the sheet whose type is "Chapter" (or blank)
   const chapterRows = chaptersData.filter(c => c.type !== 'Impact')
   // Rows explicitly marked as teaching locations
@@ -307,7 +314,7 @@ function LeafletMap({ chaptersData }) {
             <Marker key={`chapter-${i}`} position={m.coords} icon={chapterIcon}>
               <Popup>
                 <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", minWidth: 180 }}>
-                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: '#a8d4f0', marginBottom: 6 }}>Chapter</div>
+                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: '#a8d4f0', marginBottom: 6 }}>{t('home.map.chapter')}</div>
                   <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>{m.school}</div>
                   {m.president && <div style={{ fontSize: 12, color: '#aaa' }}>{m.president}</div>}
                   {(m.city || m.state) && (
@@ -327,7 +334,7 @@ function LeafletMap({ chaptersData }) {
             <Marker key={`teaching-${i}`} position={m.coords} icon={teachingIcon}>
               <Popup>
                 <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", minWidth: 180 }}>
-                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: '#fbbf24', marginBottom: 6 }}>Impact</div>
+                  <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: '#fbbf24', marginBottom: 6 }}>{t('home.map.impact')}</div>
                   <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>{m.school}</div>
                   {(m.city || m.state) && (
                     <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>
@@ -352,11 +359,11 @@ function LeafletMap({ chaptersData }) {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 10, height: 10, borderRadius: '50%', background: 'rgba(168,212,240,0.9)', boxShadow: '0 0 8px rgba(168,212,240,0.7)', flexShrink: 0 }} />
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: 'rgba(168,212,240,0.7)', letterSpacing: '1.5px', textTransform: 'uppercase' }}>Chapter</span>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: 'rgba(168,212,240,0.7)', letterSpacing: '1.5px', textTransform: 'uppercase' }}>{t('home.map.chapter')}</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 9, height: 9, background: 'rgba(251,191,36,0.9)', boxShadow: '0 0 8px rgba(251,191,36,0.7)', flexShrink: 0, transform: 'rotate(45deg)', borderRadius: 2 }} />
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: 'rgba(251,191,36,0.7)', letterSpacing: '1.5px', textTransform: 'uppercase' }}>Impact</span>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: 'rgba(251,191,36,0.7)', letterSpacing: '1.5px', textTransform: 'uppercase' }}>{t('home.map.impact')}</span>
         </div>
       </div>
     </div>
@@ -364,6 +371,8 @@ function LeafletMap({ chaptersData }) {
 }
 
 export default function Home() {
+  const { t, lang } = useLanguage()
+  const dateLocale = lang === 'es' ? 'es-ES' : 'en-US'
   const [ctaReady,      setCtaReady]      = useState(false)
   const [videoMuted,    setVideoMuted]    = useState(false)
   const [activePhoto,   setActivePhoto]   = useState(0)
@@ -498,8 +507,8 @@ export default function Home() {
                 textShadow: '0 2px 24px rgba(3,5,15,0.8)',
                 marginBottom: 16,
               }}>
-                Science for every<br/>
-                <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>curious mind.</em>
+                {t('home.hero.title.line1')}<br/>
+                <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>{t('home.hero.title.em')}</em>
               </h1>
               <p style={{
                 fontFamily: "'Cormorant Garamond', serif",
@@ -510,7 +519,7 @@ export default function Home() {
                 letterSpacing: '0.01em', lineHeight: 1.5,
                 textShadow: '0 1px 16px rgba(3,5,15,0.8)',
               }}>
-                Accessible, immersive, hands-on science kits for underserved students.
+                {t('home.hero.subtitle')}
               </p>
             </motion.div>
 
@@ -545,7 +554,7 @@ export default function Home() {
                     e.currentTarget.style.background = kitsMenuOpen ? 'rgba(168,212,240,0.2)' : 'rgba(168,212,240,0.12)'
                     e.currentTarget.style.boxShadow = kitsMenuOpen ? '0 0 24px rgba(168,212,240,0.2)' : 'none'
                   }}
-                >Our Initiatives</button>
+                >{t('home.hero.initiativesButton')}</button>
 
                 <AnimatePresence>
                   {kitsMenuOpen && (
@@ -578,7 +587,7 @@ export default function Home() {
                         }}
                         onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.15)'; e.currentTarget.style.color = 'var(--cream)' }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(197,227,247,0.85)' }}
-                      >How Can I Join?</Link>
+                      >{t('home.hero.menu.howToJoin')}</Link>
 
                       <div style={{ height: 1, background: 'rgba(168,212,240,0.15)', margin: '4px 0' }} />
 
@@ -595,7 +604,7 @@ export default function Home() {
                         }}
                         onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.15)'; e.currentTarget.style.color = 'var(--cream)' }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(197,227,247,0.85)' }}
-                      >View Kits</Link>
+                      >{t('home.hero.menu.viewKits')}</Link>
 
                       <div style={{ height: 1, background: 'rgba(168,212,240,0.15)', margin: '4px 0' }} />
 
@@ -604,11 +613,11 @@ export default function Home() {
                         fontFamily: "'JetBrains Mono', monospace", fontSize: 8,
                         letterSpacing: '2px', textTransform: 'uppercase',
                         color: 'var(--muted)', opacity: 0.45,
-                      }}>Initiatives</div>
+                      }}>{t('home.hero.menu.sectionLabel')}</div>
 
                       {[
-                        { to: '/initiatives/kits', label: 'Initiatives' },
-                        { to: '/initiatives/teaching', label: 'Hands-On Teaching / Curriculum Developer' },
+                        { to: '/initiatives/kits', labelKey: 'home.hero.menu.linkInitiatives', label: 'Initiatives' },
+                        { to: '/initiatives/teaching', labelKey: 'home.hero.menu.linkTeaching', label: 'Hands-On Teaching / Curriculum Developer' },
                       ].map(item => (
                         <Link
                           key={item.to}
@@ -624,7 +633,7 @@ export default function Home() {
                           }}
                           onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.15)'; e.currentTarget.style.color = 'var(--cream)' }}
                           onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(197,227,247,0.85)' }}
-                        >{item.label}</Link>
+                        >{t(item.labelKey, item.label)}</Link>
                       ))}
                     </motion.div>
                   )}
@@ -652,7 +661,7 @@ export default function Home() {
                 e.currentTarget.style.color = 'rgba(197,227,247,0.7)'
                 e.currentTarget.style.boxShadow = 'none'
               }}
-              >View Gallery</Link>
+              >{t('home.hero.viewGallery')}</Link>
               <button
                 onClick={() => document.getElementById('what-is-curiocrate')?.scrollIntoView({ behavior: 'smooth' })}
                 style={{
@@ -666,7 +675,7 @@ export default function Home() {
                 }}
                 onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.2)'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.65)'; e.currentTarget.style.color = 'var(--cream)' }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(168,212,240,0.22)'; e.currentTarget.style.color = 'rgba(197,227,247,0.7)' }}
-              >Our Mission</button>
+              >{t('home.hero.ourMission')}</button>
             </motion.div>
           </div>
 
@@ -701,12 +710,12 @@ export default function Home() {
               fontFamily: "'JetBrains Mono', monospace", fontSize: 8,
               letterSpacing: '4px', textTransform: 'uppercase',
               color: 'rgba(168,212,240,0.5)',
-            }}>Supported by</span>
+            }}>{t('home.hero.supportedBy')}</span>
 
             <div className="home-partners-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 52 }}>
               {PARTNERS.map((p) => (
                 <div key={p.name} className="home-partner-logo" style={{ width: 160, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <img src={p.logo} alt={p.name} style={{
+                  <img src={p.logo} alt={t(`home.hero.partners.${p.key}`, p.name)} style={{
                     maxWidth: '100%', maxHeight: '100%',
                     objectFit: 'contain',
                     filter: 'brightness(0) invert(1) opacity(0.72)',
@@ -748,7 +757,7 @@ export default function Home() {
           fontWeight: 300, color: 'rgba(168,212,240,0.016)',
           letterSpacing: '-0.06em', pointerEvents: 'none', userSelect: 'none',
           whiteSpace: 'nowrap', lineHeight: 1,
-        }}>DISPATCH</div>
+        }}>{t('home.news.watermark', 'DISPATCH')}</div>
 
         {/* ── Scrolling ticker (only when data ready) ── */}
         {newsData && <div style={{
@@ -805,13 +814,13 @@ export default function Home() {
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: 8, letterSpacing: '3px', textTransform: 'uppercase',
                 color: '#ef4444',
-              }}>LIVE</span>
+              }}>{t('home.news.live')}</span>
               <div style={{ width: 1, height: 12, background: 'rgba(168,212,240,0.15)' }} />
               <span style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: 8, letterSpacing: '2.5px', textTransform: 'uppercase',
                 color: 'rgba(168,212,240,0.35)',
-              }}>CURIOCRATE DISPATCH</span>
+              }}>{t('home.news.dispatchLabel')}</span>
               <motion.div
                 initial={{ scaleX: 0 }}
                 whileInView={{ scaleX: 1 }}
@@ -825,7 +834,7 @@ export default function Home() {
               fontSize: 'clamp(32px,4.5vw,60px)',
               fontWeight: 400, color: 'var(--cream)',
               lineHeight: 1.0, letterSpacing: '-0.03em',
-            }}>Recent <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>News</em></h2>
+            }}>{t('home.news.heading.recent', 'Recent ')}<em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>{t('home.news.heading.em', 'News')}</em></h2>
           </motion.div>
 
           {/* Main grid: featured left, stacked right */}
@@ -932,7 +941,7 @@ export default function Home() {
                       fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 8, letterSpacing: '1.5px', textTransform: 'uppercase',
                       color: 'rgba(168,212,240,0.28)',
-                    }}>{formatNewsDate(newsData[0].date)}</span>
+                    }}>{formatNewsDate(newsData[0].date, dateLocale)}</span>
                   </div>
 
                   {/* Headline + body */}
@@ -968,13 +977,13 @@ export default function Home() {
                       }}
                       onMouseEnter={e => { e.currentTarget.style.background = `${newsColor(newsData[0].category)}14` }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
-                      >View Source →</a>
+                      >{t('home.news.viewSource')}</a>
                     )}
                   </div>
 
                   {/* Footer */}
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 20, borderTop: '1px solid rgba(168,212,240,0.06)' }}>
-                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 7.5, letterSpacing: '2px', textTransform: 'uppercase', color: 'rgba(168,212,240,0.18)' }}>FEATURED DISPATCH</span>
+                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 7.5, letterSpacing: '2px', textTransform: 'uppercase', color: 'rgba(168,212,240,0.18)' }}>{t('home.news.featuredDispatch')}</span>
                     <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 7.5, letterSpacing: '2px', color: 'rgba(168,212,240,0.18)' }}>01 / {newsData.length.toString().padStart(2, '0')}</span>
                   </div>
                 </div>
@@ -1054,7 +1063,7 @@ export default function Home() {
                         fontFamily: "'JetBrains Mono', monospace",
                         fontSize: 7.5, letterSpacing: '1px',
                         color: 'rgba(168,212,240,0.22)', marginLeft: 'auto',
-                      }}>{formatNewsDate(item.date)}</span>
+                      }}>{formatNewsDate(item.date, dateLocale)}</span>
                     </div>
 
                     <h3 style={{
@@ -1083,7 +1092,7 @@ export default function Home() {
                         }}
                         onMouseEnter={e => { e.currentTarget.style.opacity = '1' }}
                         onMouseLeave={e => { e.currentTarget.style.opacity = '0.85' }}
-                        >View Source →</a>
+                        >{t('home.news.viewSource')}</a>
                       ) : <span />}
                       <span style={{
                         fontFamily: "'JetBrains Mono', monospace",
@@ -1118,21 +1127,21 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.9 }}
             >
-              <div className="label" style={{ marginBottom: 16 }}>Est. 2023</div>
+              <div className="label" style={{ marginBottom: 16 }}>{t('home.whatIs.label')}</div>
               <h2 style={{
                 fontFamily: "'Cormorant Garamond', serif",
                 fontSize: 'clamp(32px,4.5vw,60px)',
                 fontWeight: 400, color: 'var(--cream)',
                 lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 28,
               }}>
-                What is<br/>
-                <em style={{ color: 'var(--pastel1)' }}>CurioCrate?</em>
+                {t('home.whatIs.title.line1')}<br/>
+                <em style={{ color: 'var(--pastel1)' }}>{t('home.whatIs.title.em')}</em>
               </h2>
               <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.9, marginBottom: 20 }}>
-                CurioCrate believes every child, regardless of zip code, income, or background, deserves to experience the wonder of real science.
+                {t('home.whatIs.paragraph1')}
               </p>
               <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.9 }}>
-                Our immersive, accessible, hands-on experiment kits, designed by passionate high school volunteers alongside college professors and industry professionals, bring "lab" education to underserved students, paired with live workshops that make learning engaging for early learners.
+                {t('home.whatIs.paragraph2')}
               </p>
             </motion.div>
 
@@ -1183,7 +1192,7 @@ export default function Home() {
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
                     </svg>
                   )}
-                  {videoMuted ? 'Unmute' : 'Mute'}
+                  {videoMuted ? t('home.whatIs.unmute') : t('home.whatIs.mute')}
                 </button>
               </div>
             </motion.div>
@@ -1201,14 +1210,14 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             style={{ textAlign: 'center', marginBottom: 60 }}
           >
-            <div className="label" style={{ marginBottom: 14 }}>Our Reach</div>
+            <div className="label" style={{ marginBottom: 14 }}>{t('home.impact.label')}</div>
             <h2 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(30px,4vw,52px)',
               fontWeight: 400, color: 'var(--cream)', lineHeight: 1.1,
             }}>
-              Every dot is a community<br/>
-              <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>we've reached.</em>
+              {t('home.impact.title.line1')}<br/>
+              <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>{t('home.impact.title.em')}</em>
             </h2>
           </motion.div>
 
@@ -1282,7 +1291,7 @@ export default function Home() {
                   fontFamily: "'JetBrains Mono', monospace",
                   fontSize: 8, letterSpacing: '1.5px',
                   color: 'rgba(168,212,240,0.25)', textTransform: 'uppercase',
-                }}>tap for details</div>
+                }}>{t('home.impact.tapForDetails')}</div>
               </motion.div>
             ))}
           </div>
@@ -1306,14 +1315,14 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             style={{ textAlign: 'center', marginBottom: 76 }}
           >
-            <div className="label" style={{ marginBottom: 18, fontSize: 12, letterSpacing: '4px' }}>Our Alumni</div>
+            <div className="label" style={{ marginBottom: 18, fontSize: 12, letterSpacing: '4px' }}>{t('home.alumni.label')}</div>
             <h2 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(38px,5.5vw,68px)',
               fontWeight: 400, color: 'var(--cream)', lineHeight: 1.08,
             }}>
-              Where our leaders<br/>
-              <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>go next.</em>
+              {t('home.alumni.title.line1')}<br/>
+              <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>{t('home.alumni.title.em')}</em>
             </h2>
           </motion.div>
 
@@ -1434,12 +1443,12 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             style={{ textAlign: 'center', marginBottom: 72 }}
           >
-            <div className="label" style={{ marginBottom: 14 }}>Join Us</div>
+            <div className="label" style={{ marginBottom: 14 }}>{t('home.getInvolved.label')}</div>
             <h2 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(30px,4vw,56px)',
               fontWeight: 400, color: 'var(--cream)', lineHeight: 1.05,
-            }}>What Can You Do to Get Involved?</h2>
+            }}>{t('home.getInvolved.title')}</h2>
           </motion.div>
 
           <div className="home-involved-row" style={{ display: 'flex', alignItems: 'flex-start', gap: 0 }}>
@@ -1456,7 +1465,7 @@ export default function Home() {
                   <div style={{ marginBottom: 20, display: 'flex', justifyContent: 'center' }}>
                     <img
                       src={step.img}
-                      alt={step.title}
+                      alt={t(`home.getInvolved.steps.${step.key}.title`, step.title)}
                       style={{
                         height: 220,
                         objectFit: 'contain',
@@ -1475,10 +1484,10 @@ export default function Home() {
                     fontFamily: "'Cormorant Garamond', serif",
                     fontSize: 22, fontWeight: 400, color: 'var(--cream)',
                     marginBottom: 14, lineHeight: 1.2,
-                  }}>{step.title}</div>
+                  }}>{t(`home.getInvolved.steps.${step.key}.title`, step.title)}</div>
 
                   <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.8, maxWidth: 240, margin: '0 auto' }}>
-                    {step.body}
+                    {t(`home.getInvolved.steps.${step.key}.body`, step.body)}
                   </p>
 
                   {step.href && (
@@ -1493,7 +1502,7 @@ export default function Home() {
                       }}
                       onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.08)' }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
-                      >{step.ctaLabel || 'Learn More →'}</Link>
+                      >{step.ctaLabel ? t(`home.getInvolved.steps.${step.key}.cta`, step.ctaLabel) : t('home.getInvolved.learnMore', 'Learn More →')}</Link>
                     ) : (
                       <a href={step.href} target="_blank" rel="noopener noreferrer" style={{
                         display: 'inline-block', marginTop: 20,
@@ -1505,7 +1514,7 @@ export default function Home() {
                       }}
                       onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.08)' }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
-                      >{step.ctaLabel || 'Learn More →'}</a>
+                      >{step.ctaLabel ? t(`home.getInvolved.steps.${step.key}.cta`, step.ctaLabel) : t('home.getInvolved.learnMore', 'Learn More →')}</a>
                     )
                   )}
                 </motion.div>
@@ -1536,13 +1545,13 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             style={{ maxWidth: 640, margin: '80px auto 0', textAlign: 'center' }}
           >
-            <div className="label" style={{ marginBottom: 14 }}>A Message From Our President</div>
+            <div className="label" style={{ marginBottom: 14 }}>{t('home.president.label')}</div>
             <h3 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(24px,3vw,34px)',
               fontWeight: 400, color: 'var(--cream)', lineHeight: 1.2, marginBottom: 28,
             }}>
-              Why we do this <em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>work.</em>
+              {t('home.president.title.line1', 'Why we do this ')}<em style={{ color: 'var(--pastel1)', fontStyle: 'italic' }}>{t('home.president.title.em', 'work.')}</em>
             </h3>
             <AutoplayVideo src={MESSAGE_FROM_PRES_URL} />
           </motion.div>
