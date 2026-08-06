@@ -209,6 +209,28 @@ export default function KitDevelopment() {
                         {t('kitDevelopment.stem.description')}
                       </p>
 
+                      {/* Partnership video */}
+                      <div style={{
+                        width: '100%',
+                        maxWidth: 720,
+                        aspectRatio: '16 / 9',
+                        borderRadius: 14,
+                        overflow: 'hidden',
+                        border: '1px solid rgba(168,212,240,0.18)',
+                        boxShadow: '0 0 40px rgba(168,212,240,0.12)',
+                        marginBottom: 36,
+                        background: 'rgba(0,0,0,0.3)',
+                      }}>
+                        <video
+                          controls
+                          playsInline
+                          preload="metadata"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                        >
+                          <source src="https://pub-e7374d03fa9c42bfb531206a5e81830b.r2.dev/ccycttvideo.mp4" type="video/mp4" />
+                        </video>
+                      </div>
+
                       {/* 2x2 details grid */}
                       <div style={{
                         display: 'grid',
