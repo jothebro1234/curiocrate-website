@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
+import AutoplayVideo from '../components/AutoplayVideo'
 import { useLanguage } from '../i18n/useLanguage'
 
 function AnimatedAmount({ target = 1000, duration = 2800, holdDelay = 600, onComplete }) {
@@ -54,8 +56,8 @@ const DETAILS = [
 ]
 
 const TABS = [
-  { num: '01', key: 'stemAdvocacy', label: 'STEM Advocacy Competition' },
-  { num: '02', key: 'kitDevelopment', label: 'Kit Development' },
+  { num: '01', key: 'stemAdvocacy', label: 'STEM Advocacy Project (Competition)', path: '/initiatives/sap' },
+  { num: '02', key: 'kitDevelopment', label: 'Kit Development', path: '/initiatives/kits' },
 ]
 
 const STEM_DETAILS = [
@@ -67,7 +69,9 @@ const STEM_DETAILS = [
 
 export default function KitDevelopment() {
   const { t } = useLanguage()
-  const [activeTab, setActiveTab] = useState(0)
+  const location = useLocation()
+  const navigate = useNavigate()
+  const activeTab = location.pathname === TABS[0].path ? 0 : 1
   const [countDone, setCountDone] = useState(false)
 
   return (
@@ -108,7 +112,7 @@ export default function KitDevelopment() {
                   <button
                     key={tab.num}
                     className="kd-tab"
-                    onClick={() => setActiveTab(i)}
+                    onClick={() => navigate(tab.path)}
                     style={{
                       display: 'flex', alignItems: 'center', gap: 10, flex: 1,
                       padding: '13px 24px',
@@ -210,26 +214,10 @@ export default function KitDevelopment() {
                       </p>
 
                       {/* Partnership video */}
-                      <div style={{
-                        width: '100%',
-                        maxWidth: 720,
-                        aspectRatio: '16 / 9',
-                        borderRadius: 14,
-                        overflow: 'hidden',
-                        border: '1px solid rgba(168,212,240,0.18)',
-                        boxShadow: '0 0 40px rgba(168,212,240,0.12)',
-                        marginBottom: 36,
-                        background: 'rgba(0,0,0,0.3)',
-                      }}>
-                        <video
-                          controls
-                          playsInline
-                          preload="metadata"
-                          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                        >
-                          <source src="https://pub-e7374d03fa9c42bfb531206a5e81830b.r2.dev/ccycttvideo.mp4" type="video/mp4" />
-                        </video>
-                      </div>
+                      <AutoplayVideo
+                        src="https://pub-e7374d03fa9c42bfb531206a5e81830b.r2.dev/ccycttvideo.mp4"
+                        style={{ maxWidth: 720, marginBottom: 36 }}
+                      />
 
                       {/* 2x2 details grid */}
                       <div style={{

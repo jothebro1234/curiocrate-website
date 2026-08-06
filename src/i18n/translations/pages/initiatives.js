@@ -7,7 +7,7 @@ export const en = {
     eyebrow: 'Initiatives',
     applyNow: 'Apply Now',
     tabs: {
-      stemAdvocacy: 'STEM Advocacy Competition',
+      stemAdvocacy: 'STEM Advocacy Project (Competition)',
       kitDevelopment: 'Kit Development',
     },
     stem: {
@@ -81,7 +81,7 @@ export const es = {
     eyebrow: 'Iniciativas',
     applyNow: 'Solicitar Ahora',
     tabs: {
-      stemAdvocacy: 'Concurso de Promoción STEM',
+      stemAdvocacy: 'Proyecto de Promoción STEM (Concurso)',
       kitDevelopment: 'Desarrollo de Kits',
     },
     stem: {

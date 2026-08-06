@@ -616,7 +616,7 @@ export default function Home() {
                       }}>{t('home.hero.menu.sectionLabel')}</div>
 
                       {[
-                        { to: '/initiatives/kits', labelKey: 'home.hero.menu.linkInitiatives', label: 'Initiatives' },
+                        { to: '/initiatives/sap', labelKey: 'home.hero.menu.linkInitiatives', label: 'Initiatives' },
                         { to: '/initiatives/teaching', labelKey: 'home.hero.menu.linkTeaching', label: 'Hands-On Teaching / Curriculum Developer' },
                       ].map(item => (
                         <Link

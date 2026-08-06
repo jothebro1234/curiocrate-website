@@ -10,7 +10,7 @@ const NAV_LEFT = [
 ]
 
 const INITIATIVES_ITEMS = [
-  { path: '/initiatives/kits',     labelKey: 'nav.initiatives'      },
+  { path: '/initiatives/sap',      labelKey: 'nav.initiatives'      },
   { path: '/initiatives/teaching', labelKey: 'nav.handsOnTeaching' },
 ]
 
@@ -85,7 +85,7 @@ export default function CinematicNavbar() {
 
   const openInitiatives  = () => { clearTimeout(initiativesTimer.current); setInitiativesOpen(true) }
   const closeInitiatives = () => { initiativesTimer.current = setTimeout(() => setInitiativesOpen(false), 120) }
-  const isInitiativesActive = INITIATIVES_ITEMS.some(i => location.pathname === i.path)
+  const isInitiativesActive = location.pathname.startsWith('/initiatives')
 
   return (
     <>
