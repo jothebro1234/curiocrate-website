@@ -62,8 +62,8 @@ const TABS = [
 
 const STEM_DETAILS = [
   { key: 'who', label: 'WHO', value: '2 to 3 high school students' },
-  { key: 'startDate', label: 'START DATE', value: 'TBD' },
-  { key: 'endDate', label: 'END DATE', value: 'TBD' },
+  { key: 'startDate', label: 'START DATE', value: 'August 8, 2026' },
+  { key: 'endDate', label: 'END DATE', value: 'September 9, 2026, 11:59 PM PST' },
   { key: 'format', label: 'FORMAT', value: 'Video pitch + one-pager' },
 ]
 

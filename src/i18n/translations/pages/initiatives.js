@@ -16,11 +16,10 @@ export const en = {
       headline: 'A national platform where students turn STEM equity research into real policy action.',
       description: 'Teams research and pitch real STEM equity solutions on video, then bring their strongest ideas straight to the school leaders who can act on them.',
       promptsLabel: 'The Prompts',
-      applicationsOpenSoon: 'Applications open soon. Dates TBD.',
       details: {
         who: { label: 'WHO', value: '2 to 3 high school students' },
-        startDate: { label: 'START DATE', value: 'TBD' },
-        endDate: { label: 'END DATE', value: 'TBD' },
+        startDate: { label: 'START DATE', value: 'August 8, 2026' },
+        endDate: { label: 'END DATE', value: 'September 9, 2026, 11:59 PM PST' },
         format: { label: 'FORMAT', value: 'Video pitch + one-pager' },
       },
       prompts: {
@@ -90,11 +89,10 @@ export const es = {
       headline: 'Una plataforma nacional donde los estudiantes convierten la investigación sobre equidad en STEM en acción política real.',
       description: 'Los equipos investigan y presentan en video soluciones reales para la equidad en STEM, y luego llevan sus mejores ideas directamente a los líderes escolares que pueden ponerlas en práctica.',
       promptsLabel: 'Las Consignas',
-      applicationsOpenSoon: 'Las solicitudes abren pronto. Fechas por confirmar.',
       details: {
         who: { label: 'QUIÉNES', value: '2 a 3 estudiantes de preparatoria' },
-        startDate: { label: 'FECHA DE INICIO', value: 'Por confirmar' },
-        endDate: { label: 'FECHA DE CIERRE', value: 'Por confirmar' },
+        startDate: { label: 'FECHA DE INICIO', value: '8 de agosto de 2026' },
+        endDate: { label: 'FECHA DE CIERRE', value: '9 de septiembre de 2026, 11:59 PM (hora del Pacífico)' },
         format: { label: 'FORMATO', value: 'Pitch en video + resumen de una página' },
       },
       prompts: {
