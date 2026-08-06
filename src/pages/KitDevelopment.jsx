@@ -161,7 +161,7 @@ export default function KitDevelopment() {
                     transition={{ duration: 0.3 }}
                     className="kd-panel" style={{ padding: '40px 44px 44px' }}
                   >
-                    {/* Big $300+ prize */}
+                    {/* Big $500+ prize */}
                     <div style={{
                       fontFamily: "'Cormorant Garamond', serif",
                       fontSize: 'clamp(64px, 10vw, 112px)',
@@ -172,7 +172,7 @@ export default function KitDevelopment() {
                       textShadow: '0 0 60px rgba(168,212,240,0.5), 0 0 24px rgba(168,212,240,0.3)',
                       marginBottom: 18,
                     }}>
-                      <AnimatedAmount target={300} duration={2000} holdDelay={500} onComplete={() => setCountDone(true)} />+
+                      <AnimatedAmount target={500} duration={2000} holdDelay={500} onComplete={() => setCountDone(true)} />+
                     </div>
                     <div style={{
                       fontFamily: "'JetBrains Mono', monospace",
