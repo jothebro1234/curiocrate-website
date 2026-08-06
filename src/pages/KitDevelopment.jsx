@@ -65,11 +65,6 @@ const STEM_DETAILS = [
   { key: 'format', label: 'FORMAT', value: 'Video pitch + one-pager' },
 ]
 
-const STEM_PROMPTS = [
-  { key: 'video', label: 'Video Prompt', text: 'You have 3 minutes to pitch to School Board Member Ms. Garcia. Convince her why STEM advocacy matters, and tell her exactly one action you want her to take.' },
-  { key: 'onePager', label: 'One-Pager Prompt', text: 'If you could change one aspect of STEM education for middle and elementary school students, what would it be, why does the data support it, and how could it realistically be implemented?' },
-]
-
 export default function KitDevelopment() {
   const { t } = useLanguage()
   const [activeTab, setActiveTab] = useState(0)
@@ -236,35 +231,6 @@ export default function KitDevelopment() {
                             }}>
                               {t(`kitDevelopment.stem.details.${d.key}.value`, d.value)}
                             </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Prompts */}
-                      <div style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
-                        color: 'var(--pastel1)', opacity: 0.6, marginBottom: 14,
-                      }}>
-                        {t('kitDevelopment.stem.promptsLabel')}
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 36 }}>
-                        {STEM_PROMPTS.map(p => (
-                          <div key={p.key} style={{
-                            background: 'rgba(168,212,240,0.06)',
-                            border: '1px solid rgba(168,212,240,0.12)',
-                            borderRadius: 10, padding: '16px 20px', maxWidth: 600,
-                          }}>
-                            <div style={{
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: 9.5, letterSpacing: '2px', textTransform: 'uppercase',
-                              color: 'var(--pastel1)', opacity: 0.7, marginBottom: 6,
-                            }}>{t(`kitDevelopment.stem.prompts.${p.key}.label`, p.label)}</div>
-                            <p style={{
-                              fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic',
-                              fontSize: 17, color: 'var(--cream)', opacity: 0.92,
-                              lineHeight: 1.6, margin: 0,
-                            }}>“{t(`kitDevelopment.stem.prompts.${p.key}.text`, p.text)}”</p>
                           </div>
                         ))}
                       </div>
