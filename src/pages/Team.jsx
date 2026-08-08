@@ -21,18 +21,6 @@ const cabinet = [
     number: '01',
   },
   {
-    id: 'vp',
-    name: 'Vice President',
-    shortName: 'VP',
-    role: 'We\'re Hiring',
-    bio: 'We\'re looking for our next Vice President to help lead CurioCrate\'s strategy and community reach — reach out if that\'s you.',
-    emoji: '🧭',
-    color: '#a8d4f0',
-    glow: 'rgba(168,212,240,0.5)',
-    dark: '#020d1a',
-    number: '02',
-  },
-  {
     id: 'treasurer',
     name: 'Rebecca Ho',
     role: 'Treasurer',
@@ -42,7 +30,7 @@ const cabinet = [
     color: '#6ee7b7',
     glow: 'rgba(110,231,183,0.5)',
     dark: '#00100a',
-    number: '03',
+    number: '02',
   },
   {
     id: 'secretary',
@@ -54,7 +42,7 @@ const cabinet = [
     color: '#c084fc',
     glow: 'rgba(192,132,252,0.5)',
     dark: '#0a0018',
-    number: '04',
+    number: '03',
   },
 ].map(m => ({ ...m, ns: 'cabinet' }))
 
