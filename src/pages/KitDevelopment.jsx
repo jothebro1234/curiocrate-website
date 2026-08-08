@@ -48,6 +48,83 @@ function AnimatedAmount({ target = 1000, duration = 2800, holdDelay = 600, onCom
   )
 }
 
+const STEM_DEADLINE = new Date('2026-09-09T23:59:00-08:00')
+
+function useCountdown(target) {
+  const [msLeft, setMsLeft] = useState(() => target.getTime() - Date.now())
+  useEffect(() => {
+    const id = setInterval(() => setMsLeft(target.getTime() - Date.now()), 1000)
+    return () => clearInterval(id)
+  }, [target])
+  return Math.max(msLeft, 0)
+}
+
+function StemCountdown() {
+  const { t } = useLanguage()
+  const msLeft = useCountdown(STEM_DEADLINE)
+  const closed = msLeft <= 0
+
+  const days = Math.floor(msLeft / 86400000)
+  const hours = Math.floor((msLeft % 86400000) / 3600000)
+  const minutes = Math.floor((msLeft % 3600000) / 60000)
+  const seconds = Math.floor((msLeft % 60000) / 1000)
+  const pad = n => String(n).padStart(2, '0')
+
+  const units = [
+    [days, t('kitDevelopment.stem.countdownDays', 'Days')],
+    [hours, t('kitDevelopment.stem.countdownHours', 'Hrs')],
+    [minutes, t('kitDevelopment.stem.countdownMinutes', 'Min')],
+    [seconds, t('kitDevelopment.stem.countdownSeconds', 'Sec')],
+  ]
+
+  return (
+    <div className="kd-countdown" style={{
+      display: 'flex', alignItems: 'center', gap: 22, flexWrap: 'wrap',
+      padding: '16px 22px',
+      border: '1px solid rgba(168,212,240,0.25)',
+      borderRadius: 10,
+      background: 'rgba(168,212,240,0.05)',
+      marginBottom: 32,
+    }}>
+      <div style={{
+        fontFamily: "'JetBrains Mono', monospace",
+        fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase',
+        color: 'var(--pastel1)', opacity: 0.65,
+      }}>
+        {closed ? t('kitDevelopment.stem.countdownClosed', 'Applications are closed') : t('kitDevelopment.stem.countdownLabel', 'Applications Close In')}
+      </div>
+      {!closed && (
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+          {units.map(([value, label], i) => (
+            <div key={label} style={{ display: 'flex', alignItems: 'baseline' }}>
+              <div style={{ textAlign: 'center', minWidth: 40 }}>
+                <div style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 24, fontWeight: 700, lineHeight: 1,
+                  color: 'var(--pastel1)',
+                  textShadow: '0 0 18px rgba(168,212,240,0.5)',
+                }}>{pad(value)}</div>
+                <div style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 8, letterSpacing: '2px', textTransform: 'uppercase',
+                  color: 'var(--muted)', opacity: 0.6, marginTop: 3,
+                }}>{label}</div>
+              </div>
+              {i < units.length - 1 && (
+                <div style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 22, fontWeight: 700, color: 'var(--pastel1)',
+                  opacity: 0.35, alignSelf: 'flex-start', margin: '0 6px',
+                }}>:</div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 const DETAILS = [
   { key: 'who', label: 'WHO', value: '2 to 3 high school students' },
   { key: 'date', label: 'DATE', value: 'TBD' },
@@ -212,6 +289,9 @@ export default function KitDevelopment() {
                       }}>
                         {t('kitDevelopment.stem.description')}
                       </p>
+
+                      {/* Live countdown to application deadline */}
+                      <StemCountdown />
 
                       {/* Partnership video */}
                       <AutoplayVideo
@@ -394,6 +474,7 @@ export default function KitDevelopment() {
           .kd-tab { flex-direction: column !important; gap: 4px !important; padding: 10px 8px !important; text-align: center; }
           .kd-tab-label { font-size: 8.5px !important; letter-spacing: 1px !important; white-space: normal !important; line-height: 1.3 !important; }
           .kd-panel { padding: 28px 22px 32px !important; }
+          .kd-countdown { padding: 12px 16px !important; gap: 12px !important; }
         }
       `}</style>
     </PageTransition>
