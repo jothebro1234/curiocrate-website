@@ -5,17 +5,17 @@ import { useLanguage } from '../i18n/useLanguage'
 const contacts = [
   {
     key: 'schools',
-    email: 'ckf.curiocrate@curiocrate.org',
+    email: 'contact@curiocrate.org',
     img: '/images/curieschool.png',
   },
   {
     key: 'students',
-    email: 'ckf.curiocrate@curiocrate.org',
+    email: 'contact@curiocrate.org',
     img: '/images/curiequestion.png',
   },
   {
     key: 'sponsors',
-    email: 'ckf.curiocrate@gmail.com',
+    email: 'contact@curiocrate.org',
     img: '/images/curielove.png',
   },
 ]
