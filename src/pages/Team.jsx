@@ -232,6 +232,46 @@ const departmentHeads = [
   },
 ].map(m => ({ ...m, ns: 'departmentHeads' }))
 
+// ─── MOBILE MEMBER CARD (lightweight — no filters/animations, safe for mobile) ─
+function MobileMemberCard({ photo, glow, dark, color, emoji, role, name, bio }) {
+  return (
+    <div style={{
+      borderRadius: 16, overflow: 'hidden',
+      background: dark,
+      border: `1px solid ${color}22`,
+      padding: '20px 20px',
+      display: 'flex', alignItems: 'center', gap: 20,
+      boxShadow: `0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px ${color}0a`,
+    }}>
+      {photo ? (
+        <img src={photo} alt={name} style={{
+          height: 104, width: 84, objectFit: 'contain', objectPosition: 'top',
+          flexShrink: 0,
+          filter: `drop-shadow(0 0 12px ${glow.replace('0.5','0.4')})`,
+        }} />
+      ) : (
+        <div style={{
+          width: 72, height: 72, borderRadius: '50%', flexShrink: 0,
+          background: `radial-gradient(circle, ${glow.replace('0.5','0.3')} 0%, ${dark} 70%)`,
+          border: `1px solid ${color}33`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28,
+        }}>{emoji}</div>
+      )}
+      <div>
+        <div style={{
+          fontFamily: "'JetBrains Mono', monospace", fontSize: 8,
+          letterSpacing: '2px', textTransform: 'uppercase', color, marginBottom: 6,
+        }}>{role}</div>
+        <div style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: 22, fontWeight: 300, color: 'var(--cream)', lineHeight: 1.1, marginBottom: 7,
+        }}>{name}</div>
+        <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.65 }}>{bio}</p>
+      </div>
+    </div>
+  )
+}
+
 // ─── PANEL STAGE (reusable for Cabinet + Directors) ───────────────────────────
 function PanelStage({ members, height = 580, expandFlex = 3.5, groupBreakAfter = null }) {
   const [active, setActive] = useState(null)
@@ -244,40 +284,13 @@ function PanelStage({ members, height = 580, expandFlex = 3.5, groupBreakAfter =
     return (
       <div style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
         {members.map((m) => (
-          <div key={m.id} style={{
-            borderRadius: 16, overflow: 'hidden',
-            background: m.dark,
-            border: `1px solid ${m.color}22`,
-            padding: '20px 20px',
-            display: 'flex', alignItems: 'center', gap: 20,
-            boxShadow: `0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px ${m.color}0a`,
-          }}>
-            {m.photo ? (
-              <img src={m.photo} alt={m.name} style={{
-                height: 104, width: 84, objectFit: 'contain', objectPosition: 'top',
-                flexShrink: 0,
-                filter: `drop-shadow(0 0 12px ${m.glow.replace('0.5','0.4')})`,
-              }} />
-            ) : (
-              <div style={{
-                width: 72, height: 72, borderRadius: '50%', flexShrink: 0,
-                background: `radial-gradient(circle, ${m.glow.replace('0.5','0.3')} 0%, ${m.dark} 70%)`,
-                border: `1px solid ${m.color}33`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28,
-              }}>{m.emoji}</div>
-            )}
-            <div>
-              <div style={{
-                fontFamily: "'JetBrains Mono', monospace", fontSize: 8,
-                letterSpacing: '2px', textTransform: 'uppercase', color: m.color, marginBottom: 6,
-              }}>{t(`team.${m.ns}.${m.id}.role`, m.role)}</div>
-              <div style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontSize: 22, fontWeight: 300, color: 'var(--cream)', lineHeight: 1.1, marginBottom: 7,
-              }}>{m.name}</div>
-              <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.65 }}>{t(`team.${m.ns}.${m.id}.bio`, m.bio)}</p>
-            </div>
-          </div>
+          <MobileMemberCard
+            key={m.id}
+            photo={m.photo} glow={m.glow} dark={m.dark} color={m.color} emoji={m.emoji}
+            role={t(`team.${m.ns}.${m.id}.role`, m.role)}
+            name={m.name}
+            bio={t(`team.${m.ns}.${m.id}.bio`, m.bio)}
+          />
         ))}
       </div>
     )
@@ -484,6 +497,7 @@ function SectionHeading({ label, title, italic, delay = 0 }) {
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 export default function Team() {
   const { t } = useLanguage()
+  const isMobile = useMobile()
   return (
     <PageTransition>
       <div style={{ minHeight:'100vh', position:'relative', zIndex:1 }}>
@@ -573,8 +587,24 @@ export default function Team() {
         </div>
 
         {/* ══════════════════════════════════════════════════════════════════════
-            FOUNDER SPOTLIGHT: Chief Executive Founder (temporarily hidden)
+            FOUNDER SPOTLIGHT: Chief Executive Founder
+            Mobile gets the same lightweight card format as the other panels —
+            the full cinematic version's stacked filters/infinite animations
+            were heavy enough to freeze/crash mobile browsers on scroll.
         ══════════════════════════════════════════════════════════════════════ */}
+        {isMobile ? (
+          <div style={{ padding: '40px 20px 20px' }}>
+            <MobileMemberCard
+              photo="/boardmembers/jeongseopyoonchiefexecutivefounder.png"
+              glow="rgba(103,232,249,0.5)"
+              dark="#00080e"
+              color="#67e8f9"
+              role={t('team.founder.roleLabel')}
+              name="Jeongseop Yoon"
+              bio={t('team.founder.bio')}
+            />
+          </div>
+        ) : (
         <motion.div
           initial={{ opacity:0 }}
           whileInView={{ opacity:1 }}
@@ -761,6 +791,7 @@ export default function Team() {
             }}
           />
         </motion.div>
+        )}
 
         {/* ══════════════════════════════════════════════════════════════════════
             JOIN CTA
@@ -813,7 +844,6 @@ export default function Team() {
       <style>{`
         @media(max-width:768px){
           .team-header  { padding: 96px 20px 48px !important; }
-          .team-founder { margin: 40px 20px 20px !important; min-height: 70vh !important; }
           .team-join-cta { margin: 40px 20px 72px !important; padding: 40px 24px !important; }
           .team-directors-row { flex-direction: column !important; margin-left: 0 !important; margin-right: 0 !important; }
         }
