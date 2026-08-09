@@ -23,6 +23,8 @@ const ABOUT_ITEMS = [
 
 const ALL_NAV = [...NAV_LEFT, ...INITIATIVES_ITEMS, ...ABOUT_ITEMS]
 
+const DONATE_URL = 'https://gofund.me/75cba1415'
+
 function NavItem({ path, label, end }) {
   return (
     <NavLink
@@ -236,6 +238,22 @@ export default function CinematicNavbar() {
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.1)'; e.currentTarget.style.boxShadow = '0 0 20px rgba(168,212,240,0.15)' }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none' }}
           >{t('nav.becomeAMember')}</a>
+
+          {/* Donate (external CTA) */}
+          <a
+            href={DONATE_URL}
+            target="_blank" rel="noopener noreferrer"
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
+              textDecoration: 'none', padding: '8px 16px', borderRadius: 4,
+              color: '#06101f', background: 'var(--pastel1)',
+              border: '1px solid var(--pastel1)',
+              transition: 'all 0.3s ease', marginLeft: 8,
+            }}
+            onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.12)'; e.currentTarget.style.boxShadow = '0 0 24px rgba(168,212,240,0.4)' }}
+            onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.boxShadow = 'none' }}
+          >{t('nav.donate')}</a>
         </div>
 
         {/* Hamburger (mobile only) */}
@@ -321,6 +339,18 @@ export default function CinematicNavbar() {
               color: 'var(--pastel1)', border: '1px solid rgba(168,212,240,0.3)',
             }}
           >{t('nav.becomeAMember')} →</a>
+          <a
+            href={DONATE_URL}
+            target="_blank" rel="noopener noreferrer"
+            onClick={() => setMenuOpen(false)}
+            style={{
+              display: 'block', width: '100%', textAlign: 'center',
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
+              textDecoration: 'none', padding: '16px 24px', borderRadius: 6,
+              color: '#06101f', background: 'var(--pastel1)',
+            }}
+          >{t('nav.donate')} →</a>
         </div>
       </div>
 

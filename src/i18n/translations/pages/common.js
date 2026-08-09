@@ -21,6 +21,7 @@ export const en = {
     team: 'Team',
     contactUs: 'Contact Us',
     becomeAMember: 'Become a Member',
+    donate: 'Donate',
     esc: 'ESC',
   },
   footer: {
@@ -32,6 +33,7 @@ export const en = {
     volunteeringOpportunities: 'Volunteering Opportunities',
     startAChapter: 'Start a Chapter',
     partnerWithUs: 'Partner With Us',
+    donate: 'Donate',
     copyright: '501(c)(3) NONPROFIT',
   },
 }
@@ -55,6 +57,7 @@ export const es = {
     team: 'Equipo',
     contactUs: 'Contáctanos',
     becomeAMember: 'Hazte Miembro',
+    donate: 'Donar',
     esc: 'ESC',
   },
   footer: {
@@ -66,6 +69,7 @@ export const es = {
     volunteeringOpportunities: 'Oportunidades de Voluntariado',
     startAChapter: 'Inicia un Capítulo',
     partnerWithUs: 'Colabora con Nosotros',
+    donate: 'Donar',
     copyright: 'ORGANIZACIÓN SIN FINES DE LUCRO 501(c)(3)',
   },
 }
