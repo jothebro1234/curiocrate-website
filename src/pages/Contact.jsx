@@ -2,22 +2,12 @@ import { motion } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
 import { useLanguage } from '../i18n/useLanguage'
 
-const contacts = [
-  {
-    key: 'schools',
-    email: 'contact@curiocrate.org',
-    img: '/images/curieschool.png',
-  },
-  {
-    key: 'students',
-    email: 'contact@curiocrate.org',
-    img: '/images/curiequestion.png',
-  },
-  {
-    key: 'sponsors',
-    email: 'contact@curiocrate.org',
-    img: '/images/curielove.png',
-  },
+const CONTACT_EMAIL = 'contact@curiocrate.org'
+
+const topics = [
+  { key: 'schools', img: '/images/curieschool.png' },
+  { key: 'students', img: '/images/curiequestion.png' },
+  { key: 'sponsors', img: '/images/curielove.png' },
 ]
 
 export default function Contact() {
@@ -45,28 +35,27 @@ export default function Contact() {
             </p>
           </motion.div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-            {contacts.map((c, i) => (
-              <motion.div
-                key={c.key}
-                className="contact-card"
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: i * 0.12 }}
-                style={{
-                  padding: '40px 48px',
-                  border: '1px solid rgba(168,212,240,0.12)',
-                  borderRadius: 20,
-                  background: 'rgba(8,16,42,0.5)',
-                  backdropFilter: 'blur(24px)',
-                }}
-              >
-                <div className="contact-card-inner" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+          <motion.div
+            className="contact-card"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            style={{
+              padding: '48px 48px 40px',
+              border: '1px solid rgba(168,212,240,0.12)',
+              borderRadius: 20,
+              background: 'rgba(8,16,42,0.5)',
+              backdropFilter: 'blur(24px)',
+            }}
+          >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+              {topics.map(c => (
+                <div key={c.key} className="contact-topic" style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
                   <img
                     src={c.img}
                     alt={t(`contact.${c.key}.title`)}
                     style={{
-                      width: 80, height: 80, objectFit: 'contain',
+                      width: 56, height: 56, objectFit: 'contain',
                       flexShrink: 0,
                       filter: 'drop-shadow(0 4px 16px rgba(0,0,0,0.3))',
                     }}
@@ -74,27 +63,30 @@ export default function Contact() {
                   <div>
                     <div style={{
                       fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: 24, fontWeight: 400,
-                      color: 'var(--cream)', marginBottom: 8,
+                      fontSize: 22, fontWeight: 400,
+                      color: 'var(--cream)', marginBottom: 6,
                     }}>{t(`contact.${c.key}.title`)}</div>
-                    <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.7, marginBottom: 20 }}>
+                    <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.7 }}>
                       {t(`contact.${c.key}.description`)}
                     </p>
-                    <a href={`mailto:${c.email}`} style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 13, letterSpacing: '1px',
-                      color: 'var(--pastel1)', textDecoration: 'none',
-                      borderBottom: '1px solid rgba(168,212,240,0.3)',
-                      paddingBottom: 2, transition: 'border-color 0.2s',
-                    }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(168,212,240,0.7)' }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(168,212,240,0.3)' }}
-                    >{c.email}</a>
                   </div>
                 </div>
-              </motion.div>
-            ))}
-          </div>
+              ))}
+            </div>
+
+            <div style={{ borderTop: '1px solid rgba(168,212,240,0.12)', marginTop: 36, paddingTop: 28, textAlign: 'center' }}>
+              <a href={`mailto:${CONTACT_EMAIL}`} style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 15, letterSpacing: '1px',
+                color: 'var(--pastel1)', textDecoration: 'none',
+                borderBottom: '1px solid rgba(168,212,240,0.3)',
+                paddingBottom: 2, transition: 'border-color 0.2s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(168,212,240,0.7)' }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(168,212,240,0.3)' }}
+              >{CONTACT_EMAIL}</a>
+            </div>
+          </motion.div>
 
           <motion.p
             initial={{ opacity: 0 }}
@@ -113,8 +105,8 @@ export default function Contact() {
       <style>{`
         @media(max-width:768px){
           .contact-section { padding: 100px 20px 72px !important; }
-          .contact-card { padding: 28px 24px !important; }
-          .contact-card-inner { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
+          .contact-card { padding: 32px 24px !important; }
+          .contact-topic { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
         }
       `}</style>
     </PageTransition>
