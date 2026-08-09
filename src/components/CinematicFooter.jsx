@@ -30,8 +30,8 @@ export default function CinematicFooter() {
           {/* Nav */}
           {[
             { labelKey:'footer.explore', links:[{lKey:'nav.kits',p:'/kits'},{lKey:'nav.ourChapters',p:'/chapters'},{lKey:'footer.mission',p:'/#what-is-curiocrate'},{lKey:'nav.gallery',p:'/gallery'},{lKey:'nav.team',p:'/team'}] },
-            { labelKey:'footer.connect', links:[{lKey:'nav.contactUs',p:'/contact'},{l:'ckf.curiocrate@curiocrate.org',p:'mailto:ckf.curiocrate@curiocrate.org'}] },
-            { labelKey:'footer.program', links:[{lKey:'footer.volunteeringOpportunities',p:'https://portal.curiocrate.org'},{lKey:'footer.startAChapter',p:'https://forms.gle/nEBfc84qHXxcmT4k8'},{lKey:'footer.partnerWithUs',p:'mailto:ckf.curiocrate@curiocrate.org'}] },
+            { labelKey:'footer.connect', links:[{lKey:'nav.contactUs',p:'/contact'},{l:'contact@curiocrate.org',p:'mailto:contact@curiocrate.org'}] },
+            { labelKey:'footer.program', links:[{lKey:'footer.volunteeringOpportunities',p:'https://portal.curiocrate.org'},{lKey:'footer.startAChapter',p:'https://forms.gle/nEBfc84qHXxcmT4k8'},{lKey:'footer.partnerWithUs',p:'mailto:contact@curiocrate.org'}] },
           ].map(col => (
             <div key={col.labelKey}>
               <div className="label" style={{ marginBottom:20, fontSize:9 }}>{t(col.labelKey)}</div>
