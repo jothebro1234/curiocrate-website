@@ -23,7 +23,8 @@ const ABOUT_ITEMS = [
 
 const ALL_NAV = [...NAV_LEFT, ...INITIATIVES_ITEMS, ...ABOUT_ITEMS]
 
-const DONATE_URL = 'https://gofund.me/75cba1415'
+// No live donation flow yet — point Donate at Contact until one exists.
+const DONATE_URL = '/contact'
 
 function NavItem({ path, label, end }) {
   return (
@@ -239,10 +240,9 @@ export default function CinematicNavbar() {
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none' }}
           >{t('nav.becomeAMember')}</a>
 
-          {/* Donate (external CTA) */}
-          <a
-            href={DONATE_URL}
-            target="_blank" rel="noopener noreferrer"
+          {/* Donate */}
+          <NavLink
+            to={DONATE_URL}
             style={{
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
@@ -253,7 +253,7 @@ export default function CinematicNavbar() {
             }}
             onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.12)'; e.currentTarget.style.boxShadow = '0 0 24px rgba(168,212,240,0.4)' }}
             onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.boxShadow = 'none' }}
-          >{t('nav.donate')}</a>
+          >{t('nav.donate')}</NavLink>
         </div>
 
         {/* Hamburger (mobile only) */}
@@ -339,9 +339,8 @@ export default function CinematicNavbar() {
               color: 'var(--pastel1)', border: '1px solid rgba(168,212,240,0.3)',
             }}
           >{t('nav.becomeAMember')} →</a>
-          <a
-            href={DONATE_URL}
-            target="_blank" rel="noopener noreferrer"
+          <NavLink
+            to={DONATE_URL}
             onClick={() => setMenuOpen(false)}
             style={{
               display: 'block', width: '100%', textAlign: 'center',
@@ -350,7 +349,7 @@ export default function CinematicNavbar() {
               textDecoration: 'none', padding: '16px 24px', borderRadius: 6,
               color: '#06101f', background: 'var(--pastel1)',
             }}
-          >{t('nav.donate')} →</a>
+          >{t('nav.donate')} →</NavLink>
         </div>
       </div>
 
