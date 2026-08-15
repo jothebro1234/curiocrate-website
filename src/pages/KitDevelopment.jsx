@@ -237,6 +237,28 @@ export default function KitDevelopment() {
                     transition={{ duration: 0.3 }}
                     className="kd-panel" style={{ padding: '40px 44px 44px' }}
                   >
+                    {/* CTA — moved to top for visibility */}
+                    <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 10, marginBottom: 28 }}>
+                      <a
+                        href="https://docs.google.com/forms/d/e/1FAIpQLScgkA-yNs8sUiGrDJvxm_Nwju_3LPJ1cU-loZodL4-Rvm_MNA/viewform?usp=preview"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
+                          background: 'var(--pastel1)', color: 'var(--dark)',
+                          borderRadius: 6, padding: '12px 32px',
+                          fontWeight: 700, textDecoration: 'none',
+                          display: 'inline-flex', alignItems: 'center', gap: 8,
+                        }}
+                      >
+                        {t('kitDevelopment.applyNow')}
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                          <path d="M7 17L17 7M17 7H7M17 7v10"/>
+                        </svg>
+                      </a>
+                    </div>
+
                     {/* Big $500+ prize */}
                     <div style={{
                       fontFamily: "'Cormorant Garamond', serif",
@@ -323,28 +345,6 @@ export default function KitDevelopment() {
                             </div>
                           </div>
                         ))}
-                      </div>
-
-                      {/* CTA */}
-                      <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 10 }}>
-                        <a
-                          href="https://docs.google.com/forms/d/e/1FAIpQLSel26WFvX_YIJHXHbKBU19R6w5x0kDyVh5VD4sBrOrdyfyEQw/viewform?usp=sharing&ouid=103602362999951274053"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
-                            background: 'var(--pastel1)', color: 'var(--dark)',
-                            borderRadius: 6, padding: '12px 32px',
-                            fontWeight: 700, textDecoration: 'none',
-                            display: 'inline-flex', alignItems: 'center', gap: 8,
-                          }}
-                        >
-                          {t('kitDevelopment.applyNow')}
-                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                            <path d="M7 17L17 7M17 7H7M17 7v10"/>
-                          </svg>
-                        </a>
                       </div>
                     </motion.div>
                   </motion.div>
