@@ -237,7 +237,7 @@ export default function HandsOnTeaching() {
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
-                background: 'var(--pastel1)', color: 'var(--dark)',
+                background: 'var(--pastel1)', color: 'var(--void)',
                 borderRadius: 6, padding: '13px 34px',
                 fontWeight: 700, textDecoration: 'none',
                 display: 'inline-flex', alignItems: 'center', gap: 8,

@@ -246,7 +246,7 @@ export default function KitDevelopment() {
                         style={{
                           fontFamily: "'JetBrains Mono', monospace",
                           fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
-                          background: 'var(--pastel1)', color: 'var(--dark)',
+                          background: 'var(--pastel1)', color: 'var(--void)',
                           borderRadius: 6, padding: '12px 32px',
                           fontWeight: 700, textDecoration: 'none',
                           display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -427,7 +427,7 @@ export default function KitDevelopment() {
                             style={{
                               fontFamily: "'JetBrains Mono', monospace",
                               fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
-                              background: 'var(--pastel1)', color: 'var(--dark)',
+                              background: 'var(--pastel1)', color: 'var(--void)',
                               borderRadius: 6, padding: '12px 32px',
                               fontWeight: 700, textDecoration: 'none',
                               display: 'inline-flex', alignItems: 'center', gap: 8,
