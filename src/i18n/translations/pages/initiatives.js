@@ -56,7 +56,7 @@ export const en = {
           desc: 'Verifiable service hours for school, scholarship, and service requirements.',
         },
         connections: {
-          title: 'Guaranteed Professor & Professional Connections',
+          title: 'Get Paired With A Professor/Professional',
           desc: "We introduce your kit, and you, to university professors and subject-matter experts in your kit's field of science who partner with CurioCrate to review your work and give feedback.",
         },
         funding: {
@@ -166,7 +166,7 @@ export const es = {
           desc: 'Horas de servicio verificables para requisitos escolares, de becas y de servicio.',
         },
         connections: {
-          title: 'Conexiones Garantizadas con Profesores y Profesionales',
+          title: 'Te Emparejamos con un Profesor/Profesional',
           desc: 'Presentamos tu kit, y a ti, a profesores universitarios y expertos en la materia del campo científico de tu kit, quienes colaboran con CurioCrate para revisar tu trabajo y darte retroalimentación.',
         },
         funding: {
