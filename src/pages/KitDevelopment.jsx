@@ -127,14 +127,25 @@ function StemCountdown() {
 
 const DETAILS = [
   { key: 'who', label: 'WHO', value: '2 to 3 high school students' },
-  { key: 'date', label: 'DATE', value: 'TBD' },
-  { key: 'deliverable', label: 'DELIVERABLE', value: 'Pitch deck and presentation' },
+  { key: 'date', label: 'ADMISSIONS', value: 'Rolling — Cohort 01 Open' },
+  { key: 'deliverable', label: 'DELIVERABLE', value: 'A produced, distributed science kit' },
   { key: 'targetImpact', label: 'TARGET IMPACT', value: 'Underserved students and classrooms in Los Angeles and Orange Counties' },
 ]
 
 const TABS = [
   { num: '01', key: 'stemAdvocacy', label: 'STEM Advocacy Project (Competition)', path: '/initiatives/sap' },
-  { num: '02', key: 'kitDevelopment', label: 'Kit Development', path: '/initiatives/kits' },
+  { num: '02', key: 'kitDevelopment', label: 'Kit Research Internship', path: '/initiatives/kits' },
+]
+
+const KIT_INTERNSHIP_FORM_URL = 'https://forms.gle/1pE8a4CNeE9a1jW17'
+
+const BENEFITS = [
+  { num: '01', key: 'credit' },
+  { num: '02', key: 'hours' },
+  { num: '03', key: 'connections' },
+  { num: '04', key: 'funding' },
+  { num: '05', key: 'mentorship' },
+  { num: '06', key: 'impact' },
 ]
 
 const STEM_DETAILS = [
@@ -357,18 +368,82 @@ export default function KitDevelopment() {
                     transition={{ duration: 0.3 }}
                     className="kd-panel" style={{ padding: '40px 44px 44px' }}
                   >
+                    {/* Urgency status badge */}
+                    <div className="kd-badge-pulse" style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 8,
+                      padding: '7px 16px', borderRadius: 999,
+                      border: '1px solid rgba(134,239,172,0.4)',
+                      background: 'rgba(74,222,128,0.08)',
+                      marginBottom: 22,
+                    }}>
+                      <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 8px 2px rgba(74,222,128,0.8)' }} />
+                      <span style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 9.5, letterSpacing: '2px', textTransform: 'uppercase',
+                        color: '#86efac', fontWeight: 700,
+                      }}>
+                        {t('kitDevelopment.kit.statusBadge')}
+                      </span>
+                    </div>
+
+                    {/* CTA — moved to top for visibility, now live */}
+                    <div style={{ display: 'block', marginBottom: 28 }}>
+                      <a
+                        href={KIT_INTERNSHIP_FORM_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
+                          background: 'var(--pastel1)', color: 'var(--void)',
+                          borderRadius: 6, padding: '12px 32px',
+                          fontWeight: 700, textDecoration: 'none',
+                          display: 'inline-flex', alignItems: 'center', gap: 8,
+                          boxShadow: '0 0 28px rgba(168,212,240,0.35)',
+                        }}
+                      >
+                        {t('kitDevelopment.kit.applyCta')}
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                          <path d="M7 17L17 7M17 7H7M17 7v10"/>
+                        </svg>
+                      </a>
+                      <div style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 10, letterSpacing: '1px', lineHeight: 1.6,
+                        color: 'var(--muted)', opacity: 0.7, marginTop: 10, maxWidth: 440,
+                      }}>
+                        {t('kitDevelopment.kit.urgencyNote')}
+                      </div>
+                    </div>
+
+                    {/* Eyebrow */}
+                    <div style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase',
+                      color: 'var(--pastel1)', opacity: 0.65, marginBottom: 14,
+                    }}>
+                      {t('kitDevelopment.kit.eyebrow')}
+                    </div>
+
                     {/* Big $1,000 */}
                     <div style={{
                       fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: 'clamp(88px, 14vw, 160px)',
+                      fontSize: 'clamp(72px, 12vw, 140px)',
                       fontWeight: 300,
                       color: 'var(--pastel1)',
                       lineHeight: 0.85,
                       letterSpacing: '-0.05em',
                       textShadow: '0 0 100px rgba(168,212,240,0.6), 0 0 40px rgba(168,212,240,0.3)',
-                      marginBottom: 16,
+                      marginBottom: 10,
                     }}>
                       <AnimatedAmount target={1000} duration={2800} holdDelay={600} onComplete={() => setCountDone(true)} />
+                    </div>
+                    <div style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
+                      color: 'var(--pastel1)', opacity: 0.55, marginBottom: 24,
+                    }}>
+                      {t('kitDevelopment.kit.fundedLabel')}
                     </div>
 
                     <motion.div
@@ -379,27 +454,72 @@ export default function KitDevelopment() {
                       {/* Headline */}
                       <p style={{
                         fontFamily: "'Cormorant Garamond', serif",
-                        fontSize: 'clamp(17px, 2.2vw, 26px)',
-                        fontWeight: 300, color: 'var(--cream)',
-                        lineHeight: 1.3, margin: '0 0 14px',
+                        fontSize: 'clamp(22px, 2.8vw, 32px)',
+                        fontWeight: 400, color: 'var(--cream)',
+                        lineHeight: 1.3, margin: '0 0 16px', maxWidth: 640,
                       }}>
                         {t('kitDevelopment.kit.headline')}
                       </p>
 
                       {/* Description */}
                       <p style={{
-                        fontSize: 14, color: 'var(--muted)', lineHeight: 1.75,
-                        maxWidth: 520, margin: '0 0 30px', opacity: 0.8,
+                        fontSize: 16, color: 'var(--cream)', lineHeight: 1.75,
+                        maxWidth: 600, margin: '0 0 34px', opacity: 0.85,
                       }}>
                         {t('kitDevelopment.kit.description')}
                       </p>
+
+                      {/* Benefits label */}
+                      <div style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
+                        color: 'var(--pastel1)', opacity: 0.75, marginBottom: 16,
+                        borderTop: '1px solid rgba(168,212,240,0.15)', paddingTop: 24,
+                      }}>
+                        {t('kitDevelopment.kit.benefitsLabel')}
+                      </div>
+
+                      {/* Benefits grid */}
+                      <div className="kd-benefits" style={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr',
+                        gap: '18px 28px',
+                        marginBottom: 36,
+                      }}>
+                        {BENEFITS.map(b => (
+                          <div key={b.key} style={{
+                            border: '1px solid rgba(168,212,240,0.15)',
+                            borderRadius: 10,
+                            background: 'rgba(168,212,240,0.03)',
+                            padding: '16px 18px',
+                          }}>
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 6 }}>
+                              <span style={{
+                                fontFamily: "'JetBrains Mono', monospace",
+                                fontSize: 11, fontWeight: 700, color: 'var(--pastel1)', opacity: 0.5,
+                              }}>{b.num}</span>
+                              <span style={{
+                                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                                fontSize: 14.5, fontWeight: 700, color: 'var(--cream)',
+                              }}>
+                                {t(`kitDevelopment.kit.benefits.${b.key}.title`)}
+                              </span>
+                            </div>
+                            <div style={{
+                              fontSize: 12.5, color: 'var(--muted)', lineHeight: 1.6, opacity: 0.85,
+                            }}>
+                              {t(`kitDevelopment.kit.benefits.${b.key}.desc`)}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
 
                       {/* 2x2 details grid */}
                       <div style={{
                         display: 'grid',
                         gridTemplateColumns: '1fr 1fr',
                         gap: '16px 64px',
-                        marginBottom: 34,
+                        marginBottom: 8,
                       }}>
                         {DETAILS.map(d => (
                           <div key={d.key} style={{ borderLeft: '3px solid rgba(168,212,240,0.3)', paddingLeft: 14 }}>
@@ -419,45 +539,6 @@ export default function KitDevelopment() {
                           </div>
                         ))}
                       </div>
-
-                      {/* CTA */}
-                      <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 10 }}>
-                        <div style={{ position: 'relative', display: 'inline-flex' }}>
-                          <span
-                            style={{
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
-                              background: 'var(--pastel1)', color: 'var(--void)',
-                              borderRadius: 6, padding: '12px 32px',
-                              fontWeight: 700, textDecoration: 'none',
-                              display: 'inline-flex', alignItems: 'center', gap: 8,
-                              opacity: 0.4,
-                            }}
-                          >
-                            {t('kitDevelopment.applyNow')}
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                              <path d="M7 17L17 7M17 7H7M17 7v10"/>
-                            </svg>
-                          </span>
-                          {/* Overlay: blocks the CTA and shows a "not allowed" cursor */}
-                          <div
-                            title={t('kitDevelopment.kit.applicationsClosed')}
-                            style={{
-                              position: 'absolute',
-                              inset: 0,
-                              borderRadius: 6,
-                              cursor: 'not-allowed',
-                            }}
-                          />
-                        </div>
-                        <span style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 10, letterSpacing: '1px',
-                          color: '#f87171', opacity: 0.85,
-                        }}>
-                          {t('kitDevelopment.kit.applicationsClosed')}
-                        </span>
-                      </div>
                     </motion.div>
                   </motion.div>
                 )}
@@ -469,12 +550,18 @@ export default function KitDevelopment() {
       </div>
 
       <style>{`
+        .kd-badge-pulse { animation: kdBadgePulse 2.2s ease-in-out infinite; }
+        @keyframes kdBadgePulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(74,222,128,0.25); }
+          50% { box-shadow: 0 0 0 6px rgba(74,222,128,0); }
+        }
         @media(max-width:640px){
           .kd-page { padding: 96px 16px 48px !important; }
           .kd-tab { flex-direction: column !important; gap: 4px !important; padding: 10px 8px !important; text-align: center; }
           .kd-tab-label { font-size: 8.5px !important; letter-spacing: 1px !important; white-space: normal !important; line-height: 1.3 !important; }
           .kd-panel { padding: 28px 22px 32px !important; }
           .kd-countdown { padding: 12px 16px !important; gap: 12px !important; }
+          .kd-benefits { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </PageTransition>

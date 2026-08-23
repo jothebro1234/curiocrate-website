@@ -10,18 +10,24 @@ const NAV_LEFT = [
 ]
 
 const INITIATIVES_ITEMS = [
-  { path: '/initiatives/sap',      labelKey: 'nav.initiatives'      },
-  { path: '/initiatives/teaching', labelKey: 'nav.handsOnTeaching' },
+  { id: 'kitDevelopment',        path: '/initiatives/kits',     labelKey: 'nav.kitDevelopmentItem'        },
+  { id: 'stemAdvocacy',          path: '/initiatives/sap',      labelKey: 'nav.stemAdvocacyItem'          },
+  { id: 'kitResearchInternship', path: '/initiatives/kits',     labelKey: 'nav.kitResearchInternshipItem' },
+  { id: 'handsOnTeaching',       path: '/initiatives/teaching', labelKey: 'nav.handsOnTeaching'           },
 ]
 
 const ABOUT_ITEMS = [
-  { path: '/chapters', labelKey: 'nav.ourChapters' },
-  { path: '/gallery',  labelKey: 'nav.gallery'      },
-  { path: '/team',     labelKey: 'nav.team'         },
-  { path: '/contact',  labelKey: 'nav.contactUs'    },
+  { id: 'ourChapters', path: '/chapters', labelKey: 'nav.ourChapters' },
+  { id: 'gallery',     path: '/gallery',  labelKey: 'nav.gallery'      },
+  { id: 'team',        path: '/team',     labelKey: 'nav.team'         },
+  { id: 'contactUs',   path: '/contact',  labelKey: 'nav.contactUs'    },
 ]
 
-const ALL_NAV = [...NAV_LEFT, ...INITIATIVES_ITEMS, ...ABOUT_ITEMS]
+const ALL_NAV = [
+  ...NAV_LEFT.map(item => ({ ...item, id: item.path })),
+  ...INITIATIVES_ITEMS,
+  ...ABOUT_ITEMS,
+]
 
 // No live donation flow yet — point Donate at Contact until one exists.
 const DONATE_URL = '/contact'
@@ -152,7 +158,7 @@ export default function CinematicNavbar() {
             }}>
               {INITIATIVES_ITEMS.map(item => (
                 <NavLink
-                  key={item.path}
+                  key={item.id}
                   to={item.path}
                   style={({ isActive }) => ({
                     display: 'block', padding: '10px 16px', borderRadius: 8,
@@ -205,7 +211,7 @@ export default function CinematicNavbar() {
             }}>
               {ABOUT_ITEMS.map(item => (
                 <NavLink
-                  key={item.path}
+                  key={item.id}
                   to={item.path}
                   style={({ isActive }) => ({
                     display: 'block', padding: '10px 16px', borderRadius: 8,
@@ -305,7 +311,7 @@ export default function CinematicNavbar() {
         <nav style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
           {ALL_NAV.map(item => (
             <NavLink
-              key={item.path}
+              key={item.id}
               to={item.path}
               end={item.path === '/'}
               onClick={() => setMenuOpen(false)}

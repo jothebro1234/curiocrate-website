@@ -37,6 +37,11 @@ export const en = {
       minutes: 'MIN',
       seconds: 'SEC',
     },
+    internshipBanner: {
+      badge: 'First Rolling Batch — Applications Open',
+      text: 'Want your idea shipped as a real CurioCrate kit? Apply to the Kit Research Internship.',
+      cta: 'Apply Now',
+    },
   },
 }
 
@@ -75,6 +80,11 @@ export const es = {
       hours: 'HRS',
       minutes: 'MIN',
       seconds: 'SEG',
+    },
+    internshipBanner: {
+      badge: 'Primer Lote Continuo — Solicitudes Abiertas',
+      text: '¿Quieres que tu idea se convierta en un kit real de CurioCrate? Postúlate a la Pasantía de Investigación de Kits.',
+      cta: 'Solicitar Ahora',
     },
   },
 }

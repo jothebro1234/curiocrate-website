@@ -8,7 +8,7 @@ export const en = {
     applyNow: 'Apply Now',
     tabs: {
       stemAdvocacy: 'STEM Advocacy Project (Competition)',
-      kitDevelopment: 'Kit Development',
+      kitDevelopment: 'Kit Research Internship',
     },
     stem: {
       prizeMoneyLabel: 'In Prize Money',
@@ -40,13 +40,44 @@ export const en = {
       },
     },
     kit: {
-      headline: 'Pitch your kit idea and get up to $1,000 to develop and distribute your science kit.',
-      description: 'Apply to design a hands-on experiment kit. Selected teams receive up to $1,000 and CurioCrate handles production and distribution to 30 to 100 underserved students and classrooms.',
-      applicationsClosed: 'Applications are closed at the moment.',
+      statusBadge: 'First Rolling Batch — Applications Open',
+      eyebrow: 'CurioCrate Product Leadership · Selective Research Internship',
+      fundedLabel: 'Funded Per Selected Creator',
+      headline: 'Build a real product. Earn a real title: Certified CurioCrate Creator.',
+      description: "This isn't a worksheet packet or a participation certificate. It's a selective, rolling-admission research internship where a small cohort of high schoolers designs an actual CurioCrate kit, ships it to real classrooms, and walks away with a credential that proves they built something that mattered.",
+      benefitsLabel: 'What You Get As A Creator',
+      benefits: {
+        credit: {
+          title: 'CurioCrate Creator Credit',
+          desc: 'Your name stays attached to the kit and its materials — a real product you developed, shown on the main website and on the kit packaging itself. You become a certified CurioCrate Creator.',
+        },
+        hours: {
+          title: 'Documented Volunteer Hours',
+          desc: 'Verifiable service hours for school, scholarship, and service requirements.',
+        },
+        connections: {
+          title: 'Guaranteed Professor & Professional Connections',
+          desc: "We introduce your kit, and you, to university professors and subject-matter experts in your kit's field of science who partner with CurioCrate to review your work and give feedback.",
+        },
+        funding: {
+          title: 'We Fund Everything',
+          desc: "You don't pay to build your idea. CurioCrate funds your prototype up to $20, and up to $1,000 worth of production for your kit.",
+        },
+        mentorship: {
+          title: 'Real Mentorship',
+          desc: "One-on-one guidance from CurioCrate's Product Leadership team through every stage of turning an idea into a product.",
+        },
+        impact: {
+          title: 'Serving an Underserved Area',
+          desc: "Your kit is used as a teacher's aid or student resource in underserved communities — real classrooms, real impact.",
+        },
+      },
+      applyCta: 'Apply Now — Cohort 01',
+      urgencyNote: 'Rolling admissions. Seats are limited per cohort and reviewed as applications come in — early applicants get first consideration.',
       details: {
         who: { label: 'WHO', value: '2 to 3 high school students' },
-        date: { label: 'DATE', value: 'TBD' },
-        deliverable: { label: 'DELIVERABLE', value: 'Pitch deck and presentation' },
+        date: { label: 'ADMISSIONS', value: 'Rolling — Cohort 01 Open' },
+        deliverable: { label: 'DELIVERABLE', value: 'A produced, distributed science kit' },
         targetImpact: { label: 'TARGET IMPACT', value: 'Underserved students and classrooms in Los Angeles and Orange Counties' },
       },
     },
@@ -87,7 +118,7 @@ export const es = {
     applyNow: 'Solicitar Ahora',
     tabs: {
       stemAdvocacy: 'Proyecto de Promoción STEM (Concurso)',
-      kitDevelopment: 'Desarrollo de Kits',
+      kitDevelopment: 'Pasantía de Investigación de Kits',
     },
     stem: {
       prizeMoneyLabel: 'En Premios',
@@ -119,13 +150,44 @@ export const es = {
       },
     },
     kit: {
-      headline: 'Presenta la idea de tu kit y recibe hasta $1,000 para desarrollarlo y distribuir tu kit de ciencia.',
-      description: 'Postúlate para diseñar un kit de experimentos prácticos. Los equipos seleccionados reciben hasta $1,000, y CurioCrate se encarga de la producción y distribución a entre 30 y 100 estudiantes y aulas desatendidas.',
-      applicationsClosed: 'Las solicitudes están cerradas por el momento.',
+      statusBadge: 'Primer Lote Continuo — Solicitudes Abiertas',
+      eyebrow: 'Liderazgo de Producto de CurioCrate · Pasantía de Investigación Selectiva',
+      fundedLabel: 'Financiado Por Creador Seleccionado',
+      headline: 'Construye un producto real. Gana un título real: Creador Certificado de CurioCrate.',
+      description: 'Esto no es un paquete de hojas de trabajo ni un certificado de participación. Es una pasantía de investigación selectiva y de admisión continua donde un pequeño grupo de estudiantes de preparatoria diseña un kit real de CurioCrate, lo envía a aulas reales y se lleva una credencial que demuestra que construyeron algo que importó.',
+      benefitsLabel: 'Lo Que Obtienes Como Creador',
+      benefits: {
+        credit: {
+          title: 'Crédito de Creador CurioCrate',
+          desc: 'Tu nombre permanece vinculado al kit y sus materiales: un producto real que desarrollaste, mostrado en el sitio web principal y en el empaque del kit. Te conviertes en un Creador Certificado de CurioCrate.',
+        },
+        hours: {
+          title: 'Horas de Voluntariado Documentadas',
+          desc: 'Horas de servicio verificables para requisitos escolares, de becas y de servicio.',
+        },
+        connections: {
+          title: 'Conexiones Garantizadas con Profesores y Profesionales',
+          desc: 'Presentamos tu kit, y a ti, a profesores universitarios y expertos en la materia del campo científico de tu kit, quienes colaboran con CurioCrate para revisar tu trabajo y darte retroalimentación.',
+        },
+        funding: {
+          title: 'Financiamos Todo',
+          desc: 'No pagas para construir tu idea. CurioCrate financia tu prototipo hasta $20, y hasta $1,000 en producción para tu kit.',
+        },
+        mentorship: {
+          title: 'Mentoría Real',
+          desc: 'Guía personalizada del equipo de Liderazgo de Producto de CurioCrate en cada etapa de convertir una idea en un producto.',
+        },
+        impact: {
+          title: 'Sirviendo a un Área Desatendida',
+          desc: 'Tu kit se usa como apoyo docente o recurso estudiantil en comunidades desatendidas: aulas reales, impacto real.',
+        },
+      },
+      applyCta: 'Solicitar Ahora — Cohorte 01',
+      urgencyNote: 'Admisiones continuas. Los lugares son limitados por cohorte y se revisan conforme llegan las solicitudes: quienes solicitan primero reciben prioridad.',
       details: {
         who: { label: 'QUIÉNES', value: '2 a 3 estudiantes de preparatoria' },
-        date: { label: 'FECHA', value: 'Por confirmar' },
-        deliverable: { label: 'ENTREGABLE', value: 'Pitch deck y presentación' },
+        date: { label: 'ADMISIONES', value: 'Continuas — Cohorte 01 Abierta' },
+        deliverable: { label: 'ENTREGABLE', value: 'Un kit de ciencia producido y distribuido' },
         targetImpact: { label: 'IMPACTO OBJETIVO', value: 'Estudiantes y aulas desatendidas en los condados de Los Ángeles y Orange' },
       },
     },
