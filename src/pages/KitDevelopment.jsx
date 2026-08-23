@@ -129,7 +129,7 @@ const DETAILS = [
   { key: 'who', label: 'WHO', value: '2 to 3 high school students' },
   { key: 'date', label: 'ADMISSIONS', value: 'Rolling — Cohort 01 Open' },
   { key: 'deliverable', label: 'DELIVERABLE', value: 'A produced, distributed science kit' },
-  { key: 'targetImpact', label: 'TARGET IMPACT', value: 'Underserved students and classrooms in Los Angeles and Orange Counties' },
+  { key: 'gradeLevel', label: 'GRADE LEVEL', value: 'Older Elementary to Middle Schoolers' },
 ]
 
 const TABS = [
@@ -473,42 +473,20 @@ export default function KitDevelopment() {
                       <div style={{
                         fontFamily: "'JetBrains Mono', monospace",
                         fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
-                        color: 'var(--pastel1)', opacity: 0.75, marginBottom: 16,
+                        color: 'var(--pastel1)', opacity: 0.75, marginBottom: 4,
                         borderTop: '1px solid rgba(168,212,240,0.15)', paddingTop: 24,
                       }}>
                         {t('kitDevelopment.kit.benefitsLabel')}
                       </div>
 
-                      {/* Benefits grid */}
-                      <div className="kd-benefits" style={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 1fr',
-                        gap: '18px 28px',
-                        marginBottom: 36,
-                      }}>
+                      {/* Benefits — editorial numeral list, not a card grid */}
+                      <div className="kd-benefits-list">
                         {BENEFITS.map(b => (
-                          <div key={b.key} style={{
-                            border: '1px solid rgba(168,212,240,0.15)',
-                            borderRadius: 10,
-                            background: 'rgba(168,212,240,0.03)',
-                            padding: '16px 18px',
-                          }}>
-                            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 6 }}>
-                              <span style={{
-                                fontFamily: "'JetBrains Mono', monospace",
-                                fontSize: 11, fontWeight: 700, color: 'var(--pastel1)', opacity: 0.5,
-                              }}>{b.num}</span>
-                              <span style={{
-                                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                                fontSize: 14.5, fontWeight: 700, color: 'var(--cream)',
-                              }}>
-                                {t(`kitDevelopment.kit.benefits.${b.key}.title`)}
-                              </span>
-                            </div>
-                            <div style={{
-                              fontSize: 12.5, color: 'var(--muted)', lineHeight: 1.6, opacity: 0.85,
-                            }}>
-                              {t(`kitDevelopment.kit.benefits.${b.key}.desc`)}
+                          <div className="kd-benefit-row" key={b.key}>
+                            <span className="kd-benefit-num">{b.num}</span>
+                            <div className="kd-benefit-copy">
+                              <span className="kd-benefit-title">{t(`kitDevelopment.kit.benefits.${b.key}.title`)}</span>
+                              <span className="kd-benefit-desc">{t(`kitDevelopment.kit.benefits.${b.key}.desc`)}</span>
                             </div>
                           </div>
                         ))}
@@ -555,13 +533,52 @@ export default function KitDevelopment() {
           0%, 100% { box-shadow: 0 0 0 0 rgba(74,222,128,0.25); }
           50% { box-shadow: 0 0 0 6px rgba(74,222,128,0); }
         }
+
+        .kd-benefits-list { margin-bottom: 32px; }
+        .kd-benefit-row {
+          display: flex; align-items: flex-start; gap: 18px;
+          padding: 14px 2px;
+          border-bottom: 1px solid rgba(168,212,240,0.1);
+          position: relative;
+        }
+        .kd-benefit-row:first-child { border-top: 1px solid rgba(168,212,240,0.1); }
+        .kd-benefit-row::before {
+          content: '';
+          position: absolute; left: -2px; top: 0; bottom: 0; width: 2px;
+          background: linear-gradient(180deg, var(--pastel1), transparent);
+          transform: scaleY(0); transform-origin: top;
+          transition: transform 0.4s cubic-bezier(.4,0,.2,1);
+        }
+        .kd-benefit-row:hover::before { transform: scaleY(1); }
+        .kd-benefit-row:hover { background: rgba(168,212,240,0.035); }
+        .kd-benefit-num {
+          font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300;
+          font-size: 32px; line-height: 1; flex-shrink: 0; min-width: 40px;
+          color: rgba(168,212,240,0.25);
+          transition: color 0.4s ease, transform 0.4s ease;
+        }
+        .kd-benefit-row:hover .kd-benefit-num { color: var(--pastel1); transform: translateX(2px); }
+        .kd-benefit-copy { display: flex; flex-direction: column; gap: 3px; padding-top: 3px; }
+        .kd-benefit-title {
+          font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 13.5px;
+          color: var(--cream); letter-spacing: 0.01em;
+          transition: letter-spacing 0.3s ease;
+        }
+        .kd-benefit-row:hover .kd-benefit-title { letter-spacing: 0.03em; }
+        .kd-benefit-desc {
+          font-size: 11.5px; color: var(--muted); opacity: 0.6; line-height: 1.5; max-width: 460px;
+          transition: opacity 0.3s ease;
+        }
+        .kd-benefit-row:hover .kd-benefit-desc { opacity: 0.9; }
+
         @media(max-width:640px){
           .kd-page { padding: 96px 16px 48px !important; }
           .kd-tab { flex-direction: column !important; gap: 4px !important; padding: 10px 8px !important; text-align: center; }
           .kd-tab-label { font-size: 8.5px !important; letter-spacing: 1px !important; white-space: normal !important; line-height: 1.3 !important; }
           .kd-panel { padding: 28px 22px 32px !important; }
           .kd-countdown { padding: 12px 16px !important; gap: 12px !important; }
-          .kd-benefits { grid-template-columns: 1fr !important; }
+          .kd-benefit-num { font-size: 24px !important; min-width: 30px !important; }
+          .kd-benefit-row { gap: 12px !important; }
         }
       `}</style>
     </PageTransition>
