@@ -31,6 +31,7 @@ const PARTNERS = [
   { key: 'societyForScience',    name: 'Society for Science',    logo: '/logos/sfslogo.png' },
   { key: 'connectKeyFoundation', name: 'Connect Key Foundation', logo: '/logos/ckflogo.png' },
   { key: 'ymca',                 name: 'YMCA',                   logo: '/logos/ymcamainpng.png' },
+  { key: 'discoveryCube',        name: 'Discovery Cube',         logo: '/logos/dclogo.png' },
 ]
 
 const GET_INVOLVED_STEPS = [
