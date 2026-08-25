@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
 import AutoplayVideo from '../components/AutoplayVideo'
 import { useLanguage } from '../i18n/useLanguage'
@@ -125,27 +125,9 @@ function StemCountdown() {
   )
 }
 
-const DETAILS = [
-  { key: 'who', label: 'WHO', value: '2 to 3 high school students' },
-  { key: 'date', label: 'ADMISSIONS', value: 'Rolling — Cohort 01 Open' },
-  { key: 'deliverable', label: 'DELIVERABLE', value: 'A produced, distributed science kit' },
-  { key: 'gradeLevel', label: 'GRADE LEVEL', value: 'Older Elementary to Middle Schoolers' },
-]
-
 const TABS = [
   { num: '01', key: 'stemAdvocacy', label: 'STEM Advocacy Project (Competition)', path: '/initiatives/sap' },
   { num: '02', key: 'kitDevelopment', label: 'Kit Research Internship', path: '/initiatives/kits' },
-]
-
-const KIT_INTERNSHIP_FORM_URL = 'https://forms.gle/1pE8a4CNeE9a1jW17'
-
-const BENEFITS = [
-  { num: '01', key: 'credit' },
-  { num: '02', key: 'hours' },
-  { num: '03', key: 'connections' },
-  { num: '04', key: 'funding' },
-  { num: '05', key: 'mentorship' },
-  { num: '06', key: 'impact' },
 ]
 
 const STEM_DETAILS = [
@@ -238,16 +220,13 @@ export default function KitDevelopment() {
               overflow: 'hidden',
               minHeight: 420,
             }}>
-              <AnimatePresence mode="wait">
-                {activeTab === 0 ? (
-                  <motion.div
-                    key="stem"
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.3 }}
-                    className="kd-panel" style={{ padding: '40px 44px 44px' }}
-                  >
+              <motion.div
+                key="stem"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="kd-panel" style={{ padding: '40px 44px 44px' }}
+              >
                     {/* CTA — moved to top for visibility */}
                     <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 10, marginBottom: 28 }}>
                       <a
@@ -359,168 +338,6 @@ export default function KitDevelopment() {
                       </div>
                     </motion.div>
                   </motion.div>
-                ) : (
-                  <motion.div
-                    key="kit"
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.3 }}
-                    className="kd-panel" style={{ padding: '40px 44px 44px' }}
-                  >
-                    {/* Urgency status badge */}
-                    <div className="kd-badge-pulse" style={{
-                      display: 'inline-flex', alignItems: 'center', gap: 8,
-                      padding: '7px 16px', borderRadius: 999,
-                      border: '1px solid rgba(134,239,172,0.4)',
-                      background: 'rgba(74,222,128,0.08)',
-                      marginBottom: 22,
-                    }}>
-                      <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 8px 2px rgba(74,222,128,0.8)' }} />
-                      <span style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 9.5, letterSpacing: '2px', textTransform: 'uppercase',
-                        color: '#86efac', fontWeight: 700,
-                      }}>
-                        {t('kitDevelopment.kit.statusBadge')}
-                      </span>
-                    </div>
-
-                    {/* CTA — moved to top for visibility, now live */}
-                    <div style={{ display: 'block', marginBottom: 28 }}>
-                      <a
-                        href={KIT_INTERNSHIP_FORM_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
-                          background: 'var(--pastel1)', color: 'var(--void)',
-                          borderRadius: 6, padding: '12px 32px',
-                          fontWeight: 700, textDecoration: 'none',
-                          display: 'inline-flex', alignItems: 'center', gap: 8,
-                          boxShadow: '0 0 28px rgba(168,212,240,0.35)',
-                        }}
-                      >
-                        {t('kitDevelopment.kit.applyCta')}
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                          <path d="M7 17L17 7M17 7H7M17 7v10"/>
-                        </svg>
-                      </a>
-                      <div style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 10, letterSpacing: '1px', lineHeight: 1.6,
-                        color: 'var(--muted)', opacity: 0.7, marginTop: 10, maxWidth: 440,
-                      }}>
-                        {t('kitDevelopment.kit.urgencyNote')}
-                      </div>
-                    </div>
-
-                    {/* Eyebrow */}
-                    <div style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase',
-                      color: 'var(--pastel1)', opacity: 0.65, marginBottom: 14,
-                    }}>
-                      {t('kitDevelopment.kit.eyebrow')}
-                    </div>
-
-                    {/* Big $1,000 */}
-                    <div style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: 'clamp(72px, 12vw, 140px)',
-                      fontWeight: 300,
-                      color: 'var(--pastel1)',
-                      lineHeight: 0.85,
-                      letterSpacing: '-0.05em',
-                      textShadow: '0 0 100px rgba(168,212,240,0.6), 0 0 40px rgba(168,212,240,0.3)',
-                      marginBottom: 10,
-                    }}>
-                      <AnimatedAmount target={1000} duration={2800} holdDelay={600} onComplete={() => setCountDone(true)} />
-                    </div>
-                    <div style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
-                      color: 'var(--pastel1)', opacity: 0.55, marginBottom: 24,
-                    }}>
-                      {t('kitDevelopment.kit.fundedLabel')}
-                    </div>
-
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={countDone ? { opacity: 1, y: 0 } : {}}
-                      transition={{ duration: 0.7 }}
-                    >
-                      {/* Headline */}
-                      <p style={{
-                        fontFamily: "'Cormorant Garamond', serif",
-                        fontSize: 'clamp(22px, 2.8vw, 32px)',
-                        fontWeight: 400, color: 'var(--cream)',
-                        lineHeight: 1.3, margin: '0 0 16px', maxWidth: 640,
-                      }}>
-                        {t('kitDevelopment.kit.headline')}
-                      </p>
-
-                      {/* Description */}
-                      <p style={{
-                        fontSize: 16, color: 'var(--cream)', lineHeight: 1.75,
-                        maxWidth: 600, margin: '0 0 34px', opacity: 0.85,
-                      }}>
-                        {t('kitDevelopment.kit.description')}
-                      </p>
-
-                      {/* Benefits label */}
-                      <div style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: 10, letterSpacing: '3px', textTransform: 'uppercase',
-                        color: 'var(--pastel1)', opacity: 0.75, marginBottom: 4,
-                        borderTop: '1px solid rgba(168,212,240,0.15)', paddingTop: 24,
-                      }}>
-                        {t('kitDevelopment.kit.benefitsLabel')}
-                      </div>
-
-                      {/* Benefits — editorial numeral list, not a card grid */}
-                      <div className="kd-benefits-list">
-                        {BENEFITS.map(b => (
-                          <div className="kd-benefit-row" key={b.key}>
-                            <span className="kd-benefit-num">{b.num}</span>
-                            <div className="kd-benefit-copy">
-                              <span className="kd-benefit-title">{t(`kitDevelopment.kit.benefits.${b.key}.title`)}</span>
-                              <span className="kd-benefit-desc">{t(`kitDevelopment.kit.benefits.${b.key}.desc`)}</span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* 2x2 details grid */}
-                      <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 1fr',
-                        gap: '16px 64px',
-                        marginBottom: 8,
-                      }}>
-                        {DETAILS.map(d => (
-                          <div key={d.key} style={{ borderLeft: '3px solid rgba(168,212,240,0.3)', paddingLeft: 14 }}>
-                            <div style={{
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: 9, letterSpacing: '3px', textTransform: 'uppercase',
-                              color: 'var(--pastel1)', opacity: 0.6, marginBottom: 4,
-                            }}>
-                              {t(`kitDevelopment.kit.details.${d.key}.label`, d.label)}
-                            </div>
-                            <div style={{
-                              fontFamily: "'Plus Jakarta Sans', sans-serif",
-                              fontSize: 15, fontWeight: 600, color: 'var(--cream)',
-                            }}>
-                              {t(`kitDevelopment.kit.details.${d.key}.value`, d.value)}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
           </motion.div>
 
@@ -528,57 +345,12 @@ export default function KitDevelopment() {
       </div>
 
       <style>{`
-        .kd-badge-pulse { animation: kdBadgePulse 2.2s ease-in-out infinite; }
-        @keyframes kdBadgePulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(74,222,128,0.25); }
-          50% { box-shadow: 0 0 0 6px rgba(74,222,128,0); }
-        }
-
-        .kd-benefits-list { margin-bottom: 32px; }
-        .kd-benefit-row {
-          display: flex; align-items: flex-start; gap: 18px;
-          padding: 14px 2px;
-          border-bottom: 1px solid rgba(168,212,240,0.1);
-          position: relative;
-        }
-        .kd-benefit-row:first-child { border-top: 1px solid rgba(168,212,240,0.1); }
-        .kd-benefit-row::before {
-          content: '';
-          position: absolute; left: -2px; top: 0; bottom: 0; width: 2px;
-          background: linear-gradient(180deg, var(--pastel1), transparent);
-          transform: scaleY(0); transform-origin: top;
-          transition: transform 0.4s cubic-bezier(.4,0,.2,1);
-        }
-        .kd-benefit-row:hover::before { transform: scaleY(1); }
-        .kd-benefit-row:hover { background: rgba(168,212,240,0.035); }
-        .kd-benefit-num {
-          font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300;
-          font-size: 32px; line-height: 1; flex-shrink: 0; min-width: 40px;
-          color: rgba(168,212,240,0.25);
-          transition: color 0.4s ease, transform 0.4s ease;
-        }
-        .kd-benefit-row:hover .kd-benefit-num { color: var(--pastel1); transform: translateX(2px); }
-        .kd-benefit-copy { display: flex; flex-direction: column; gap: 3px; padding-top: 3px; }
-        .kd-benefit-title {
-          font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 13.5px;
-          color: var(--cream); letter-spacing: 0.01em;
-          transition: letter-spacing 0.3s ease;
-        }
-        .kd-benefit-row:hover .kd-benefit-title { letter-spacing: 0.03em; }
-        .kd-benefit-desc {
-          font-size: 11.5px; color: var(--muted); opacity: 0.6; line-height: 1.5; max-width: 460px;
-          transition: opacity 0.3s ease;
-        }
-        .kd-benefit-row:hover .kd-benefit-desc { opacity: 0.9; }
-
         @media(max-width:640px){
           .kd-page { padding: 96px 16px 48px !important; }
           .kd-tab { flex-direction: column !important; gap: 4px !important; padding: 10px 8px !important; text-align: center; }
           .kd-tab-label { font-size: 8.5px !important; letter-spacing: 1px !important; white-space: normal !important; line-height: 1.3 !important; }
           .kd-panel { padding: 28px 22px 32px !important; }
           .kd-countdown { padding: 12px 16px !important; gap: 12px !important; }
-          .kd-benefit-num { font-size: 24px !important; min-width: 30px !important; }
-          .kd-benefit-row { gap: 12px !important; }
         }
       `}</style>
     </PageTransition>

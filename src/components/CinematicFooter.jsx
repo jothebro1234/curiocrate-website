@@ -1,14 +1,44 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useLanguage } from '../i18n/useLanguage'
+
+// Kept in sync with CinematicNavbar.jsx's LIGHT_ROUTE_PREFIX — the Creator Program
+// (Kit Research Internship) page is a dedicated light-mode design.
+const LIGHT_ROUTE_PREFIX = '/initiatives/kits'
+
+const DARK = {
+  border: 'rgba(168,212,240,0.06)',
+  bg: 'rgba(3,5,15,0.6)',
+  muted: 'var(--muted)',
+  hoverText: 'var(--pastel2)',
+  dividerBorder: 'rgba(168,212,240,0.05)',
+  copyright: 'rgba(168,212,240,0.25)',
+  domain: 'rgba(168,212,240,0.2)',
+  logoGlow: 'drop-shadow(0 0 10px rgba(168,212,240,0.3))',
+}
+
+const LIGHT = {
+  border: 'rgba(27,127,232,0.12)',
+  bg: 'rgba(255,255,255,0.9)',
+  muted: 'rgba(11,27,51,0.55)',
+  hoverText: '#1B7FE8',
+  dividerBorder: 'rgba(27,127,232,0.1)',
+  copyright: 'rgba(11,27,51,0.35)',
+  domain: 'rgba(11,27,51,0.3)',
+  logoGlow: 'drop-shadow(0 0 8px rgba(27,127,232,0.2))',
+}
 
 export default function CinematicFooter() {
   const { t } = useLanguage()
+  const location = useLocation()
+  const isLight = location.pathname.startsWith(LIGHT_ROUTE_PREFIX)
+  const theme = isLight ? LIGHT : DARK
+
   return (
     <footer style={{
       position:'relative', zIndex:1,
-      borderTop:'1px solid rgba(168,212,240,0.06)',
+      borderTop: `1px solid ${theme.border}`,
       padding:'56px 40px 40px',
-      background:'rgba(3,5,15,0.6)',
+      background: theme.bg,
       backdropFilter:'blur(20px)',
     }}>
       <div style={{ maxWidth:1100, margin:'0 auto' }}>
@@ -21,9 +51,9 @@ export default function CinematicFooter() {
             <img
               src="/images/cclogosmall.png"
               alt="CurioCrate"
-              style={{ height:40, marginBottom:16, filter:'drop-shadow(0 0 10px rgba(168,212,240,0.3))' }}
+              style={{ height:40, marginBottom:16, filter: theme.logoGlow }}
             />
-            <p style={{ fontSize:13, color:'var(--muted)', lineHeight:1.7, maxWidth:200 }}>
+            <p style={{ fontSize:13, color: theme.muted, lineHeight:1.7, maxWidth:200 }}>
               {t('footer.tagline')}
             </p>
           </div>
@@ -34,20 +64,20 @@ export default function CinematicFooter() {
             { labelKey:'footer.program', links:[{lKey:'footer.volunteeringOpportunities',p:'https://portal.curiocrate.org'},{lKey:'footer.startAChapter',p:'https://forms.gle/nEBfc84qHXxcmT4k8'},{lKey:'footer.partnerWithUs',p:'mailto:contact@curiocrate.org'},{lKey:'footer.donate',p:'/contact'}] },
           ].map(col => (
             <div key={col.labelKey}>
-              <div className="label" style={{ marginBottom:20, fontSize:9 }}>{t(col.labelKey)}</div>
+              <div className="label" style={{ marginBottom:20, fontSize:9, color: isLight ? '#1B7FE8' : undefined }}>{t(col.labelKey)}</div>
               {col.links.map(link => {
                 const label = link.lKey ? t(link.lKey) : link.l
                 return link.p.startsWith('http') || link.p.startsWith('mailto')
                   ? <a key={label} href={link.p} target={link.p.startsWith('http')?'_blank':undefined}
                       rel="noopener noreferrer"
-                      style={{ display:'block', fontSize:13, color:'var(--muted)', textDecoration:'none', marginBottom:10, transition:'color 0.2s' }}
-                      onMouseEnter={e=>{e.currentTarget.style.color='var(--pastel2)'}}
-                      onMouseLeave={e=>{e.currentTarget.style.color='var(--muted)'}}
+                      style={{ display:'block', fontSize:13, color: theme.muted, textDecoration:'none', marginBottom:10, transition:'color 0.2s' }}
+                      onMouseEnter={e=>{e.currentTarget.style.color=theme.hoverText}}
+                      onMouseLeave={e=>{e.currentTarget.style.color=theme.muted}}
                     >{label}</a>
                   : <Link key={label} to={link.p}
-                      style={{ display:'block', fontSize:13, color:'var(--muted)', textDecoration:'none', marginBottom:10, transition:'color 0.2s' }}
-                      onMouseEnter={e=>{e.currentTarget.style.color='var(--pastel2)'}}
-                      onMouseLeave={e=>{e.currentTarget.style.color='var(--muted)'}}
+                      style={{ display:'block', fontSize:13, color: theme.muted, textDecoration:'none', marginBottom:10, transition:'color 0.2s' }}
+                      onMouseEnter={e=>{e.currentTarget.style.color=theme.hoverText}}
+                      onMouseLeave={e=>{e.currentTarget.style.color=theme.muted}}
                     >{label}</Link>
               })}
             </div>
@@ -55,14 +85,14 @@ export default function CinematicFooter() {
         </div>
 
         <div style={{
-          borderTop:'1px solid rgba(168,212,240,0.05)',
+          borderTop: `1px solid ${theme.dividerBorder}`,
           paddingTop:24,
           display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:12,
         }}>
-          <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10, color:'rgba(168,212,240,0.25)', letterSpacing:'2px' }}>
+          <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10, color: theme.copyright, letterSpacing:'2px' }}>
             © {new Date().getFullYear()} CURIOCRATE · {t('footer.copyright')}
           </div>
-          <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10, color:'rgba(168,212,240,0.2)', letterSpacing:'1px' }}>
+          <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10, color: theme.domain, letterSpacing:'1px' }}>
             curiocrate.org
           </div>
         </div>

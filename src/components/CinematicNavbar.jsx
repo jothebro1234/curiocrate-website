@@ -31,7 +31,62 @@ const ALL_NAV = [
 // No live donation flow yet — point Donate at Contact until one exists.
 const DONATE_URL = '/contact'
 
-function NavItem({ path, label, end }) {
+// The Creator Program (Kit Research Internship) page is a dedicated light-mode
+// editorial design — the persistent navbar/footer/particle field switch to a
+// matching light palette while the visitor is on that route.
+const LIGHT_ROUTE_PREFIX = '/initiatives/kits'
+
+const DARK = {
+  barBg: 'linear-gradient(to bottom, rgba(6,13,31,0.92) 0%, transparent 100%)',
+  barBgMobile: 'linear-gradient(to bottom, rgba(6,13,31,0.92) 0%, rgba(6,13,31,0.55) 65%, rgba(6,13,31,0.2) 100%)',
+  text: 'var(--cream)',
+  muted: 'var(--muted)',
+  hoverText: 'var(--pastel2)',
+  accent: 'var(--pastel1)',
+  accentText: '#06101f',
+  activeBg: 'rgba(168,212,240,0.08)',
+  activeBorder: 'rgba(168,212,240,0.15)',
+  hoverBg: 'rgba(168,212,240,0.06)',
+  dropdownBg: 'rgba(6,13,31,0.95)',
+  dropdownBorder: '1px solid rgba(168,212,240,0.12)',
+  dropdownShadow: '0 16px 48px rgba(0,0,0,0.4)',
+  overlayBg: 'rgba(3,5,15,0.98)',
+  hamburgerBorder: '1px solid rgba(168,212,240,0.2)',
+  ctaBorder: '1px solid rgba(168,212,240,0.25)',
+  ctaHoverBg: 'rgba(168,212,240,0.1)',
+  ctaHoverShadow: '0 0 20px rgba(168,212,240,0.15)',
+  mobileInactive: 'rgba(197,227,247,0.4)',
+  mobileBorder: 'rgba(168,212,240,0.06)',
+  logoGlow: 'drop-shadow(0 0 10px rgba(168,212,240,0.5))',
+  logoGlowSm: 'drop-shadow(0 0 8px rgba(168,212,240,0.4))',
+}
+
+const LIGHT = {
+  barBg: 'linear-gradient(to bottom, rgba(255,255,255,0.95) 0%, transparent 100%)',
+  barBgMobile: 'linear-gradient(to bottom, rgba(255,255,255,0.97) 0%, rgba(255,255,255,0.7) 65%, rgba(255,255,255,0.3) 100%)',
+  text: '#0B1B33',
+  muted: 'rgba(11,27,51,0.55)',
+  hoverText: '#1B7FE8',
+  accent: '#1B7FE8',
+  accentText: '#FFFFFF',
+  activeBg: 'rgba(27,127,232,0.08)',
+  activeBorder: 'rgba(27,127,232,0.18)',
+  hoverBg: 'rgba(27,127,232,0.06)',
+  dropdownBg: 'rgba(255,255,255,0.98)',
+  dropdownBorder: '1px solid rgba(27,127,232,0.15)',
+  dropdownShadow: '0 16px 48px rgba(11,27,51,0.12)',
+  overlayBg: 'rgba(255,255,255,0.98)',
+  hamburgerBorder: '1px solid rgba(27,127,232,0.25)',
+  ctaBorder: '1px solid rgba(27,127,232,0.3)',
+  ctaHoverBg: 'rgba(27,127,232,0.1)',
+  ctaHoverShadow: '0 0 20px rgba(27,127,232,0.15)',
+  mobileInactive: 'rgba(11,27,51,0.4)',
+  mobileBorder: 'rgba(27,127,232,0.08)',
+  logoGlow: 'drop-shadow(0 0 8px rgba(27,127,232,0.25))',
+  logoGlowSm: 'drop-shadow(0 0 6px rgba(27,127,232,0.2))',
+}
+
+function NavItem({ path, label, end, theme }) {
   return (
     <NavLink
       to={path}
@@ -40,18 +95,18 @@ function NavItem({ path, label, end }) {
         fontFamily: "'JetBrains Mono', monospace",
         fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
         textDecoration: 'none', padding: '8px 14px', borderRadius: 4,
-        color: isActive ? 'var(--cream)' : 'var(--muted)',
-        background: isActive ? 'rgba(168,212,240,0.08)' : 'transparent',
-        border: isActive ? '1px solid rgba(168,212,240,0.15)' : '1px solid transparent',
+        color: isActive ? theme.text : theme.muted,
+        background: isActive ? theme.activeBg : 'transparent',
+        border: isActive ? `1px solid ${theme.activeBorder}` : '1px solid transparent',
         transition: 'all 0.3s ease',
       })}
       onMouseEnter={e => {
         if (!e.currentTarget.style.background.includes('0.08'))
-          e.currentTarget.style.color = 'var(--pastel2)'
+          e.currentTarget.style.color = theme.hoverText
       }}
       onMouseLeave={e => {
         if (!e.currentTarget.style.background.includes('0.08'))
-          e.currentTarget.style.color = 'var(--muted)'
+          e.currentTarget.style.color = theme.muted
       }}
     >{label}</NavLink>
   )
@@ -68,6 +123,9 @@ export default function CinematicNavbar() {
   const aboutTimer       = useRef(null)
   const initiativesTimer = useRef(null)
   const location         = useLocation()
+
+  const isLight = location.pathname.startsWith(LIGHT_ROUTE_PREFIX)
+  const theme = isLight ? LIGHT : DARK
 
   useEffect(() => {
     const onScroll = () => {
@@ -103,34 +161,36 @@ export default function CinematicNavbar() {
         padding: '18px 36px',
         transition: 'transform 0.5s cubic-bezier(0.4,0,0.2,1), background 0.4s',
         transform: visible ? 'translateY(0)' : 'translateY(-100%)',
-        background: atTop
-          ? 'transparent'
-          : 'linear-gradient(to bottom, rgba(6,13,31,0.92) 0%, transparent 100%)',
-        backdropFilter: atTop ? 'none' : 'blur(18px)',
+        // The Creator Program page opens on a dark ink hero block, so a fully
+        // transparent "atTop" nav (tuned for the site's dark cosmic background)
+        // would leave light-theme text unreadable there — always keep the light
+        // gradient backdrop on this route instead of only after scrolling.
+        background: (atTop && !isLight) ? 'transparent' : theme.barBg,
+        backdropFilter: (atTop && !isLight) ? 'none' : 'blur(18px)',
       }}>
 
         {/* Brand */}
         <NavLink to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
           <img
             src="/images/cclogofull5.png" alt="CurioCrate"
-            style={{ height: 58, objectFit: 'contain', filter: 'drop-shadow(0 0 10px rgba(168,212,240,0.5))' }}
+            style={{ height: 58, objectFit: 'contain', filter: theme.logoGlow }}
           />
         </NavLink>
 
         {/* Desktop nav */}
         <div className="nav-desktop" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
 
-          {NAV_LEFT.map(r => <NavItem key={r.path} path={r.path} label={t(r.labelKey)} end={r.path === '/'} />)}
+          {NAV_LEFT.map(r => <NavItem key={r.path} path={r.path} label={t(r.labelKey)} end={r.path === '/'} theme={theme} />)}
 
           {/* Initiatives dropdown */}
           <div style={{ position: 'relative' }} onMouseEnter={openInitiatives} onMouseLeave={closeInitiatives}>
             <button style={{
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
-              background: isInitiativesActive ? 'rgba(168,212,240,0.08)' : 'transparent',
-              border: isInitiativesActive ? '1px solid rgba(168,212,240,0.15)' : '1px solid transparent',
+              background: isInitiativesActive ? theme.activeBg : 'transparent',
+              border: isInitiativesActive ? `1px solid ${theme.activeBorder}` : '1px solid transparent',
               borderRadius: 4, padding: '8px 14px',
-              color: isInitiativesActive || initiativesOpen ? 'var(--cream)' : 'var(--muted)',
+              color: isInitiativesActive || initiativesOpen ? theme.text : theme.muted,
               cursor: 'pointer', transition: 'all 0.3s ease',
               display: 'flex', alignItems: 'center', gap: 6,
             }}>
@@ -144,8 +204,8 @@ export default function CinematicNavbar() {
 
             <div style={{
               position: 'absolute', top: 'calc(100% + 8px)', left: '50%',
-              background: 'rgba(6,13,31,0.95)', backdropFilter: 'blur(24px)',
-              border: '1px solid rgba(168,212,240,0.12)', borderRadius: 12,
+              background: theme.dropdownBg, backdropFilter: 'blur(24px)',
+              border: theme.dropdownBorder, borderRadius: 12,
               padding: '8px', minWidth: 180,
               opacity: initiativesOpen ? 1 : 0,
               pointerEvents: initiativesOpen ? 'auto' : 'none',
@@ -153,7 +213,7 @@ export default function CinematicNavbar() {
                 ? 'translateX(-50%) translateY(0)'
                 : 'translateX(-50%) translateY(-8px)',
               transition: 'opacity 0.2s ease, transform 0.2s ease',
-              boxShadow: '0 16px 48px rgba(0,0,0,0.4)',
+              boxShadow: theme.dropdownShadow,
             }}>
               {INITIATIVES_ITEMS.map(item => (
                 <NavLink
@@ -164,12 +224,12 @@ export default function CinematicNavbar() {
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase',
                     textDecoration: 'none',
-                    color: isActive ? 'var(--cream)' : 'var(--muted)',
-                    background: isActive ? 'rgba(168,212,240,0.08)' : 'transparent',
+                    color: isActive ? theme.text : theme.muted,
+                    background: isActive ? theme.activeBg : 'transparent',
                     transition: 'all 0.2s ease',
                   })}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.06)'; e.currentTarget.style.color = 'var(--pastel2)' }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--muted)' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = theme.hoverBg; e.currentTarget.style.color = theme.hoverText }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = theme.muted }}
                 >{t(item.labelKey)}</NavLink>
               ))}
             </div>
@@ -180,10 +240,10 @@ export default function CinematicNavbar() {
             <button style={{
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
-              background: isAboutActive ? 'rgba(168,212,240,0.08)' : 'transparent',
-              border: isAboutActive ? '1px solid rgba(168,212,240,0.15)' : '1px solid transparent',
+              background: isAboutActive ? theme.activeBg : 'transparent',
+              border: isAboutActive ? `1px solid ${theme.activeBorder}` : '1px solid transparent',
               borderRadius: 4, padding: '8px 14px',
-              color: isAboutActive || aboutOpen ? 'var(--cream)' : 'var(--muted)',
+              color: isAboutActive || aboutOpen ? theme.text : theme.muted,
               cursor: 'pointer', transition: 'all 0.3s ease',
               display: 'flex', alignItems: 'center', gap: 6,
             }}>
@@ -197,8 +257,8 @@ export default function CinematicNavbar() {
 
             <div style={{
               position: 'absolute', top: 'calc(100% + 8px)', left: '50%',
-              background: 'rgba(6,13,31,0.95)', backdropFilter: 'blur(24px)',
-              border: '1px solid rgba(168,212,240,0.12)', borderRadius: 12,
+              background: theme.dropdownBg, backdropFilter: 'blur(24px)',
+              border: theme.dropdownBorder, borderRadius: 12,
               padding: '8px', minWidth: 160,
               opacity: aboutOpen ? 1 : 0,
               pointerEvents: aboutOpen ? 'auto' : 'none',
@@ -206,7 +266,7 @@ export default function CinematicNavbar() {
                 ? 'translateX(-50%) translateY(0)'
                 : 'translateX(-50%) translateY(-8px)',
               transition: 'opacity 0.2s ease, transform 0.2s ease',
-              boxShadow: '0 16px 48px rgba(0,0,0,0.4)',
+              boxShadow: theme.dropdownShadow,
             }}>
               {ABOUT_ITEMS.map(item => (
                 <NavLink
@@ -217,12 +277,12 @@ export default function CinematicNavbar() {
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase',
                     textDecoration: 'none',
-                    color: isActive ? 'var(--cream)' : 'var(--muted)',
-                    background: isActive ? 'rgba(168,212,240,0.08)' : 'transparent',
+                    color: isActive ? theme.text : theme.muted,
+                    background: isActive ? theme.activeBg : 'transparent',
                     transition: 'all 0.2s ease',
                   })}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.06)'; e.currentTarget.style.color = 'var(--pastel2)' }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--muted)' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = theme.hoverBg; e.currentTarget.style.color = theme.hoverText }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = theme.muted }}
                 >{t(item.labelKey)}</NavLink>
               ))}
             </div>
@@ -238,10 +298,10 @@ export default function CinematicNavbar() {
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
               textDecoration: 'none', padding: '8px 14px', borderRadius: 4,
-              color: 'var(--pastel1)', border: '1px solid rgba(168,212,240,0.25)',
+              color: theme.accent, border: theme.ctaBorder,
               transition: 'all 0.3s ease', marginLeft: 4,
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(168,212,240,0.1)'; e.currentTarget.style.boxShadow = '0 0 20px rgba(168,212,240,0.15)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = theme.ctaHoverBg; e.currentTarget.style.boxShadow = theme.ctaHoverShadow }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none' }}
           >{t('nav.becomeAMember')}</a>
 
@@ -252,11 +312,11 @@ export default function CinematicNavbar() {
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
               textDecoration: 'none', padding: '8px 16px', borderRadius: 4,
-              color: '#06101f', background: 'var(--pastel1)',
-              border: '1px solid var(--pastel1)',
+              color: theme.accentText, background: theme.accent,
+              border: `1px solid ${theme.accent}`,
               transition: 'all 0.3s ease', marginLeft: 8,
             }}
-            onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.12)'; e.currentTarget.style.boxShadow = '0 0 24px rgba(168,212,240,0.4)' }}
+            onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.12)'; e.currentTarget.style.boxShadow = theme.ctaHoverShadow }}
             onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.boxShadow = 'none' }}
           >{t('nav.donate')}</NavLink>
         </div>
@@ -268,20 +328,20 @@ export default function CinematicNavbar() {
           aria-label="Open navigation menu"
           style={{
             flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 5,
-            background: 'none', border: '1px solid rgba(168,212,240,0.2)',
+            background: 'none', border: theme.hamburgerBorder,
             borderRadius: 8, padding: '10px 12px', cursor: 'pointer',
           }}
         >
-          <span style={{ display: 'block', width: 20, height: 1.5, background: 'var(--pastel1)', borderRadius: 1 }} />
-          <span style={{ display: 'block', width: 20, height: 1.5, background: 'var(--pastel1)', borderRadius: 1 }} />
-          <span style={{ display: 'block', width: 20, height: 1.5, background: 'var(--pastel1)', borderRadius: 1 }} />
+          <span style={{ display: 'block', width: 20, height: 1.5, background: theme.accent, borderRadius: 1 }} />
+          <span style={{ display: 'block', width: 20, height: 1.5, background: theme.accent, borderRadius: 1 }} />
+          <span style={{ display: 'block', width: 20, height: 1.5, background: theme.accent, borderRadius: 1 }} />
         </button>
       </nav>
 
       {/* ── Mobile menu overlay ── */}
       <div style={{
         position: 'fixed', inset: 0, zIndex: 200,
-        background: 'rgba(3,5,15,0.98)', backdropFilter: 'blur(24px)',
+        background: theme.overlayBg, backdropFilter: 'blur(24px)',
         display: 'flex', flexDirection: 'column',
         padding: '24px 28px',
         opacity: menuOpen ? 1 : 0,
@@ -292,14 +352,14 @@ export default function CinematicNavbar() {
         {/* Overlay header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 48 }}>
           <NavLink to="/" onClick={() => setMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-            <img src="/images/cclogosmall.png" alt="CurioCrate" style={{ height: 30, objectFit: 'contain', filter: 'drop-shadow(0 0 8px rgba(168,212,240,0.4))' }} />
-            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 17, color: 'var(--pastel2)', fontWeight: 300 }}>CurioCrate</span>
+            <img src="/images/cclogosmall.png" alt="CurioCrate" style={{ height: 30, objectFit: 'contain', filter: theme.logoGlowSm }} />
+            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 17, color: isLight ? theme.accent : 'var(--pastel2)', fontWeight: 300 }}>CurioCrate</span>
           </NavLink>
           <button
             onClick={() => setMenuOpen(false)}
             style={{
-              background: 'none', border: '1px solid rgba(168,212,240,0.2)',
-              borderRadius: 8, color: 'var(--muted)', fontSize: 11,
+              background: 'none', border: theme.hamburgerBorder,
+              borderRadius: 8, color: theme.muted, fontSize: 11,
               cursor: 'pointer', padding: '8px 14px',
               fontFamily: "'JetBrains Mono', monospace", letterSpacing: '2px',
             }}
@@ -319,9 +379,9 @@ export default function CinematicNavbar() {
                 fontSize: 38, fontWeight: 300,
                 letterSpacing: '-0.01em',
                 textDecoration: 'none',
-                color: isActive ? 'var(--cream)' : 'rgba(197,227,247,0.4)',
+                color: isActive ? theme.text : theme.mobileInactive,
                 padding: '12px 0',
-                borderBottom: '1px solid rgba(168,212,240,0.06)',
+                borderBottom: `1px solid ${theme.mobileBorder}`,
                 transition: 'color 0.2s',
                 display: 'block',
               })}
@@ -341,7 +401,7 @@ export default function CinematicNavbar() {
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
               textDecoration: 'none', padding: '16px 24px', borderRadius: 6,
-              color: 'var(--pastel1)', border: '1px solid rgba(168,212,240,0.3)',
+              color: theme.accent, border: theme.ctaBorder,
             }}
           >{t('nav.becomeAMember')} →</a>
           <NavLink
@@ -352,7 +412,7 @@ export default function CinematicNavbar() {
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase',
               textDecoration: 'none', padding: '16px 24px', borderRadius: 6,
-              color: '#06101f', background: 'var(--pastel1)',
+              color: theme.accentText, background: theme.accent,
             }}
           >{t('nav.donate')} →</NavLink>
         </div>
@@ -368,7 +428,7 @@ export default function CinematicNavbar() {
           /* On mobile the hero heading sits close enough to the top that a fully transparent
              "atTop" nav lets it visually collide with the logo/hamburger — always keep a
              legible backdrop here regardless of scroll position. */
-          .cn-nav { background: linear-gradient(to bottom, rgba(6,13,31,0.92) 0%, rgba(6,13,31,0.55) 65%, rgba(6,13,31,0.2) 100%) !important; backdrop-filter: blur(14px) !important; }
+          .cn-nav { background: ${theme.barBgMobile} !important; backdrop-filter: blur(14px) !important; }
         }
       `}</style>
     </>
