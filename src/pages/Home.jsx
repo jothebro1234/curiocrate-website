@@ -31,7 +31,7 @@ const PARTNERS = [
   { key: 'societyForScience',    name: 'Society for Science',    logo: '/logos/sfslogo.png' },
   { key: 'connectKeyFoundation', name: 'Connect Key Foundation', logo: '/logos/ckflogo.png' },
   { key: 'ymca',                 name: 'YMCA',                   logo: '/logos/ymcamainpng.png' },
-  { key: 'discoveryCube',        name: 'Discovery Cube',         logo: '/logos/dclogo.png' },
+  { key: 'discoveryCube',        name: 'Discovery Cube',         logo: '/logos/dclogo.png', keepColor: true },
 ]
 
 const GET_INVOLVED_STEPS = [
@@ -617,8 +617,9 @@ export default function Home() {
                       }}>{t('home.hero.menu.sectionLabel')}</div>
 
                       {[
-                        { to: '/initiatives/sap', labelKey: 'home.hero.menu.linkInitiatives', label: 'Initiatives' },
-                        { to: '/initiatives/teaching', labelKey: 'home.hero.menu.linkTeaching', label: 'Hands-On Teaching / Curriculum Developer' },
+                        { to: '/initiatives/teaching', labelKey: 'nav.handsOnTeaching', label: 'Hands-On Teaching' },
+                        { to: '/initiatives/sap', labelKey: 'nav.stemAdvocacyItem', label: 'STEM Advocacy Project' },
+                        { to: '/initiatives/kits', labelKey: 'nav.kitResearchInternshipItem', label: 'Kit Research Internship' },
                       ].map(item => (
                         <Link
                           key={item.to}
@@ -719,11 +720,11 @@ export default function Home() {
                   <img src={p.logo} alt={t(`home.hero.partners.${p.key}`, p.name)} style={{
                     maxWidth: '100%', maxHeight: '100%',
                     objectFit: 'contain',
-                    filter: 'brightness(0) invert(1) opacity(0.72)',
+                    filter: p.keepColor ? 'opacity(0.85)' : 'brightness(0) invert(1) opacity(0.72)',
                     transition: 'filter 0.3s',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(1)' }}
-                  onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(0) invert(1) opacity(0.72)' }}
+                  onMouseEnter={e => { e.currentTarget.style.filter = p.keepColor ? 'opacity(1)' : 'brightness(0) invert(1) opacity(1)' }}
+                  onMouseLeave={e => { e.currentTarget.style.filter = p.keepColor ? 'opacity(0.85)' : 'brightness(0) invert(1) opacity(0.72)' }}
                   />
                 </div>
               ))}

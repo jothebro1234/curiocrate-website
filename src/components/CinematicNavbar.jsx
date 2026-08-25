@@ -10,10 +10,9 @@ const NAV_LEFT = [
 ]
 
 const INITIATIVES_ITEMS = [
-  { id: 'kitDevelopment',        path: '/initiatives/kits',     labelKey: 'nav.kitDevelopmentItem'        },
+  { id: 'handsOnTeaching',       path: '/initiatives/teaching', labelKey: 'nav.handsOnTeaching'           },
   { id: 'stemAdvocacy',          path: '/initiatives/sap',      labelKey: 'nav.stemAdvocacyItem'          },
   { id: 'kitResearchInternship', path: '/initiatives/kits',     labelKey: 'nav.kitResearchInternshipItem' },
-  { id: 'handsOnTeaching',       path: '/initiatives/teaching', labelKey: 'nav.handsOnTeaching'           },
 ]
 
 const ABOUT_ITEMS = [
