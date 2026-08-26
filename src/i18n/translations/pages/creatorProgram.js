@@ -4,7 +4,7 @@
 export const en = {
   creatorProgram: {
     hero: {
-      eyebrow: 'CURIOCRATE PRODUCT LEADERSHIP · COHORT 01',
+      eyebrow: 'CURIO CRATE KIT DEVELOPMENT PROGRAM INTERNSHIP · COHORT 01',
       headline: 'Creator Program',
       lead: 'Do you build things, and want one of them shipped to real classrooms?',
       bodyIntro: 'If so, look no further. Mentored by',
@@ -16,9 +16,14 @@ export const en = {
         gradesLabel: 'GRADES', gradesValue: '9–12',
         cohortSizeLabel: 'COHORT SIZE', cohortSizeValue: '2–3 students',
         kitBudgetLabel: 'KIT BUDGET', kitBudgetValue: 'Up to $1,000',
-        admissionsLabel: 'ADMISSIONS', admissionsValue: 'Rolling — Cohort 01',
+        admissionsLabel: 'ADMISSIONS', admissionsValue: 'Cohort 01 · Closes Sep 26',
         creditLabel: 'CREDIT', creditValue: 'Your name on the box',
       },
+    },
+    countdown: {
+      label: 'Cohort 01 Submissions Close In',
+      closed: 'Cohort 01 submissions are closed',
+      days: 'Days', hours: 'Hrs', minutes: 'Min', seconds: 'Sec',
     },
     whatYouBuild: {
       label: 'What You Build',
@@ -36,8 +41,8 @@ export const en = {
       },
     },
     bannerLine: {
-      pre: 'Creators get',
-      emphasis: 'their name on the box.',
+      pre: 'This is not just a resume line. Creators leave with a shipped product, a funded prototype, a professor in their corner, and documented hours —',
+      emphasis: 'all before they graduate.',
     },
     howItRuns: {
       label: 'How It Runs',
@@ -50,10 +55,31 @@ export const en = {
     },
     whatYouGet: {
       label: 'What You Get',
-      credit: { label: 'CREDIT', body: 'Certified CurioCrate Creator, printed on every unit in the run.' },
-      hours: { label: 'HOURS', body: 'Verified volunteer hours, signed off by CurioCrate leadership — accepted by schools and scholarship committees.' },
-      mentorship: { label: 'MENTORSHIP', body: 'Weekly 1-on-1s with the CurioCrate product team, plus one paired expert reviewer.' },
-      funding: { label: 'FUNDING', body: '$20 prototype, up to $1,000 production. Paid to vendors. You never spend your own money.' },
+      credit: {
+        title: 'Curio Crate Creator Credit',
+        body: 'Your name stays attached to the kit and its materials — a real product you developed, shown on the main website and printed on the kit packaging. You are now a certified CurioCrate Creator.',
+      },
+      hours: {
+        title: 'Documented Volunteer Hours',
+        body: 'Verifiable service hours for school, scholarship, and service requirements — logged and signed off by CurioCrate leadership.',
+      },
+      connections: {
+        title: 'Guaranteed Professor & Professional Connections',
+        body: "We introduce your kit, and you, to university professors and subject-matter experts in your kit's field of science who've partnered with CurioCrate to review your work and give feedback.",
+      },
+      funding: {
+        title: 'We Fund Everything',
+        body: "You don't pay to build your idea. CurioCrate provides the funds for your prototype (up to $20), and up to $1,000 worth of production for your kit.",
+      },
+      mentorship: {
+        title: 'Real Mentorship',
+        body: "One-on-one guidance from CurioCrate's Product Leadership team through every stage of turning an idea into a shipped product.",
+      },
+      impact: {
+        title: 'Serving An Underserved Area',
+        body: 'Your kit is put to work as a teaching aid for student education in underserved communities — a real product doing real good, not a shelved school project.',
+      },
+      more: "...and more — priority consideration for future cohorts, a written reference from CurioCrate leadership, and a seat on the team building what's next.",
     },
     whoWeTake: {
       label: 'Who We Take',
@@ -75,7 +101,7 @@ export const en = {
     },
     closing: {
       heading: 'Cohort 01 is open',
-      line: 'Grades 9–12. Cohorts of 2 to 3. Up to $1,000 to build it, and a real classroom at the end.',
+      line: 'Grades 9–12. Cohorts of 2 to 3. Up to $1,000 to build it, and a real classroom at the end. Cohort 01 submissions close September 26, 11:59 PM.',
       button: 'APPLY NOW',
       under: 'Rolling review · 2–3 seats · Questions:',
     },
@@ -85,7 +111,7 @@ export const en = {
 export const es = {
   creatorProgram: {
     hero: {
-      eyebrow: 'LIDERAZGO DE PRODUCTO CURIOCRATE · COHORTE 01',
+      eyebrow: 'PASANTÍA DE DESARROLLO DE KITS CURIO CRATE · COHORTE 01',
       headline: 'Programa de Creadores',
       lead: '¿Construyes cosas y quieres que una de ellas llegue a salones de clase reales?',
       bodyIntro: 'Si es así, no busques más. Con la guía de',
@@ -97,9 +123,14 @@ export const es = {
         gradesLabel: 'GRADOS', gradesValue: '9–12',
         cohortSizeLabel: 'TAMAÑO DE COHORTE', cohortSizeValue: '2–3 estudiantes',
         kitBudgetLabel: 'PRESUPUESTO DEL KIT', kitBudgetValue: 'Hasta $1,000',
-        admissionsLabel: 'ADMISIONES', admissionsValue: 'Continuas — Cohorte 01',
+        admissionsLabel: 'ADMISIONES', admissionsValue: 'Cohorte 01 · Cierra el 26 de sep.',
         creditLabel: 'CRÉDITO', creditValue: 'Tu nombre en la caja',
       },
+    },
+    countdown: {
+      label: 'Las postulaciones de la Cohorte 01 cierran en',
+      closed: 'Las postulaciones de la Cohorte 01 están cerradas',
+      days: 'Días', hours: 'Hrs', minutes: 'Min', seconds: 'Seg',
     },
     whatYouBuild: {
       label: 'Lo Que Construyes',
@@ -117,8 +148,8 @@ export const es = {
       },
     },
     bannerLine: {
-      pre: 'Los creadores obtienen',
-      emphasis: 'su nombre en la caja.',
+      pre: 'Esto no es solo una línea en un currículum. Los creadores se van con un producto lanzado, un prototipo financiado, un profesor de su lado y horas documentadas —',
+      emphasis: 'todo antes de graduarse.',
     },
     howItRuns: {
       label: 'Cómo Funciona',
@@ -131,10 +162,31 @@ export const es = {
     },
     whatYouGet: {
       label: 'Lo Que Obtienes',
-      credit: { label: 'CRÉDITO', body: 'Creador certificado de CurioCrate, impreso en cada unidad de la producción.' },
-      hours: { label: 'HORAS', body: 'Horas de voluntariado verificadas y avaladas por el liderazgo de CurioCrate, aceptadas por escuelas y comités de becas.' },
-      mentorship: { label: 'MENTORÍA', body: 'Sesiones semanales 1 a 1 con el equipo de producto de CurioCrate, más un revisor experto asignado.' },
-      funding: { label: 'FINANCIAMIENTO', body: '$20 para el prototipo, hasta $1,000 para producción. Pagado directamente a proveedores. Nunca gastas tu propio dinero.' },
+      credit: {
+        title: 'Crédito de Creador Curio Crate',
+        body: 'Tu nombre queda ligado al kit y sus materiales: un producto real que desarrollaste, mostrado en el sitio web principal e impreso en el empaque del kit. Ahora eres un Creador certificado de CurioCrate.',
+      },
+      hours: {
+        title: 'Horas de Voluntariado Documentadas',
+        body: 'Horas de servicio verificables para requisitos escolares, de becas y de servicio comunitario, registradas y avaladas por el liderazgo de CurioCrate.',
+      },
+      connections: {
+        title: 'Conexiones Garantizadas con Profesores y Profesionales',
+        body: 'Presentamos tu kit, y a ti, a profesores universitarios y expertos en la materia del campo científico de tu kit que se han asociado con CurioCrate para revisar tu trabajo y darte retroalimentación.',
+      },
+      funding: {
+        title: 'Nosotros Financiamos Todo',
+        body: 'No pagas para construir tu idea. CurioCrate provee los fondos para tu prototipo (hasta $20), y hasta $1,000 en producción para tu kit.',
+      },
+      mentorship: {
+        title: 'Mentoría Real',
+        body: 'Guía uno a uno del equipo de Liderazgo de Producto de CurioCrate en cada etapa de convertir una idea en un producto lanzado.',
+      },
+      impact: {
+        title: 'Sirviendo a una Comunidad Desatendida',
+        body: 'Tu kit se pone a trabajar como herramienta de enseñanza para la educación de estudiantes en comunidades desatendidas: un producto real que hace un bien real, no un proyecto escolar archivado.',
+      },
+      more: '...y más — consideración prioritaria para futuras cohortes, una carta de referencia del liderazgo de CurioCrate, y un lugar en el equipo que construye lo que sigue.',
     },
     whoWeTake: {
       label: 'A Quién Aceptamos',
@@ -156,7 +208,7 @@ export const es = {
     },
     closing: {
       heading: 'La Cohorte 01 está abierta',
-      line: 'Grados 9 a 12. Cohortes de 2 a 3. Hasta $1,000 para construirlo, y un salón de clase real al final.',
+      line: 'Grados 9 a 12. Cohortes de 2 a 3. Hasta $1,000 para construirlo, y un salón de clase real al final. Las postulaciones de la Cohorte 01 cierran el 26 de septiembre, 11:59 PM.',
       button: 'POSTULAR AHORA',
       under: 'Revisión continua · 2–3 lugares · Preguntas:',
     },

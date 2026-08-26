@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import PageTransition from '../components/PageTransition'
 import { useLanguage } from '../i18n/useLanguage'
@@ -27,11 +28,84 @@ function Mono({ children, color = 'inherit', style }) {
   )
 }
 
+// Cohort 01 submissions deadline — live countdown, same pattern as the STEM
+// Advocacy Project's StemCountdown in KitDevelopment.jsx.
+const COHORT1_DEADLINE = new Date('2026-09-26T23:59:00-08:00')
+
+function useCountdown(target) {
+  const [msLeft, setMsLeft] = useState(() => target.getTime() - Date.now())
+  useEffect(() => {
+    const id = setInterval(() => setMsLeft(target.getTime() - Date.now()), 1000)
+    return () => clearInterval(id)
+  }, [target])
+  return Math.max(msLeft, 0)
+}
+
+function CreatorCountdown() {
+  const { t } = useLanguage()
+  const msLeft = useCountdown(COHORT1_DEADLINE)
+  const closed = msLeft <= 0
+
+  const days = Math.floor(msLeft / 86400000)
+  const hours = Math.floor((msLeft % 86400000) / 3600000)
+  const minutes = Math.floor((msLeft % 3600000) / 60000)
+  const seconds = Math.floor((msLeft % 60000) / 1000)
+  const pad = n => String(n).padStart(2, '0')
+
+  const units = [
+    [days, t('creatorProgram.countdown.days', 'Days')],
+    [hours, t('creatorProgram.countdown.hours', 'Hrs')],
+    [minutes, t('creatorProgram.countdown.minutes', 'Min')],
+    [seconds, t('creatorProgram.countdown.seconds', 'Sec')],
+  ]
+
+  return (
+    <div className="cp-countdown" style={{
+      display: 'flex', alignItems: 'center', gap: 22, flexWrap: 'wrap',
+      padding: '16px 22px',
+      border: `1px solid ${CRATE}`,
+      borderRadius: 6,
+      background: 'rgba(63,200,245,0.08)',
+      marginBottom: 30,
+    }}>
+      <Mono color="rgba(255,255,255,0.6)">
+        {closed
+          ? t('creatorProgram.countdown.closed', 'Cohort 01 submissions are closed')
+          : t('creatorProgram.countdown.label', 'Cohort 01 Submissions Close In')}
+      </Mono>
+      {!closed && (
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+          {units.map(([value, label], i) => (
+            <div key={label} style={{ display: 'flex', alignItems: 'baseline' }}>
+              <div style={{ textAlign: 'center', minWidth: 40 }}>
+                <div style={{
+                  fontFamily: mono, fontSize: 24, fontWeight: 700, lineHeight: 1,
+                  color: SPARK, textShadow: '0 0 18px rgba(63,200,245,0.4)',
+                }}>{pad(value)}</div>
+                <div style={{
+                  fontFamily: mono, fontSize: 8, letterSpacing: '2px', textTransform: 'uppercase',
+                  color: 'rgba(255,255,255,0.55)', marginTop: 3,
+                }}>{label}</div>
+              </div>
+              {i < units.length - 1 && (
+                <div style={{
+                  fontFamily: mono, fontSize: 22, fontWeight: 700, color: SPARK,
+                  opacity: 0.5, alignSelf: 'flex-start', margin: '0 6px',
+                }}>:</div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 const SPEC_ROWS = [
   ['grades', 'GRADES', '9–12'],
   ['cohortSize', 'COHORT SIZE', '2–3 students'],
   ['kitBudget', 'KIT BUDGET', 'Up to $1,000'],
-  ['admissions', 'ADMISSIONS', 'Rolling — Cohort 01'],
+  ['admissions', 'ADMISSIONS', 'Cohort 01 · Closes Sep 26'],
   ['credit', 'CREDIT', 'Your name on the box'],
 ]
 
@@ -58,10 +132,30 @@ const TIMELINE = [
 ]
 
 const WHAT_YOU_GET = [
-  { key: 'credit', label: 'CREDIT', body: 'Certified CurioCrate Creator, printed on every unit in the run.' },
-  { key: 'hours', label: 'HOURS', body: 'Verified volunteer hours, signed off by CurioCrate leadership — accepted by schools and scholarship committees.' },
-  { key: 'mentorship', label: 'MENTORSHIP', body: 'Weekly 1-on-1s with the CurioCrate product team, plus one paired expert reviewer.' },
-  { key: 'funding', label: 'FUNDING', body: '$20 prototype, up to $1,000 production. Paid to vendors. You never spend your own money.' },
+  {
+    key: 'credit', num: '01', title: 'Curio Crate Creator Credit',
+    body: 'Your name stays attached to the kit and its materials — a real product you developed, shown on the main website and printed on the kit packaging. You are now a certified CurioCrate Creator.',
+  },
+  {
+    key: 'hours', num: '02', title: 'Documented Volunteer Hours',
+    body: 'Verifiable service hours for school, scholarship, and service requirements — logged and signed off by CurioCrate leadership.',
+  },
+  {
+    key: 'connections', num: '03', title: 'Guaranteed Professor & Professional Connections',
+    body: "We introduce your kit, and you, to university professors and subject-matter experts in your kit's field of science who've partnered with CurioCrate to review your work and give feedback.",
+  },
+  {
+    key: 'funding', num: '04', title: 'We Fund Everything',
+    body: "You don't pay to build your idea. CurioCrate provides the funds for your prototype (up to $20), and up to $1,000 worth of production for your kit.",
+  },
+  {
+    key: 'mentorship', num: '05', title: 'Real Mentorship',
+    body: "One-on-one guidance from CurioCrate's Product Leadership team through every stage of turning an idea into a shipped product.",
+  },
+  {
+    key: 'impact', num: '06', title: 'Serving An Underserved Area',
+    body: 'Your kit is put to work as a teaching aid for student education in underserved communities — a real product doing real good, not a shelved school project.',
+  },
 ]
 
 const FAQ = [
@@ -88,7 +182,7 @@ export default function CreatorProgram() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <Mono color="rgba(255,255,255,0.5)">{t('creatorProgram.hero.eyebrow', 'CURIOCRATE PRODUCT LEADERSHIP · COHORT 01')}</Mono>
+                <Mono color="rgba(255,255,255,0.5)">{t('creatorProgram.hero.eyebrow', 'CURIO CRATE KIT DEVELOPMENT PROGRAM INTERNSHIP · COHORT 01')}</Mono>
               </motion.div>
 
               <motion.h1
@@ -124,6 +218,14 @@ export default function CreatorProgram() {
                 {t('creatorProgram.hero.bodyMid', ', this is a selective internship for students in grades 9–12, built around one question:')}{' '}
                 <em style={{ color: SPARK, fontStyle: 'italic' }}>{t('creatorProgram.hero.bodyQuestion', 'how do you teach a big idea to a ten-year-old in 45 minutes?')}</em>
               </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.17 }}
+              >
+                <CreatorCountdown />
+              </motion.div>
 
               <motion.a
                 initial={{ opacity: 0, y: 14 }}
@@ -224,8 +326,8 @@ export default function CreatorProgram() {
         <section style={{ padding: '40px 40px', position: 'relative', zIndex: 1 }}>
           <div style={{ maxWidth: 1100, margin: '0 auto', border: `1px solid ${SKY}`, padding: '34px 30px', textAlign: 'center' }}>
             <p style={{ fontFamily: serif, fontWeight: 300, fontSize: 'clamp(22px, 3vw, 32px)', color: INK, margin: 0 }}>
-              {t('creatorProgram.bannerLine.pre', 'Creators get')}{' '}
-              <em style={{ color: CRATE, fontStyle: 'italic' }}>{t('creatorProgram.bannerLine.emphasis', 'their name on the box.')}</em>
+              {t('creatorProgram.bannerLine.pre', 'This is not just a resume line. Creators leave with a shipped product, a funded prototype, a professor in their corner, and documented hours —')}{' '}
+              <em style={{ color: CRATE, fontStyle: 'italic' }}>{t('creatorProgram.bannerLine.emphasis', 'all before they graduate.')}</em>
             </p>
           </div>
         </section>
@@ -292,7 +394,7 @@ export default function CreatorProgram() {
               {t('creatorProgram.whatYouGet.label', 'What You Get')}
             </motion.h2>
 
-            <div className="cp-getgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 32 }}>
+            <div className="cp-getgrid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 4 }}>
               {WHAT_YOU_GET.map((item, i) => (
                 <motion.div
                   key={item.key}
@@ -300,16 +402,30 @@ export default function CreatorProgram() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: i * 0.06 }}
+                  style={{ border: `1px solid ${SKY}`, padding: '28px 24px 30px', display: 'flex', flexDirection: 'column' }}
                 >
-                  <Mono color={CRATE} style={{ display: 'block', marginBottom: 10 }}>
-                    {t(`creatorProgram.whatYouGet.${item.key}.label`, item.label)}
-                  </Mono>
-                  <p style={{ fontFamily: serif, fontSize: 17, fontWeight: 400, color: INK, lineHeight: 1.5, margin: 0 }}>
+                  <div style={{ fontFamily: serif, fontStyle: 'italic', fontWeight: 300, fontSize: 26, color: CRATE, lineHeight: 1, marginBottom: 14 }}>
+                    {item.num}
+                  </div>
+                  <h3 style={{ fontFamily: serif, fontWeight: 400, fontSize: 19, color: INK, margin: '0 0 10px', lineHeight: 1.3 }}>
+                    {t(`creatorProgram.whatYouGet.${item.key}.title`, item.title)}
+                  </h3>
+                  <p style={{ fontSize: 14, lineHeight: 1.7, color: 'rgba(11,27,51,0.68)', margin: 0 }}>
                     {t(`creatorProgram.whatYouGet.${item.key}.body`, item.body)}
                   </p>
                 </motion.div>
               ))}
             </div>
+
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              style={{ fontFamily: serif, fontStyle: 'italic', fontSize: 17, color: 'rgba(11,27,51,0.6)', textAlign: 'center', margin: '32px 0 0' }}
+            >
+              {t('creatorProgram.whatYouGet.more', "...and more — priority consideration for future cohorts, a written reference from CurioCrate leadership, and a seat on the team building what's next.")}
+            </motion.p>
           </div>
         </section>
 
@@ -393,7 +509,7 @@ export default function CreatorProgram() {
               {t('creatorProgram.closing.heading', 'Cohort 01 is open')}
             </h2>
             <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, margin: '0 0 32px' }}>
-              {t('creatorProgram.closing.line', 'Grades 9–12. Cohorts of 2 to 3. Up to $1,000 to build it, and a real classroom at the end.')}
+              {t('creatorProgram.closing.line', 'Grades 9–12. Cohorts of 2 to 3. Up to $1,000 to build it, and a real classroom at the end. Cohort 01 submissions close September 26, 11:59 PM.')}
             </p>
             <a
               href={APPLY_URL} target="_blank" rel="noopener noreferrer"
@@ -435,6 +551,7 @@ export default function CreatorProgram() {
           .cp-timeline > div { border-left: none !important; border-top: 1px solid ${SKY}; }
           .cp-timeline > div:first-child { border-top: none; }
           .cp-getgrid { grid-template-columns: 1fr !important; }
+          .cp-countdown { padding: 12px 16px !important; gap: 12px !important; }
         }
       `}</style>
     </PageTransition>
