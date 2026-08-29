@@ -42,6 +42,12 @@ export const en = {
       text: 'Want your idea shipped as a real CurioCrate kit? Apply to the Kit Research Internship.',
       cta: 'Apply Now',
     },
+    progress: {
+      eyebrow: 'Funding Progress',
+      title: 'Help Us Fund Our First Kit',
+      of: 'of',
+      goalSuffix: 'goal',
+    },
   },
 }
 
@@ -85,6 +91,12 @@ export const es = {
       badge: 'Primer Lote Continuo — Solicitudes Abiertas',
       text: '¿Quieres que tu idea se convierta en un kit real de CurioCrate? Postúlate a la Pasantía de Investigación de Kits.',
       cta: 'Solicitar Ahora',
+    },
+    progress: {
+      eyebrow: 'Progreso de Financiamiento',
+      title: 'Ayúdanos a Financiar Nuestro Primer Kit',
+      of: 'de',
+      goalSuffix: 'meta',
     },
   },
 }

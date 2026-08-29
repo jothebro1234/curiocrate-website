@@ -111,26 +111,33 @@
  *   downgrading someone who already has more access) with the requested title in col D, and
  *   appended to the matching Chapters!AuthorizedDirectors so they're scoped to that chapter.
  *
- * KITSTATUS SHEET columns (A–C) — free-form key/value pairs (plus an optional per-row note)
- * describing the physical kit's status, read by the marketing site's Kits page:
- *   A=Key  B=Value  C=Text (optional)
- *   Every row is one key/value pair; add as many rows/keys as needed. Column C, if filled in,
- *   is returned as "<Key>Text" alongside that row's own "<Key>" value — e.g. typing something
- *   in column C on the LaunchAt row comes back from getKitStatus() as LaunchAtText. The
- *   marketing site (src/pages/Kits.jsx) currently reads two specific keys:
- *     LaunchAt     — the target date/time the countdown timer counts down to. Enter it as a
- *                    real Sheets date+time value (Format > Number > Date time — this matters:
- *                    it's evaluated in the spreadsheet's own timezone, File > Settings > Time
- *                    zone, so make sure that's set to what you actually mean), or type an ISO
- *                    string like "2026-12-25 09:00:00" directly into the cell. If this key is
- *                    missing or blank, the countdown page shows a static "00 : 00 : 00 : 00"
- *                    with a "launch date coming soon" message instead of a fake/misleading
- *                    countdown.
- *     LaunchAtText — optional. Column C on the SAME row as LaunchAt. Replaces the default
- *                    "Our first kit is launching in" caption shown above the countdown with
- *                    whatever text you put here.
- *   Any other keys/columns are read and returned too (for future status fields) but nothing
- *   on the site currently displays them — this sheet is intentionally a flexible catch-all.
+ * KITSTATUS SHEET columns (A–C) — mostly free-form key/value pairs describing the physical
+ * kit's status, read by the marketing site's Kits page (src/pages/Kits.jsx):
+ *   A=Key  B=Value  C=(only used by the two special keys below)
+ *   Every row is normally just one A=Key/B=Value pair; add as many rows/keys as needed — any
+ *   key besides the two special ones below is returned as-is under status[key] (column C is
+ *   ignored for those). Two keys are special-cased (matched case-insensitively):
+ *     LaunchAt    — the target date/time the countdown timer counts down to. Enter it as a
+ *                   real Sheets date+time value (Format > Number > Date time — this is
+ *                   evaluated in the spreadsheet's own timezone, File > Settings > Time zone),
+ *                   or type an ISO string like "2026-12-25 09:00:00" directly into the cell.
+ *                   If missing/blank, the countdown page shows a static "00 : 00 : 00 : 00"
+ *                   with a "launch date coming soon" message instead of a fake/misleading
+ *                   countdown.
+ *     ProgressBar — a single row driving the funding-progress bar on the Kits page.
+ *                   B=Goal (plain number, e.g. 5000)  C=Current amount raised so far (plain
+ *                   number). Add only ONE ProgressBar row — a second one just overwrites the
+ *                   first, since goal/current are single values, not a list. If this row is
+ *                   missing, the progress bar section doesn't render at all (no fake/misleading
+ *                   bar shown at 0%).
+ *     Checkpoint  — add as MANY of these rows as you want, one per milestone marker along the
+ *                   progress bar. B=Amount (plain number, same units as ProgressBar's goal)
+ *                   C=Label (short name/description shown at that marker, e.g. "First 100 kits
+ *                   funded"). Returned as its own `checkpoints` array (sorted by amount) in the
+ *                   getKitStatus() response, not folded into `status` — unlike every other key
+ *                   here, multiple rows are expected to share this same key.
+ *   Any other key/row is read and returned too (for future status fields) but nothing on the
+ *   site currently displays it — this sheet is intentionally a flexible catch-all.
  */
 
 const SS = SpreadsheetApp.getActiveSpreadsheet();
@@ -370,27 +377,45 @@ function doGet(e) {
         .setMimeType(ContentService.MimeType.JSON);
 }
 
-/* Reads the KitStatus sheet as a flat { Key: Value } object — every row is one key/value pair.
+/* Reads the KitStatus sheet. Most rows are a flat { Key: Value } pair merged into `status` —
    Date-formatted cells (e.g. LaunchAt) come through as JS Date objects, which JSON.stringify
-   automatically serializes to an ISO string for the frontend to parse with `new Date(...)`. */
+   automatically serializes to an ISO string for the frontend to parse with `new Date(...)`.
+   Two keys are special-cased (see the KITSTATUS SHEET doc comment at the top of this file):
+   "ProgressBar" (B=Goal, C=Current) feeds status.progressBarGoal/progressBarCurrent, and
+   "Checkpoint" (B=Amount, C=Label) — repeatable, unlike every other key — accumulates into a
+   separate `checkpoints` array instead of overwriting a single status property. */
 function getKitStatus() {
     try {
         const sheet = SS.getSheetByName(SHEET_KIT_STATUS);
-        if (!sheet) return ContentService.createTextOutput(JSON.stringify({ ok: true, status: {} }))
+        if (!sheet) return ContentService.createTextOutput(JSON.stringify({ ok: true, status: {}, checkpoints: [] }))
             .setMimeType(ContentService.MimeType.JSON);
         const rows = sheet.getDataRange().getValues();
         const status = {};
+        const checkpoints = [];
         for (var i = 0; i < rows.length; i++) {
             var key = String(rows[i][0] || '').trim();
             if (!key) continue;
+            var keyLower = key.toLowerCase();
             var val = rows[i][1];
+
+            if (keyLower === 'checkpoint') {
+                var cpAmount = parseFloat(val);
+                if (!isNaN(cpAmount)) {
+                    checkpoints.push({ amount: cpAmount, label: String(rows[i][2] || '').trim() });
+                }
+                continue;
+            }
+
+            if (keyLower === 'progressbar') {
+                status.progressBarGoal = parseFloat(val) || 0;
+                status.progressBarCurrent = parseFloat(rows[i][2]) || 0;
+                continue;
+            }
+
             status[key] = (val instanceof Date) ? val : String(val || '').trim();
-            // Column C, if filled in, is optional accompanying free text for that row's key —
-            // exposed as "<Key>Text" (e.g. LaunchAt's column C comes back as LaunchAtText).
-            var extra = String(rows[i][2] || '').trim();
-            if (extra) status[key + 'Text'] = extra;
         }
-        return ContentService.createTextOutput(JSON.stringify({ ok: true, status: status }))
+        checkpoints.sort(function(a, b) { return a.amount - b.amount; });
+        return ContentService.createTextOutput(JSON.stringify({ ok: true, status: status, checkpoints: checkpoints }))
             .setMimeType(ContentService.MimeType.JSON);
     } catch(err) {
         return ContentService.createTextOutput(JSON.stringify({ ok: false, error: err.toString() }))

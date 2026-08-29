@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageTransition from '../components/PageTransition'
 import KitCountdown from '../components/KitCountdown'
+import KitProgressBar from '../components/KitProgressBar'
 import { useLanguage } from '../i18n/useLanguage'
 
 function InternshipBanner() {
@@ -57,6 +58,8 @@ function InternshipBanner() {
 export default function Kits() {
   const [launchAtRaw, setLaunchAtRaw] = useState(null)
   const [introText, setIntroText] = useState(null)
+  const [progress, setProgress] = useState({ goal: 0, current: 0 })
+  const [checkpoints, setCheckpoints] = useState([])
   // Distinct from launchAtRaw being null "no date set yet" — this tracks whether the fetch
   // has resolved at all, so the page can show a loading state instead of briefly flashing
   // the frozen 00:00:00:00 placeholder before the real value (or lack of one) is known.
@@ -70,9 +73,15 @@ export default function Kits() {
     fetch(`${url}?action=get_kit_status`)
       .then(r => r.json())
       .then(data => {
-        if (!data.ok || !data.status) return
-        if (data.status.LaunchAt) setLaunchAtRaw(data.status.LaunchAt)
-        if (data.status.LaunchAtText) setIntroText(data.status.LaunchAtText)
+        if (!data.ok) return
+        if (data.status) {
+          if (data.status.LaunchAt) setLaunchAtRaw(data.status.LaunchAt)
+          if (data.status.LaunchAtText) setIntroText(data.status.LaunchAtText)
+          if (data.status.progressBarGoal) {
+            setProgress({ goal: data.status.progressBarGoal, current: data.status.progressBarCurrent || 0 })
+          }
+        }
+        if (Array.isArray(data.checkpoints)) setCheckpoints(data.checkpoints)
       })
       .catch(() => {})
       .finally(() => setLoading(false))
@@ -81,6 +90,7 @@ export default function Kits() {
   return (
     <PageTransition>
       <KitCountdown launchAtRaw={launchAtRaw} introText={introText} loading={loading} />
+      <KitProgressBar goal={progress.goal} current={progress.current} checkpoints={checkpoints} />
       {!loading && <InternshipBanner />}
     </PageTransition>
   )
