@@ -386,9 +386,24 @@ function doGet(e) {
    separate `checkpoints` array instead of overwriting a single status property. */
 function getKitStatus() {
     try {
+        // Opening this spreadsheet cold (SS.getSheetByName / getDataRange below) has been
+        // measured at 20-45s — Apps Script cold-start latency against this particular
+        // workbook, not something this function's own logic controls. Cache the finished
+        // JSON response for 60s so only the first visitor after a cache expiry pays that
+        // cost; everyone else within the window gets an instant response. 60s is short
+        // enough that an admin editing the KitStatus sheet still sees it reflected on the
+        // site within a minute, without needing a redeploy (this sheet is read live).
+        const cache = CacheService.getScriptCache();
+        const cacheKey = 'kitStatusResponseV1';
+        const cached = cache.get(cacheKey);
+        if (cached) return ContentService.createTextOutput(cached).setMimeType(ContentService.MimeType.JSON);
+
         const sheet = SS.getSheetByName(SHEET_KIT_STATUS);
-        if (!sheet) return ContentService.createTextOutput(JSON.stringify({ ok: true, status: {}, checkpoints: [] }))
-            .setMimeType(ContentService.MimeType.JSON);
+        if (!sheet) {
+            const empty = JSON.stringify({ ok: true, status: {}, checkpoints: [] });
+            cache.put(cacheKey, empty, 60);
+            return ContentService.createTextOutput(empty).setMimeType(ContentService.MimeType.JSON);
+        }
         const rows = sheet.getDataRange().getValues();
         const status = {};
         const checkpoints = [];
@@ -415,8 +430,9 @@ function getKitStatus() {
             status[key] = (val instanceof Date) ? val : String(val || '').trim();
         }
         checkpoints.sort(function(a, b) { return a.amount - b.amount; });
-        return ContentService.createTextOutput(JSON.stringify({ ok: true, status: status, checkpoints: checkpoints }))
-            .setMimeType(ContentService.MimeType.JSON);
+        const responseText = JSON.stringify({ ok: true, status: status, checkpoints: checkpoints });
+        cache.put(cacheKey, responseText, 60);
+        return ContentService.createTextOutput(responseText).setMimeType(ContentService.MimeType.JSON);
     } catch(err) {
         return ContentService.createTextOutput(JSON.stringify({ ok: false, error: err.toString() }))
             .setMimeType(ContentService.MimeType.JSON);
