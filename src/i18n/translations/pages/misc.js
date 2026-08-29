@@ -34,9 +34,24 @@ export const en = {
     },
     progress: {
       eyebrow: 'Funding Progress',
-      title: 'Help Us Fund Our First Kit',
+      title: 'Help Us Ship Our First Kit',
       of: 'of',
       goalSuffix: 'goal',
+      toGo: 'to go',
+      away: 'away',
+      cta: 'Donate Now',
+      ctaSub: 'Secure and tax-deductible — every dollar goes toward building this kit.',
+      trust: {
+        nonprofit: '501(c)(3) Nonprofit',
+        deductible: '100% Tax-Deductible',
+        direct: 'Goes Directly to Kits',
+      },
+      stage: {
+        start: 'Every gift right now helps us build momentum from day one.',
+        building: "We're building momentum — thank you for being part of it.",
+        almost: 'So close! Help us cross the finish line.',
+        funded: 'Fully funded — thank you to everyone who made this possible!',
+      },
     },
   },
 }
@@ -74,9 +89,24 @@ export const es = {
     },
     progress: {
       eyebrow: 'Progreso de Financiamiento',
-      title: 'Ayúdanos a Financiar Nuestro Primer Kit',
+      title: 'Ayúdanos a Enviar Nuestro Primer Kit',
       of: 'de',
       goalSuffix: 'meta',
+      toGo: 'restante',
+      away: 'de distancia',
+      cta: 'Donar Ahora',
+      ctaSub: 'Seguro y deducible de impuestos — cada dólar se destina a construir este kit.',
+      trust: {
+        nonprofit: 'Organización 501(c)(3)',
+        deductible: '100% Deducible de Impuestos',
+        direct: 'Va Directo a los Kits',
+      },
+      stage: {
+        start: 'Cada donación ahora nos ayuda a generar impulso desde el primer día.',
+        building: 'Estamos generando impulso — gracias por ser parte de esto.',
+        almost: '¡Ya casi! Ayúdanos a cruzar la meta.',
+        funded: '¡Financiado por completo — gracias a todos los que lo hicieron posible!',
+      },
     },
   },
 }
