@@ -64,13 +64,22 @@ export default function Kits() {
   // has resolved at all, so the page can show a loading state instead of briefly flashing
   // the frozen 00:00:00:00 placeholder before the real value (or lack of one) is known.
   // Google Apps Script backends are inherently slow to respond (cold-start latency on
-  // Google's side, not something fixable here), so this window can be a full second or two.
+  // Google's side, not something fixable here) — measured 20-45s cold, ~2-3s warm against
+  // this spreadsheet, so this window can be substantial, not just "a second or two".
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const url = import.meta.env.VITE_APPS_SCRIPT_URL
     if (!url) { setLoading(false); return }
-    fetch(`${url}?action=get_kit_status`)
+    const controller = new AbortController()
+    // Apps Script cold-starts against this spreadsheet are genuinely slow — measured 20-45s
+    // for a cold hit, ~2-3s once warm — not "a second or two". The fetch itself has no
+    // built-in timeout, so a slow-enough or genuinely stalled response used to leave the page
+    // stuck on the loading orb forever, with the progress bar (which depends on the same
+    // request) never appearing either. Bail out after 40s — long enough to cover a realistic
+    // cold start — so both fall back to their "no data yet" states instead of hanging forever.
+    const timeoutId = setTimeout(() => controller.abort(), 40000)
+    fetch(`${url}?action=get_kit_status`, { signal: controller.signal })
       .then(r => r.json())
       .then(data => {
         if (!data.ok) return
@@ -84,7 +93,8 @@ export default function Kits() {
         if (Array.isArray(data.checkpoints)) setCheckpoints(data.checkpoints)
       })
       .catch(() => {})
-      .finally(() => setLoading(false))
+      .finally(() => { clearTimeout(timeoutId); setLoading(false) })
+    return () => { clearTimeout(timeoutId); controller.abort() }
   }, [])
 
   return (
