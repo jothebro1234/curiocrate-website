@@ -1,5 +1,5 @@
-// Newsletter page, Contact page, and Kits countdown component — see CLAUDE.md for the
-// convention every page-translation file should follow (auto-discovered/merged by
+// Newsletter page, Contact page, and the Kits funding-progress section — see CLAUDE.md for
+// the convention every page-translation file should follow (auto-discovered/merged by
 // src/i18n/LanguageContext.jsx, no import wiring needed here).
 export const en = {
   newsletterPage: {
@@ -27,16 +27,6 @@ export const en = {
     responseTime: 'We typically respond within 2 to 3 business days.',
   },
   kits: {
-    defaultIntro: 'Our first kit is launching in',
-    comingSoon: 'Launch date coming soon',
-    arrived: 'The first kit has arrived.',
-    loading: 'Syncing countdown',
-    labels: {
-      days: 'DAYS',
-      hours: 'HRS',
-      minutes: 'MIN',
-      seconds: 'SEC',
-    },
     internshipBanner: {
       badge: 'First Rolling Batch — Applications Open',
       text: 'Want your idea shipped as a real CurioCrate kit? Apply to the Kit Research Internship.',
@@ -77,16 +67,6 @@ export const es = {
     responseTime: 'Normalmente respondemos dentro de 2 a 3 días hábiles.',
   },
   kits: {
-    defaultIntro: 'Nuestro primer kit se lanza en',
-    comingSoon: 'Fecha de lanzamiento próximamente',
-    arrived: 'El primer kit ya ha llegado.',
-    loading: 'Sincronizando cuenta regresiva',
-    labels: {
-      days: 'DÍA',
-      hours: 'HRS',
-      minutes: 'MIN',
-      seconds: 'SEG',
-    },
     internshipBanner: {
       badge: 'Primer Lote Continuo — Solicitudes Abiertas',
       text: '¿Quieres que tu idea se convierta en un kit real de CurioCrate? Postúlate a la Pasantía de Investigación de Kits.',

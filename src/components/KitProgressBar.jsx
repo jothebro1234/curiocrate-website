@@ -8,8 +8,8 @@ function formatAmount(n) {
 
 // Funding progress bar for the Kits page, driven by the KitStatus sheet's "ProgressBar" row
 // (goal/current) and any number of "Checkpoint" rows (see the KITSTATUS SHEET doc comment in
-// apps-script/Code.gs). Deliberately renders nothing when there's no goal set — same philosophy
-// as KitCountdown not showing a fake countdown when LaunchAt is unset: no misleading 0% bar.
+// apps-script/Code.gs). Deliberately renders nothing when there's no goal set, so an empty
+// sheet never shows a misleading 0% bar.
 export default function KitProgressBar({ goal = 0, current = 0, checkpoints = [] }) {
   const { t } = useLanguage()
   const sectionRef = useRef(null)

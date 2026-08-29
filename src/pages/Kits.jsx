@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageTransition from '../components/PageTransition'
-import KitCountdown from '../components/KitCountdown'
 import KitProgressBar from '../components/KitProgressBar'
 import { useLanguage } from '../i18n/useLanguage'
 
@@ -56,16 +55,10 @@ function InternshipBanner() {
 }
 
 export default function Kits() {
-  const [launchAtRaw, setLaunchAtRaw] = useState(null)
-  const [introText, setIntroText] = useState(null)
   const [progress, setProgress] = useState({ goal: 0, current: 0 })
   const [checkpoints, setCheckpoints] = useState([])
-  // Distinct from launchAtRaw being null "no date set yet" — this tracks whether the fetch
-  // has resolved at all, so the page can show a loading state instead of briefly flashing
-  // the frozen 00:00:00:00 placeholder before the real value (or lack of one) is known.
-  // Google Apps Script backends are inherently slow to respond (cold-start latency on
-  // Google's side, not something fixable here) — measured 20-45s cold, ~2-3s warm against
-  // this spreadsheet, so this window can be substantial, not just "a second or two".
+  // Tracks whether the get_kit_status fetch has resolved at all, so the internship banner
+  // doesn't pop in before the progress bar's data is ready.
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -73,22 +66,17 @@ export default function Kits() {
     if (!url) { setLoading(false); return }
     const controller = new AbortController()
     // Apps Script cold-starts against this spreadsheet are genuinely slow — measured 20-45s
-    // for a cold hit, ~2-3s once warm — not "a second or two". The fetch itself has no
-    // built-in timeout, so a slow-enough or genuinely stalled response used to leave the page
-    // stuck on the loading orb forever, with the progress bar (which depends on the same
-    // request) never appearing either. Bail out after 40s — long enough to cover a realistic
-    // cold start — so both fall back to their "no data yet" states instead of hanging forever.
+    // for a cold hit, ~2-3s once warm (mitigated server-side by a 60s response cache in
+    // getKitStatus(), but a cache-miss can still be slow). The fetch itself has no built-in
+    // timeout, so a slow-enough or genuinely stalled response used to leave the page stuck
+    // waiting forever. Bail out after 40s so it falls back to the "no data yet" state instead.
     const timeoutId = setTimeout(() => controller.abort(), 40000)
     fetch(`${url}?action=get_kit_status`, { signal: controller.signal })
       .then(r => r.json())
       .then(data => {
         if (!data.ok) return
-        if (data.status) {
-          if (data.status.LaunchAt) setLaunchAtRaw(data.status.LaunchAt)
-          if (data.status.LaunchAtText) setIntroText(data.status.LaunchAtText)
-          if (data.status.progressBarGoal) {
-            setProgress({ goal: data.status.progressBarGoal, current: data.status.progressBarCurrent || 0 })
-          }
+        if (data.status && data.status.progressBarGoal) {
+          setProgress({ goal: data.status.progressBarGoal, current: data.status.progressBarCurrent || 0 })
         }
         if (Array.isArray(data.checkpoints)) setCheckpoints(data.checkpoints)
       })
@@ -99,7 +87,6 @@ export default function Kits() {
 
   return (
     <PageTransition>
-      <KitCountdown launchAtRaw={launchAtRaw} introText={introText} loading={loading} />
       <KitProgressBar goal={progress.goal} current={progress.current} checkpoints={checkpoints} />
       {!loading && <InternshipBanner />}
     </PageTransition>
