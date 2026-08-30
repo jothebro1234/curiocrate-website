@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useInView } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useLanguage } from '../i18n/useLanguage'
 
 function formatAmount(n) {
@@ -45,13 +45,19 @@ function CheckIcon() {
 // real data. No fabricated donor counts/urgency: only genuine sheet-driven numbers are shown.
 export default function KitProgressBar({ goal = 0, current = 0, checkpoints = [] }) {
   const { t } = useLanguage()
-  const sectionRef = useRef(null)
-  // once:true so the fill animates from 0 -> current each time the page is loaded and this
-  // section scrolls into view, but doesn't re-run on every subsequent scroll past it.
-  const inView = useInView(sectionRef, { once: true, amount: 0.3 })
+  // Animates in on mount (this section sits right below the navbar now, with no hero above
+  // it, so it's essentially always in view on load anyway) rather than gating on scrolling
+  // into view. Previously used framer-motion's useInView, tied to an IntersectionObserver —
+  // confirmed live that when that observer doesn't fire (seen in a backgrounded/throttled
+  // browser tab; not something this codebase controls), EVERY animated value below (card
+  // opacity, bar fill, count-up, checkpoint fade-ins) stayed permanently stuck at its initial
+  // state with no fallback, i.e. the entire section rendered invisible forever. A plain
+  // mount-triggered flag has no such single point of failure.
+  const [ready, setReady] = useState(false)
+  useEffect(() => { setReady(true) }, [])
 
   const pct = goal > 0 ? Math.max(0, Math.min(100, (current / goal) * 100)) : 0
-  const displayedCurrent = useCountUp(current, inView)
+  const displayedCurrent = useCountUp(current, ready)
   const funded = pct >= 100
 
   const sortedCheckpoints = useMemo(
@@ -75,18 +81,18 @@ export default function KitProgressBar({ goal = 0, current = 0, checkpoints = []
   if (!goal || goal <= 0) return null
 
   return (
-    <section ref={sectionRef} className="kpb-section">
+    <section className="kpb-section">
       <div className="kpb-grid" />
       <motion.div
         className="kpb-halo"
-        animate={{ opacity: inView ? 0.6 : 0 }}
+        animate={{ opacity: ready ? 0.6 : 0 }}
         transition={{ duration: 2 }}
       />
 
       <motion.div
         className="kpb-card"
         initial={{ opacity: 0, y: 28 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
+        animate={ready ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
       >
         <div className="kpb-trust-row">
@@ -117,7 +123,7 @@ export default function KitProgressBar({ goal = 0, current = 0, checkpoints = []
             <motion.div
               className="kpb-fill"
               initial={{ width: 0 }}
-              animate={{ width: inView ? `${pct}%` : 0 }}
+              animate={{ width: ready ? `${pct}%` : 0 }}
               transition={{ duration: 1.8, ease: [0.4, 0, 0.2, 1] }}
             >
               <span className="kpb-fill-comet" />
@@ -148,7 +154,7 @@ export default function KitProgressBar({ goal = 0, current = 0, checkpoints = []
                   key={i}
                   className={`kpb-cp-card ${reached ? 'reached' : ''} ${isNext ? 'next' : ''}`}
                   initial={{ opacity: 0, y: 10 }}
-                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  animate={ready ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.5, delay: 0.4 + i * 0.09 }}
                 >
                   {isNext && <span className="kpb-cp-pulse" />}
