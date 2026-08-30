@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion, useScroll, useTransform, useInView } from 'framer-motion'
@@ -256,39 +256,59 @@ function FitToMarkers({ markers }) {
     if (!markers.length) return
     const bounds = L.latLngBounds(markers.map(m => m.coords))
     map.fitBounds(bounds, { padding: [48, 48], maxZoom: 6 })
+    // Cancel any in-flight pan/zoom animation on cleanup (effect re-run or unmount) — without
+    // this, navigating away from the page while fitBounds's animation is still transitioning
+    // lets Leaflet's transitionend handler fire after the map's DOM panes are already removed,
+    // crashing with "Cannot read properties of undefined (reading '_leaflet_pos')". try/catch
+    // is required, not just defensive style: confirmed live that map.stop() itself can throw
+    // that same error when called after react-leaflet has already torn down the map's internal
+    // DOM state (React doesn't guarantee this child effect's cleanup runs strictly before
+    // MapContainer's own removal effect) — so this must never be allowed to throw uncaught.
+    return () => { try { map.stop() } catch { /* map already torn down — nothing to cancel */ } }
   }, [map, markers])
   return null
 }
 
 function LeafletMap({ chaptersData }) {
   const { t } = useLanguage()
-  // Rows from the sheet whose type is "Chapter" (or blank)
-  const chapterRows = chaptersData.filter(c => c.type !== 'Impact')
-  // Rows explicitly marked as teaching locations
-  const teachingRows = chaptersData.filter(c => c.type === 'Impact')
 
-  // For chapters: prefer lat/lng from sheet; fall back to chapterLocations.js lookup
-  const chapterMarkers = chapterRows
-    .filter(c => (c.latitude && c.longitude) || chapterLocations[c.school])
-    .map(c => {
-      const coords = (c.latitude && c.longitude)
-        ? [c.latitude, c.longitude]
-        : [chapterLocations[c.school][1], chapterLocations[c.school][0]]
-      return { ...c, coords }
-    })
+  // Memoized on chaptersData specifically (not recomputed as fresh array literals on every
+  // Home re-render) — FitToMarkers below re-triggers map.fitBounds()'s pan/zoom animation
+  // whenever its `markers` prop is a new array reference, even with identical contents, so an
+  // unmemoized recompute here was re-animating the map on every unrelated Home re-render.
+  const { spreadChapters, spreadTeaching, allMarkers } = useMemo(() => {
+    // Rows from the sheet whose type is "Chapter" (or blank)
+    const chapterRows = chaptersData.filter(c => c.type !== 'Impact')
+    // Rows explicitly marked as teaching locations
+    const teachingRows = chaptersData.filter(c => c.type === 'Impact')
 
-  // Hardcoded fallback entries (schools in chapterLocations.js not in sheet)
-  const hardcoded = Object.entries(chapterLocations)
-    .filter(([school]) => !chaptersData.some(c => c.school === school))
-    .map(([school, lngLat]) => ({ school, coords: [lngLat[1], lngLat[0]] }))
+    // For chapters: prefer lat/lng from sheet; fall back to chapterLocations.js lookup
+    const chapterMarkers = chapterRows
+      .filter(c => (c.latitude && c.longitude) || chapterLocations[c.school])
+      .map(c => {
+        const coords = (c.latitude && c.longitude)
+          ? [c.latitude, c.longitude]
+          : [chapterLocations[c.school][1], chapterLocations[c.school][0]]
+        return { ...c, coords }
+      })
 
-  // Teaching location markers (must have coordinates in the sheet)
-  const teachingMarkers = teachingRows
-    .filter(c => c.latitude && c.longitude)
-    .map(c => ({ ...c, coords: [c.latitude, c.longitude] }))
+    // Hardcoded fallback entries (schools in chapterLocations.js not in sheet)
+    const hardcoded = Object.entries(chapterLocations)
+      .filter(([school]) => !chaptersData.some(c => c.school === school))
+      .map(([school, lngLat]) => ({ school, coords: [lngLat[1], lngLat[0]] }))
 
-  const spreadChapters = spreadOverlapping([...chapterMarkers, ...hardcoded])
-  const spreadTeaching = spreadOverlapping(teachingMarkers)
+    // Teaching location markers (must have coordinates in the sheet)
+    const teachingMarkers = teachingRows
+      .filter(c => c.latitude && c.longitude)
+      .map(c => ({ ...c, coords: [c.latitude, c.longitude] }))
+
+    const spreadChapters = spreadOverlapping([...chapterMarkers, ...hardcoded])
+    const spreadTeaching = spreadOverlapping(teachingMarkers)
+    // Precompute the combined array here too — FitToMarkers below re-triggers its fitBounds
+    // animation whenever this reference changes, so it must stay stable across renders that
+    // don't actually change the underlying data, not just be recombined fresh via JSX spread.
+    return { spreadChapters, spreadTeaching, allMarkers: [...spreadChapters, ...spreadTeaching] }
+  }, [chaptersData])
 
   return (
     <div style={{ position: 'relative' }}>
@@ -307,7 +327,7 @@ function LeafletMap({ chaptersData }) {
           maxNativeZoom={16}
         />
 
-        <FitToMarkers markers={[...spreadChapters, ...spreadTeaching]} />
+        <FitToMarkers markers={allMarkers} />
 
         {spreadChapters.map((m, i) => (
           <>
