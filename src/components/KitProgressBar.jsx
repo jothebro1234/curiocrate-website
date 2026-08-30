@@ -27,9 +27,11 @@ function useCountUp(target, trigger, duration = 1800) {
   return value
 }
 
-// A tiled, horizontally-scrolling SVG sine wave used twice (different speed/opacity/direction)
-// to give the water's surface a restless, alive ripple instead of a static flat line.
-const WAVE_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='20' viewBox='0 0 120 20'%3E%3Cpath d='M0 10 Q 30 0 60 10 T 120 10 V20 H0 Z' fill='white'/%3E%3C/svg%3E"
+// A tiled, looping SVG ripple used three times (different tile widths/speeds/opacity/blur/
+// direction) so the water's surface reads as irregular, layered chop rather than one uniform
+// repeating scallop pattern. Gentle, wide curves (not tight semicircles) so it reads as liquid
+// motion, not a decorative border.
+const WAVE_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='20' viewBox='0 0 140 20'%3E%3Cpath d='M0 10 C 17.5 6, 52.5 6, 70 10 C 87.5 14, 122.5 14, 140 10 V20 H0 Z' fill='white'/%3E%3C/svg%3E"
 
 // Full-bleed funding progress bar for the Kits page, driven by the KitStatus sheet's
 // "ProgressBar" row (goal/current) and any number of "Checkpoint" rows (see the KITSTATUS
@@ -97,11 +99,15 @@ export default function KitProgressBar({ goal = 0, current = 0, checkpoints = []
             className="kpb-tube-fill"
             initial={{ width: 0 }}
             animate={{ width: ready ? `${pct}%` : 0 }}
-            transition={{ duration: 1.9, ease: [0.4, 0, 0.2, 1] }}
+            // A spring instead of a plain easing curve — the fill overshoots its target width by
+            // a few percent and settles back, like water surging in and sloshing to rest, rather
+            // than gliding straight to a stop.
+            transition={{ type: 'spring', stiffness: 55, damping: 11, mass: 1.1 }}
           >
             <div className="kpb-water-wave">
               <span className="kpb-wave w1" />
               <span className="kpb-wave w2" />
+              <span className="kpb-wave w3" />
             </div>
             <span className="kpb-tube-glint" />
           </motion.div>
@@ -132,7 +138,7 @@ export default function KitProgressBar({ goal = 0, current = 0, checkpoints = []
             const markerPct = Math.max(1.5, Math.min(98.5, cpPct))
             return (
               <div key={i}>
-                <div className={`kpb-tl-dot ${reached ? 'reached' : ''}`} style={{ left: `${markerPct}%` }} />
+                <div className={`kpb-tl-line ${reached ? 'reached' : ''}`} style={{ left: `${markerPct}%` }} />
                 <motion.div
                   className={`kpb-tl-label kpb-tl-align-${align} ${above ? 'kpb-tl-label-above' : 'kpb-tl-label-below'}`}
                   style={{ left: `${markerPct}%` }}
@@ -233,18 +239,58 @@ export default function KitProgressBar({ goal = 0, current = 0, checkpoints = []
           box-shadow: inset 0 8px 18px rgba(255,255,255,0.4), inset 0 -14px 26px rgba(0,10,40,0.4);
           overflow: hidden;
         }
+        /* Diagonal glass shine sweeping through periodically — same technique as the earlier
+           flat-bar design's shimmer, brought back here since the water-tube redesign lost it. */
+        .kpb-tube-fill::after {
+          content: ''; position: absolute; inset: 0;
+          background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,0.5) 47%, rgba(255,255,255,0.5) 53%, transparent 70%);
+          background-size: 240% 100%;
+          animation: kpbShimmer 3.4s ease-in-out infinite;
+          mix-blend-mode: overlay;
+          pointer-events: none;
+        }
+        @keyframes kpbShimmer { 0% { background-position: 240% 0; } 100% { background-position: -240% 0; } }
+
+        /* Water surface: an outer wrapper gently rocks (rotate+scale) while three independently
+           looping ripple layers (different tile width/speed/blur/blend) scroll and bob inside it
+           — layered, uneven motion reads as restless liquid chop rather than one repeating
+           scalloped border. */
         .kpb-water-wave {
-          position: absolute; top: -9px; left: 0; width: 200%; height: 20px;
+          position: absolute; top: -10px; left: 0; width: 240%; height: 22px;
+          transform-origin: 50% 100%;
+          animation: kpbSurfaceRock 4.5s ease-in-out infinite;
+        }
+        @keyframes kpbSurfaceRock {
+          0%, 100% { transform: rotate(0deg) scaleY(1); }
+          50% { transform: rotate(0.5deg) scaleY(1.05); }
         }
         .kpb-wave {
           position: absolute; inset: 0; width: 100%; height: 100%;
           background-image: url("${WAVE_SVG}");
-          background-repeat: repeat-x; background-size: 120px 20px;
-          animation: kpbWaveScroll 3s linear infinite;
+          background-repeat: repeat-x;
+          mix-blend-mode: soft-light;
         }
-        .kpb-wave.w1 { opacity: 0.38; }
-        .kpb-wave.w2 { opacity: 0.2; top: 4px; animation-duration: 4.6s; animation-direction: reverse; }
-        @keyframes kpbWaveScroll { from { transform: translateX(0); } to { transform: translateX(-120px); } }
+        .kpb-wave.w1 { background-size: 140px 22px; opacity: 0.3; filter: blur(0.5px); animation: kpbWave1 2.8s linear infinite; }
+        .kpb-wave.w2 { background-size: 210px 22px; top: 5px; opacity: 0.16; filter: blur(0.8px); animation: kpbWave2 4.3s linear infinite; }
+        .kpb-wave.w3 { background-size: 95px 22px; top: 2px; opacity: 0.12; filter: blur(1px); animation: kpbWave3 1.9s linear infinite; }
+        @keyframes kpbWave1 {
+          0%   { transform: translate(0, 0); }
+          25%  { transform: translate(-35px, -2.5px); }
+          50%  { transform: translate(-70px, 0); }
+          75%  { transform: translate(-105px, 2.5px); }
+          100% { transform: translate(-140px, 0); }
+        }
+        @keyframes kpbWave2 {
+          0%   { transform: translate(0, 0); }
+          30%  { transform: translate(70px, 2px); }
+          60%  { transform: translate(140px, -1.5px); }
+          100% { transform: translate(210px, 0); }
+        }
+        @keyframes kpbWave3 {
+          0%   { transform: translate(0, 0); }
+          50%  { transform: translate(-47.5px, -1.5px); }
+          100% { transform: translate(-95px, 0); }
+        }
         .kpb-tube-glint {
           position: absolute; right: 0; top: 6%; bottom: 6%; width: 3px;
           background: rgba(255,255,255,0.85);
@@ -254,16 +300,16 @@ export default function KitProgressBar({ goal = 0, current = 0, checkpoints = []
         @keyframes kpbGlintPulse { 0%, 100% { opacity: 0.65; } 50% { opacity: 1; } }
 
         .kpb-timeline { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
-        .kpb-tl-dot {
+        .kpb-tl-line {
           position: absolute; top: 50%; transform: translate(-50%, -50%);
-          width: clamp(12px, 1.6vw, 18px); height: clamp(12px, 1.6vw, 18px); border-radius: 50%;
-          background: rgba(5,8,16,0.55); border: 2px solid rgba(255,255,255,0.55);
-          box-shadow: 0 0 0 4px rgba(5,8,16,0.35);
-          transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
+          width: 3px; height: 70%; border-radius: 3px;
+          background: rgba(255,255,255,0.4);
+          box-shadow: 0 0 0 0 transparent;
+          transition: background 0.4s, box-shadow 0.4s;
         }
-        .kpb-tl-dot.reached {
-          background: #fff; border-color: #bfdbfe;
-          box-shadow: 0 0 0 4px rgba(5,8,16,0.35), 0 0 16px 4px rgba(147,197,253,0.85);
+        .kpb-tl-line.reached {
+          background: linear-gradient(180deg, #ffffff, #bfdbfe);
+          box-shadow: 0 0 14px 3px rgba(147,197,253,0.85);
         }
         .kpb-tl-label {
           position: absolute; left: 0;
