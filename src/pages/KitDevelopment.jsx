@@ -48,7 +48,7 @@ function AnimatedAmount({ target = 1000, duration = 2800, holdDelay = 600, onCom
   )
 }
 
-const STEM_DEADLINE = new Date('2026-09-09T23:59:00-08:00')
+const STEM_DEADLINE = new Date('2026-09-06T23:59:00-07:00')
 
 function useCountdown(target) {
   const [msLeft, setMsLeft] = useState(() => target.getTime() - Date.now())
@@ -133,7 +133,7 @@ const TABS = [
 const STEM_DETAILS = [
   { key: 'who', label: 'WHO', value: '2 to 3 high school students' },
   { key: 'startDate', label: 'START DATE', value: 'August 8, 2026' },
-  { key: 'endDate', label: 'END DATE', value: 'September 9, 2026, 11:59 PM PST' },
+  { key: 'endDate', label: 'END DATE', value: 'September 6, 2026, 11:59 PM PDT' },
   { key: 'format', label: 'FORMAT', value: 'Video pitch + one-pager' },
 ]
 

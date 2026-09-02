@@ -25,7 +25,7 @@ export const en = {
       details: {
         who: { label: 'WHO', value: '2 to 3 high school students' },
         startDate: { label: 'START DATE', value: 'August 8, 2026' },
-        endDate: { label: 'END DATE', value: 'September 9, 2026, 11:59 PM PST' },
+        endDate: { label: 'END DATE', value: 'September 6, 2026, 11:59 PM PDT' },
         format: { label: 'FORMAT', value: 'Video pitch + one-pager' },
       },
       prompts: {
@@ -135,7 +135,7 @@ export const es = {
       details: {
         who: { label: 'QUIÉNES', value: '2 a 3 estudiantes de preparatoria' },
         startDate: { label: 'FECHA DE INICIO', value: '8 de agosto de 2026' },
-        endDate: { label: 'FECHA DE CIERRE', value: '9 de septiembre de 2026, 11:59 PM (hora del Pacífico)' },
+        endDate: { label: 'FECHA DE CIERRE', value: '6 de septiembre de 2026, 11:59 PM (hora del Pacífico)' },
         format: { label: 'FORMATO', value: 'Pitch en video + resumen de una página' },
       },
       prompts: {
