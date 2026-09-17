@@ -106,8 +106,8 @@ export const en = {
         shortName: 'Curriculum',
       },
       'head-marketing': {
-        role: 'Head of Marketing',
-        bio: "Leads CurioCrate's marketing department, shaping the campaigns and storytelling that connect the mission to communities far and wide.",
+        role: 'Co-Heads of Marketing',
+        bio: "Co-lead CurioCrate's marketing department, shaping the campaigns and storytelling that connect the mission to communities far and wide.",
         shortName: 'Marketing',
       },
       'head-operations': {
@@ -232,8 +232,8 @@ export const es = {
         shortName: 'Currículo',
       },
       'head-marketing': {
-        role: 'Jefa de Marketing',
-        bio: 'Lidera el departamento de marketing de CurioCrate, dando forma a las campañas y narrativas que conectan la misión con comunidades cercanas y lejanas.',
+        role: 'Co-Jefas de Marketing',
+        bio: 'Co-lideran el departamento de marketing de CurioCrate, dando forma a las campañas y narrativas que conectan la misión con comunidades cercanas y lejanas.',
         shortName: 'Marketing',
       },
       'head-operations': {

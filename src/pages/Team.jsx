@@ -195,11 +195,15 @@ const departmentHeads = [
   },
   {
     id: 'head-marketing',
-    name: 'Chloe Koo',
+    name: 'Chloe Koo & Keily Byun',
     shortName: 'Marketing',
-    role: 'Head of Marketing',
-    bio: 'Leads CurioCrate\'s marketing department, shaping the campaigns and storytelling that connect the mission to communities far and wide.',
-    photo: '/boardmembers/chloekoodirectorofcurriculum.png',
+    role: 'Co-Heads of Marketing',
+    bio: 'Co-lead CurioCrate\'s marketing department, shaping the campaigns and storytelling that connect the mission to communities far and wide.',
+    // Keily's photo hasn't been provided yet — reusing Chloe's as a placeholder for both slots until it is.
+    coHeads: [
+      { name: 'Chloe Koo', photo: '/boardmembers/chloekoodirectorofcurriculum.png' },
+      { name: 'Keily Byun', photo: '/boardmembers/chloekoodirectorofcurriculum.png' },
+    ],
     photoHeight: 330, photoExpandedHeight: 520,
     photoOffsetY: -44,
     color: '#e879f9',
@@ -249,7 +253,7 @@ const departmentHeads = [
 ].map(m => ({ ...m, ns: 'departmentHeads' }))
 
 // ─── MOBILE MEMBER CARD (lightweight — no filters/animations, safe for mobile) ─
-function MobileMemberCard({ photo, glow, dark, color, emoji, role, name, bio }) {
+function MobileMemberCard({ photo, coHeads, glow, dark, color, emoji, role, name, bio }) {
   return (
     <div style={{
       borderRadius: 16, overflow: 'hidden',
@@ -259,7 +263,16 @@ function MobileMemberCard({ photo, glow, dark, color, emoji, role, name, bio }) 
       display: 'flex', alignItems: 'center', gap: 20,
       boxShadow: `0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px ${color}0a`,
     }}>
-      {photo ? (
+      {coHeads ? (
+        <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
+          {coHeads.map((c) => (
+            <img key={c.name} src={c.photo} alt={c.name} style={{
+              height: 104, width: 60, objectFit: 'contain', objectPosition: 'top',
+              filter: `drop-shadow(0 0 12px ${glow.replace('0.5','0.4')})`,
+            }} />
+          ))}
+        </div>
+      ) : photo ? (
         <img src={photo} alt={name} style={{
           height: 104, width: 84, objectFit: 'contain', objectPosition: 'top',
           flexShrink: 0,
@@ -302,7 +315,7 @@ function PanelStage({ members, height = 580, expandFlex = 3.5, groupBreakAfter =
         {members.map((m) => (
           <MobileMemberCard
             key={m.id}
-            photo={m.photo} glow={m.glow} dark={m.dark} color={m.color} emoji={m.emoji}
+            photo={m.photo} coHeads={m.coHeads} glow={m.glow} dark={m.dark} color={m.color} emoji={m.emoji}
             role={t(`team.${m.ns}.${m.id}.role`, m.role)}
             name={m.name}
             bio={t(`team.${m.ns}.${m.id}.bio`, m.bio)}
@@ -382,7 +395,25 @@ function PanelStage({ members, height = 580, expandFlex = 3.5, groupBreakAfter =
               position:'absolute', top:'50%', left:'50%',
               transform:`translate(-50%, ${m.photoOffsetY ?? -58}%) translateY(35px)`, zIndex:1,
             }}>
-              {m.photo ? (
+              {m.coHeads ? (
+                <div style={{ display:'flex', gap:10, alignItems:'flex-end', justifyContent:'center' }}>
+                  {m.coHeads.map((c) => (
+                    <motion.img
+                      key={c.name}
+                      src={c.photo} alt={c.name}
+                      animate={{ scale: isActive ? 1.04 : 1 }}
+                      transition={{ duration:0.5 }}
+                      style={{
+                        height: isActive ? (c.photoExpandedHeight ?? m.photoExpandedHeight ?? 430) : (c.photoHeight ?? m.photoHeight ?? 230),
+                        transition:'height 0.55s cubic-bezier(0.4,0,0.2,1)',
+                        objectFit:'contain', objectPosition:'top center',
+                        filter:`drop-shadow(0 0 28px ${m.glow})`,
+                        display:'block',
+                      }}
+                    />
+                  ))}
+                </div>
+              ) : m.photo ? (
                 <motion.img
                   src={m.photo} alt={m.name}
                   animate={{ scale: isActive ? 1.04 : 1 }}
