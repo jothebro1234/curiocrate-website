@@ -233,6 +233,19 @@ const departmentHeads = [
     dark: '#160006',
     number: '04',
   },
+  {
+    id: 'head-chapter-development',
+    name: 'Ella Park',
+    shortName: 'Chapter Development',
+    role: 'Head of Chapter Development',
+    bio: 'Leads CurioCrate\'s chapter development, supporting student leaders as they launch and grow chapters in their communities.',
+    photo: '/boardmembers/ellaparkchapterdevofficer.png',
+    photoHeight: 270, photoExpandedHeight: 450,
+    color: '#60a5fa',
+    glow: 'rgba(96,165,250,0.5)',
+    dark: '#000f1a',
+    number: '05',
+  },
 ].map(m => ({ ...m, ns: 'departmentHeads' }))
 
 // ─── MOBILE MEMBER CARD (lightweight — no filters/animations, safe for mobile) ─
