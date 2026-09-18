@@ -199,10 +199,9 @@ const departmentHeads = [
     shortName: 'Marketing',
     role: 'Co-Heads of Marketing',
     bio: 'Co-lead CurioCrate\'s marketing department, shaping the campaigns and storytelling that connect the mission to communities far and wide.',
-    // Keily's photo hasn't been provided yet — reusing Chloe's as a placeholder for both slots until it is.
     coHeads: [
       { name: 'Chloe Koo', photo: '/boardmembers/chloekoodirectorofcurriculum.png' },
-      { name: 'Keily Byun', photo: '/boardmembers/chloekoodirectorofcurriculum.png' },
+      { name: 'Keily Byun', photo: '/boardmembers/keilybyunmarketinghead.png' },
     ],
     photoHeight: 330, photoExpandedHeight: 520,
     photoOffsetY: -44,
