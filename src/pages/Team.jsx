@@ -4,8 +4,8 @@ import PageTransition from '../components/PageTransition'
 import { useMobile } from '../hooks/useMobile'
 import { useLanguage } from '../i18n/useLanguage'
 
-// Founder card hidden for now at the site owner's request (2026-09-05).
-const SHOW_FOUNDER_CARD = false
+// Founder card shown again at the site owner's request (2026-09-24).
+const SHOW_FOUNDER_CARD = true
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 
@@ -638,8 +638,8 @@ export default function Team() {
             the full cinematic version's stacked filters/infinite animations
             were heavy enough to freeze/crash mobile browsers on scroll.
 
-            Hidden for now at the site owner's request (2026-09-05) — card
-            markup left intact below so it's a one-line flip to bring back.
+            Visibility is gated on SHOW_FOUNDER_CARD (top of file) so it can be
+            hidden/shown with a one-line flip.
         ══════════════════════════════════════════════════════════════════════ */}
         {SHOW_FOUNDER_CARD && (isMobile ? (
           <div style={{ padding: '40px 20px 20px' }}>
